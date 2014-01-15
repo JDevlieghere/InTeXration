@@ -13,7 +13,7 @@ class InTeXrationServer:
     def _route(self):
         self._app.route('/', method="GET", callback=self._index)
         self._app.route('/hook/<api_key>', method="POST", callback=self._hook)
-        self._app_route('/out/<repo>', method="GET", callback=self._index)
+        self._app.route('/out/<repo>', method="GET", callback=self._out)
 
     def start(self):
         self._app.run(host=self._host, port=self._port)
