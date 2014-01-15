@@ -1,5 +1,6 @@
 import os
 import errno
+import shutil
 import subprocess
 import sys
 
@@ -39,10 +40,16 @@ class InTeXrationTask:
                             '-output-directory=' + output_path, input_path]) != 0:
             raise RuntimeError('pdflatex compilation failed!')
 
+    def _clean(self):
+        shutil.rmtree(self._build_dir)
+
     def run(self):
-        self._clone()
-        self._compile('main.tex')
-
-
-def error(*objs):
-    print("ERROR: ", *objs, end='\n', file=sys.stderr)
+        def error(*objs):
+            print("ERROR: ", *objs, end='\n', file=sys.stderr)
+        try:
+            self._clone()
+            self._compile('main.tex')
+        except Exception as e:
+            error(e)
+        finally:
+            self._clean()
