@@ -1,4 +1,4 @@
-from bottle import Bottle, request, abort
+from bottle import Bottle, request, abort, static_file
 import argparse,os, json
 from task import InTeXrationTask
 
@@ -13,6 +13,7 @@ class InTeXrationServer:
     def _route(self):
         self._app.route('/', method="GET", callback=self._index)
         self._app.route('/hook/<api_key>', method="POST", callback=self._hook)
+        self._app_route('/out/<repo>', method="GET", callback=self._index)
 
     def start(self):
         self._app.run(host=self._host, port=self._port)
@@ -48,6 +49,11 @@ class InTeXrationServer:
     @staticmethod
     def _index():
         return 'InTeXration is up and running.'
+
+    @staticmethod
+    def _out(repo):
+        path = os.path.join(os.getcwd(), 'out', repo, 'main.tex')
+        return static_file(path)
 
 
 if __name__ == '__main__':
