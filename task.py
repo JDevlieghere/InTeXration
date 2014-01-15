@@ -34,11 +34,20 @@ class InTeXrationTask:
             raise RuntimeError('git clone failed!')
 
     def _compile(self, file):
-        input_path = os.path.join(self._build_dir, file)
+        @contextlib.contextmanager
+        def cd(dirname):
+            cur_dir = os.getcwd()
+            try:
+                os.chdir(dirname)
+                yield
+            finally:
+                os.chdir(cur_dir)
+
         output_path = self._output_dir
-        if subprocess.call(['pdflatex', '-interaction=nonstopmode', '-aux-directory=' + output_path,
-                            '-output-directory=' + output_path, input_path]) != 0:
-            raise RuntimeError('pdflatex compilation failed!')
+        with cd(self._build_dir):
+            if subprocess.call(['pdflatex', '-interaction=nonstopmode', '-aux-directory=' + output_path,
+                                '-output-directory=' + output_path, file]) != 0:
+                raise RuntimeError('pdflatex compilation failed!')
 
     def _clean(self):
         shutil.rmtree(self._build_dir)
