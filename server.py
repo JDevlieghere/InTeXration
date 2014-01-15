@@ -53,7 +53,7 @@ class InTeXrationServer:
     @staticmethod
     def _out(repo):
         path = os.path.join(os.getcwd(), 'out', repo)
-        return static_file('main.tex', path)
+        return static_file('main.pdf', path)
 
 
 if __name__ == '__main__':
