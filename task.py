@@ -59,6 +59,8 @@ class InTeXrationTask:
         try:
             self._clone()
             self._compile('main.tex')
+            # Run twice for cross-references
+            self._compile('main.tex')
         except Exception as e:
             error(e)
         finally:
