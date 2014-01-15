@@ -34,14 +34,15 @@ class InTeXrationTask:
 
     def _compile(self, file):
         input_path = os.path.join(self._build_dir, file)
-        output_path = self._build_dir
-        if subprocess.call(['pdflatex', '-interaction=batchmode', '-aux-directory=' + output_path,
+        output_path = self._output_dir
+        if subprocess.call(['pdflatex', '-interaction=nonstopmode', '-aux-directory=' + output_path,
                             '-output-directory=' + output_path, input_path]) != 0:
             raise RuntimeError('pdflatex compilation failed!')
 
     def run(self):
         self._clone()
         self._compile('main.tex')
+
 
 def error(*objs):
     print("ERROR: ", *objs, end='\n', file=sys.stderr)
