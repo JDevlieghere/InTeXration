@@ -1,1 +1,1 @@
-python3.3 server.py -host 95.85.6.70 &
+nohup python3.3 server.py -host 95.85.6.70 > /dev/null 2>&1 &
