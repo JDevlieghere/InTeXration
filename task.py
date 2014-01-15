@@ -14,7 +14,7 @@ class InTeXrationTask:
         self._output_dir = self._create_dir('out')
 
     def _create_dir(self, prefix, suffix=''):
-        path = os.path.join(os.getcwdu(), prefix, self._repository, suffix)
+        path = os.path.join(os.getcwd(), prefix, self._repository, suffix)
         try:
             os.makedirs(path)
         except OSError as e:
