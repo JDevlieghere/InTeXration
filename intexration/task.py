@@ -41,25 +41,25 @@ class Task:
         return url
 
     def _clone(self):
-        if subprocess.call(['git', 'clone', self._url, self._build_dir]) != 0:
+        if subprocess.call(['git', 'clone', self._url, self._build_dir], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
             raise RuntimeError('git clone failed!')
         logging.debug("Cloned %s to &s", self._repository, self._build_dir)
 
     def _makeindex(self, file):
         with cd(self._build_dir):
             if subprocess.call(['makeindex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
-                logging.warning('Makeindex failed.')
+                logging.warning("%s:Makeindex failed.", self._repository)
 
     def _bibtex(self, file):
         with cd(self._build_dir):
             if subprocess.call(['bibtex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
-                logging.warning('Bibtex failed.')
+                logging.warning("%s:Bibtex failed.", self._repository)
 
     def _compile(self, file):
         with cd(self._build_dir):
             if subprocess.call(['pdflatex', '-interaction=nonstopmode', file], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logging.error('Compilation (pdflatex) finished with errors.')
+                logging.error("%s:Compilation (pdflatex) finished with errors.", self._repository)
 
     def _copy(self, pdf_file, log_file):
         # PDF File
