@@ -17,8 +17,8 @@ class Server:
     def _route(self):
         self._app.route('/', method="GET", callback=self._index)
         self._app.route('/hook/<api_key>', method="POST", callback=self._hook)
-        self._app.route('/out/<repo>/<name>', method="GET", callback=self._out)
-        self._app.route('/log/<repo>/<name>', method="GET", callback=self._log)
+        self._app.route('/out/<repo>/<name>', method=["GET", "GET"], callback=self._out)
+        self._app.route('/log/<repo>/<name>', method=["GET", "GET"], callback=self._log)
 
     def start(self):
         self._app.run(host=self._host, port=self._port)
