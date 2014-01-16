@@ -16,6 +16,10 @@ def cd(dirname):
         os.chdir(cur_dir)
 
 
+def error(*objs):
+    print("ERROR: ", *objs, end='\n', file=sys.stderr)
+
+
 class Task:
 
     def __init__(self, url, repository, commit):
@@ -46,12 +50,13 @@ class Task:
 
     def _makeindex(self, file):
         with cd(self._output_dir):
-            subprocess.call(['makeindex', file])
+            if subprocess.call(['makeindex', file]) != 0:
+                error('makeindex failed!')
 
     def _compile(self, file):
         with cd(self._build_dir):
             if subprocess.call(['pdflatex', '-interaction=nonstopmode', file]) != 0:
-                raise RuntimeError('pdflatex compilation failed!')
+                error('pdflatex compilation failed!')
 
     def _copy(self, pdf_file, log_file):
         # PDF File
@@ -67,16 +72,11 @@ class Task:
         shutil.rmtree(self._build_dir)
 
     def run(self):
-        def error(*objs):
-            print("ERROR: ", *objs, end='\n', file=sys.stderr)
         try:
             self._clone()
             self._compile('main.tex')
             self._makeindex('main.idx')
             self._compile('main.tex')
-        except Exception as e:
-            error(e)
-        try:
             self._copy('main.pdf','main.log')
         except Exception as e:
             error(e)
