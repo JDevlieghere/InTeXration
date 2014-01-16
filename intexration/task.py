@@ -8,6 +8,9 @@ import subprocess
 
 
 # Context Swtich
+from intexration.propertyhandler import PropertyHandler
+
+
 @contextlib.contextmanager
 def cd(dirname):
     cur_dir = os.getcwd()
@@ -76,15 +79,12 @@ class Task:
         shutil.rmtree(self._build_dir)
         logging.debug("Directory %s cleaned.", self._build_dir)
 
-    def _build(self, name, idx, bib):
-        tex = name + '.tex'
-        pdf = name + '.pdf'
-        log = name + '.log'
-        self._compile(tex)
-        self._makeindex(idx)
-        self._bibtex(bib)
-        self._compile(tex)
-        self._copy(pdf, log)
+    def _build(self, build):
+        self._compile(build.get_tex())
+        self._makeindex(build.get_idx())
+        self._bibtex(build.get_bib())
+        self._compile(build.get_tex())
+        self._copy(build.get_pdf(), build.get_log())
 
     def run(self):
         logging.info("New InTeXRation task started for %s", self._repository)
@@ -93,16 +93,12 @@ class Task:
         except Exception as e:
             logging.error(e)
         path = os.path.join(self._build_dir, '.intexration')
-        if os.path.exists(path):
-            parser = configparser.ConfigParser()
-            parser.read(path)
-            for build_name in parser.sections():
-                idx = build_name + '.idx'
-                bib = build_name + '.bib'
-                try:
-                    self._build(build_name, idx, bib)
-                except Exception as e:
-                    logging.error(e)
+        property_handler = PropertyHandler(path)
+        for build in property_handler.get_builds():
+            try:
+                self._build(build)
+            except Exception as e:
+                logging.error(e)
         else:
             logging.error("No .intexration file found for %s.", self._repository)
         self._clean()
