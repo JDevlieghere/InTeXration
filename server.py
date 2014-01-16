@@ -59,12 +59,12 @@ class InTeXrationServer:
     @staticmethod
     def _log(repo):
         path = os.path.join(os.getcwd(), 'out', repo, 'main.log')
-        loghander = LogHandler(path)
+        log_handler = LogHandler(path)
         html = '<h1>Errors</h1>'
-        for line in loghander.get_errors():
+        for line in log_handler.get_errors():
             html += line.rstrip() + '<br/>'
         html += '<h1>' + repo + '</h1>'
-        for line in loghander.get_all():
+        for line in log_handler.get_all():
             html += line.rstrip() + '<br/>'
         return html
 

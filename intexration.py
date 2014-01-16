@@ -68,8 +68,7 @@ class Task:
 
 
 class LogHandler:
-    def __init__(self, name, path):
-        self._name = name
+    def __init__(self, path):
         self._path = path
 
     def _lines(self):
