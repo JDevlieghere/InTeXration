@@ -50,7 +50,7 @@ class Task:
 
     def _compile(self, file):
         with cd(self._build_dir):
-            if subprocess.call(['pdflatex', file]) != 0:
+            if subprocess.call(['pdflatex', '-interaction=nonstopmode', file]) != 0:
                 raise RuntimeError('pdflatex compilation failed!')
 
     def _copy(self, pdf_file, log_file):
