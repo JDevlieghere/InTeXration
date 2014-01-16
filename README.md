@@ -25,21 +25,7 @@ First you will have to generate an API key, for example  a [GUID](http://www.gui
 Next you must add the hook URL to GitHub.
 
 ### Starting the Server
-Starting InTeXration is as easy as starting the server. The default hostname is *localhost* and the default port is *8000*. You can alter these depending on your setup using the parameters as described below.
-```bash
-usage: server.py [-h] [-host HOST] [-port PORT]
-
-optional arguments:
-  -h, --help  show this help message and exit
-  -host HOST  hostname
-  -port PORT  port
-  ```
-
-To run the server in the background `nohup` can be used to ignore the hangup signal.
-
-```bash
-nohup python3.3 server.py > /dev/null 2>&1 &
-```
+Due to this project being in a very early development phase, please forgive us the lack of documentation.
 
 ### Output
 
