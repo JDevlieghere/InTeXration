@@ -2,6 +2,9 @@ import configparser
 import os
 from intexration.server import Server
 
+server_key = 'SERVER'
+host_key = 'host'
+port_key = 'port'
 
 def main():
     # parser = argparse.ArgumentParser()
@@ -13,9 +16,9 @@ def main():
     if not os.path.isfile(path):
         raise RuntimeError('No configuration file found!')
     config.read(path)
-    if not 'SERVER' in config:
+    if not server_key in config:
         raise RuntimeError('No server information found in configuration file!')
-    server = Server(host=config['server']['host'], port=config['server']['port'])
+    server = Server(host=config[server_key][host_key], port=config[server_key][port_key])
     server.start()
 
 if __name__ == '__main__':
