@@ -63,7 +63,7 @@ class InTeXrationServer:
         html = '<h1>Errors</h1>'
         for line in log_handler.get_errors():
             html += line.rstrip() + '<br/>'
-        html += '<h1>' + repo + '</h1>'
+        html += '<h1>Complete Log</h1>'
         for line in log_handler.get_all():
             html += line.rstrip() + '<br/>'
         return html
