@@ -1,7 +1,6 @@
 import argparse
 from intexration.server import Server
 
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-host', help='hostname', default='localhost')
