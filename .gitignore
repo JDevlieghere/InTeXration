@@ -37,3 +37,6 @@ nosetests.xml
 
 # PyCharm from JetBrains
 .idea
+
+# Logfiles
+.log
