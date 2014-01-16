@@ -17,8 +17,8 @@ class Server:
     def _route(self):
         self._app.route('/', method="GET", callback=self._index)
         self._app.route('/hook/<api_key>', method="POST", callback=self._hook)
-        self._app.route('/out/<repo>', method="GET", callback=self._out)
-        self._app.route('/log/<repo>', method="GET", callback=self._log)
+        self._app.route('/out/<repo>/<name>', method="GET", callback=self._out)
+        self._app.route('/log/<repo>/<name>', method="GET", callback=self._log)
 
     def start(self):
         self._app.run(host=self._host, port=self._port)
@@ -56,13 +56,15 @@ class Server:
         return 'InTeXration is up and running.'
 
     @staticmethod
-    def _out(repo):
+    def _out(repo, name):
         path = os.path.join(os.getcwd(), 'out', repo)
-        return static_file('main.pdf', path)
+        file_name = name + '.pdf'
+        return static_file(file_name, path)
 
     @staticmethod
-    def _log(repo):
-        path = os.path.join(os.getcwd(), 'out', repo, 'main.log')
+    def _log(repo, name):
+        file_name = name + '.log'
+        path = os.path.join(os.getcwd(), 'out', repo, file_name)
         log_handler = LogHandler(path)
         html = '<h1>Errors</h1>'
         for line in log_handler.get_errors():

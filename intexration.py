@@ -31,7 +31,6 @@ def main():
     config.read(config_path)
     if not server_key in config:
         raise RuntimeError('No server information found in configuration file!')
-    logging.error("TEST")
     server = Server(host=config[server_key][host_key], port=config[server_key][port_key], api_keys=api_keys_path)
     server.start()
 
