@@ -55,7 +55,7 @@ class Task:
 
     def _bibtex(self, file):
         with cd(self._build_dir):
-            if subprocess.call(['bibtex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
+            if subprocess.call(['bibtex', file]) != 0:
                 logging.warning('bibtex failed!')
 
     def _compile(self, file):
@@ -78,6 +78,7 @@ class Task:
         shutil.rmtree(self._build_dir)
 
     def run(self):
+        logging.info("Task started for " + self._repository)
         try:
             self._clone()
             self._compile('main.tex')
@@ -89,6 +90,7 @@ class Task:
             logging.error(e)
         finally:
             self._clean()
+        logging.info("Task finished for " + self._repository)
 
 
 class LogHandler:
