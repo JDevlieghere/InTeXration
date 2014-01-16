@@ -60,7 +60,7 @@ class InTeXrationServer:
         path = os.path.join(os.getcwd(), 'out', repo, 'main.log')
         if not os.path.isfile(path):
             return 'No logfile found.'
-        log_file = open(path, "r")
+        log_file = open(path, "r", encoding='latin-1')
         html = '<h1>' + repo + '</h1>'
         for line in log_file.readlines():
             html += line.rstrip() + '<br/>'
