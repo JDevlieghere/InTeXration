@@ -37,8 +37,13 @@ class PropertyHandler:
             parser = configparser.ConfigParser()
             parser.read(self._path)
             for build_name in parser.sections():
-                idx = build_name + '.idx'
-                bib = build_name
+                if parser.has_option(build_name, 'idx'):
+                    idx = parser[build_name]['idx']
+                else:
+                    idx = build_name + '.idx'
+                if parser.has_option(build_name, 'bib'):
+                    bib = parser[build_name]['bib']
+                else:
+                    bib = build_name
                 builds.append(Build(build_name, idx, bib))
         return builds
-
