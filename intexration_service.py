@@ -4,7 +4,7 @@ import subprocess
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-python', help('Python 3'), default='python')
+    parser.add_argument('-python', help='Python 3', default='python')
     parser.add_argument('-host', help='Hostname', default='localhost')
     parser.add_argument('-port', help='Port', default=8000)
     args = parser.parse_args()
