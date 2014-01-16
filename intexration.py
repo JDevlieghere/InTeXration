@@ -50,12 +50,13 @@ class Task:
 
     def _makeindex(self, file):
         with cd(self._build_dir):
-            if subprocess.call(['makeindex', file]) != 0:
+            if subprocess.call(['makeindex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
                 error('makeindex failed!')
 
     def _compile(self, file):
         with cd(self._build_dir):
-            if subprocess.call(['pdflatex', '-interaction=nonstopmode', file]) != 0:
+            if subprocess.call(['pdflatex', '-interaction=nonstopmode', file], stdout=subprocess.DEVNULL,
+                               stderr=subprocess.DEVNULL) != 0:
                 error('pdflatex compilation failed!')
 
     def _copy(self, pdf_file, log_file):
