@@ -14,6 +14,7 @@ class InTeXrationServer:
         self._app.route('/', method="GET", callback=self._index)
         self._app.route('/hook/<api_key>', method="POST", callback=self._hook)
         self._app.route('/out/<repo>', method="GET", callback=self._out)
+        self._app.route('/log/<repo>', method="GET", callback=self._log)
 
     def start(self):
         self._app.run(host=self._host, port=self._port)
@@ -45,7 +46,6 @@ class InTeXrationServer:
         except ValueError:
             abort(400, 'Bad request: Could not decode request body.')
 
-
     @staticmethod
     def _index():
         return 'InTeXration is up and running.'
@@ -54,6 +54,11 @@ class InTeXrationServer:
     def _out(repo):
         path = os.path.join(os.getcwd(), 'out', repo)
         return static_file('main.pdf', path)
+
+    @staticmethod
+    def _log(repo):
+        path = os.path.join(os.getcwd(), 'out', repo)
+        return static_file('main.log', path)
 
 
 if __name__ == '__main__':
