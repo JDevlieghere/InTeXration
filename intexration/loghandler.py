@@ -2,8 +2,6 @@
 import logging
 import os
 
-logger = logging.getLogger('intexration')
-
 
 class LogHandler:
     def __init__(self, path):

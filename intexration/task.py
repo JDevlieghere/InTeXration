@@ -5,8 +5,6 @@ import errno
 import shutil
 import subprocess
 
-# Logger
-logger = logging.getLogger('intexration')
 
 # Context Swtich
 @contextlib.contextmanager
