@@ -45,15 +45,23 @@ class Task:
             raise RuntimeError('git clone failed!')
 
     def _makeindex(self, file):
-        with cd(self._build_dir):
+        with cd(self._output_dir):
             subprocess.call(['makeindex', file])
 
     def _compile(self, file):
-        output_path = self._output_dir
         with cd(self._build_dir):
-            if subprocess.call(['pdflatex', '-interaction=nonstopmode', '-aux-directory=' + output_path,
-                                '-output-directory=' + output_path, file]) != 0:
+            if subprocess.call(['pdflatex', file]) != 0:
                 raise RuntimeError('pdflatex compilation failed!')
+
+    def _copy(self, pdf_file, log_file):
+        # PDF File
+        pdf_source_path = os.path.join(self._build_dir, pdf_file)
+        pdf_dest_path = os.path.join(self._output_dir, pdf_file)
+        shutil.copyfile(pdf_source_path, pdf_dest_path)
+        # Log File
+        log_source_path = os.path.join(self._build_dir, log_file)
+        log_dest_path = os.path.join(self._output_dir, log_file)
+        shutil.copyfile(log_source_path, log_dest_path)
 
     def _clean(self):
         shutil.rmtree(self._build_dir)
@@ -63,10 +71,10 @@ class Task:
             print("ERROR: ", *objs, end='\n', file=sys.stderr)
         try:
             self._clone()
-            self._makeindex('main.tex')
             self._compile('main.tex')
-            # Run twice for cross-references
+            self._makeindex('main.idx')
             self._compile('main.tex')
+            self._copy('main.pdf','main.log')
         except Exception as e:
             error(e)
         finally:
