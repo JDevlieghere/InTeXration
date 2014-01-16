@@ -46,8 +46,7 @@ class Task:
 
     def _makeindex(self, file):
         with cd(self._build_dir):
-            if subprocess.call(['makeindex', file]) != 0:
-                raise RuntimeError('makeindex failed!')
+            subprocess.call(['makeindex', file])
 
     def _compile(self, file):
         output_path = self._output_dir
