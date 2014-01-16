@@ -63,7 +63,7 @@ class InTeXrationServer:
         log_file = open(path, "r")
         html = '<h1>' + repo + '</h1>'
         for line in log_file.readlines():
-            html += line + '<br/>';
+            html += line.rstrip() + '<br/>'
         return html
 
 
