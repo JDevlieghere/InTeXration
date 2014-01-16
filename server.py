@@ -57,8 +57,14 @@ class InTeXrationServer:
 
     @staticmethod
     def _log(repo):
-        path = os.path.join(os.getcwd(), 'out', repo)
-        return static_file('main.log', path)
+        path = os.path.join(os.getcwd(), 'out', repo, 'main.log')
+        if not os.path.isfile(path):
+            return 'No logfile found.'
+        log_file = open(path, "r")
+        html = '<h1>' + repo + '</h1>'
+        for line in log_file.readlines():
+            html += line + '<br/>';
+        return html
 
 
 if __name__ == '__main__':
