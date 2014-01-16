@@ -40,7 +40,7 @@ class Server:
             return False
 
         if not validate(api_key):
-            logger.warning("Request denied: API key invalid.")
+            logger.warning("Request Denied: API key invalid.")
             abort(401, 'Unauthorized: API key invalid.')
         payload = request.forms.get('payload')
         try:
@@ -52,7 +52,7 @@ class Server:
             task.run()
             return 'InTeXration task started.'
         except ValueError:
-            logger.warning("Request denied: Could not decode request body.")
+            logger.warning("Request Denied: Could not decode request body.")
             abort(400, 'Bad request: Could not decode request body.')
 
     @staticmethod
