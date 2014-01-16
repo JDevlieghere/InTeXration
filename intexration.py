@@ -82,7 +82,8 @@ class LogHandler:
         errors = []
         for line in self._lines():
             if line.startswith(error_prefix):
-                errors.append(line.replace(error_prefix, ""))
+                while line != "":
+                    errors.append(line.replace(error_prefix, ""))
         return errors
 
     def get_wanrings(self):
