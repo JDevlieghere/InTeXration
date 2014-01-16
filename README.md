@@ -23,3 +23,8 @@ Usage
 First you will have to generate an API key, for example  a [GUID](http://www.guidgenerator.com/), and add it to the list of authorized API keys (api_keys.txt). Make sure to put each key on a different line.
 
 Next you must add the hook URL to GitHub.
+
+### Output
+
+- PDF: http://host:port/out/[name of repository]
+- Log: http://host:port/log/[name of repository]
