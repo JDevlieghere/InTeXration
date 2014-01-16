@@ -13,7 +13,7 @@ def main():
     if not os.path.isfile(path):
         raise RuntimeError('No configuration file found!')
     config.read(path)
-    if not 'server' in config:
+    if not 'SERVER' in config:
         raise RuntimeError('No server information found in configuration file!')
     server = Server(host=config['server']['host'], port=config['server']['port'])
     server.start()
