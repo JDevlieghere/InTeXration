@@ -1,11 +1,16 @@
 import contextlib
+import logging
 import os
 import errno
 import shutil
 import subprocess
 import sys
 
+# Logger
+logging.basicConfig()
 
+
+# Context Swtich
 @contextlib.contextmanager
 def cd(dirname):
     cur_dir = os.getcwd()
@@ -16,12 +21,7 @@ def cd(dirname):
         os.chdir(cur_dir)
 
 
-def error(*objs):
-    print("ERROR: ", *objs, end='\n', file=sys.stderr)
-
-
 class Task:
-
     def __init__(self, url, repository, commit):
         self._url = url
         self._repository = self._convert(repository)
@@ -51,13 +51,14 @@ class Task:
     def _makeindex(self, file):
         with cd(self._build_dir):
             if subprocess.call(['makeindex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
-                error('makeindex failed!')
+                logging.error('makeindex failed!')
+
 
     def _compile(self, file):
         with cd(self._build_dir):
             if subprocess.call(['pdflatex', '-interaction=nonstopmode', file], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                error('pdflatex compilation failed!')
+                logging.error('pdflatex compilation failed!')
 
     def _copy(self, pdf_file, log_file):
         # PDF File
@@ -78,9 +79,9 @@ class Task:
             self._compile('main.tex')
             self._makeindex('main.idx')
             self._compile('main.tex')
-            self._copy('main.pdf','main.log')
+            self._copy('main.pdf', 'main.log')
         except Exception as e:
-            error(e)
+            logging.error(e)
         finally:
             self._clean()
 
