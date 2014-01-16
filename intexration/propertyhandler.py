@@ -26,6 +26,7 @@ class Build:
     def get_log(self):
         return self._name + 'log'
 
+
 class PropertyHandler:
     def __init__(self, path):
         self._path = path

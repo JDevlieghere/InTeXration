@@ -94,6 +94,7 @@ class Task:
             logging.error(e)
         path = os.path.join(self._build_dir, '.intexration')
         property_handler = PropertyHandler(path)
+        print(property_handler.get_builds())
         for build in property_handler.get_builds():
             try:
                 self._build(build)
