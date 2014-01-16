@@ -11,9 +11,10 @@ logger = logging.getLogger('intexration')
 
 
 class Server:
-    def __init__(self, host, port):
+    def __init__(self, host, port, api_keys):
         self._host = host
         self._port = port
+        self._api_keys = api_keys
         self._app = Bottle()
         self._route()
 
@@ -26,10 +27,9 @@ class Server:
     def start(self):
         self._app.run(host=self._host, port=self._port)
 
-    @staticmethod
-    def _hook(api_key):
+    def _hook(self, api_key):
         def validate(key_to_check):
-            path = "api_keys.txt"
+            path = self._api_keys
             if not os.path.isfile(path):
                 return False
             key_file = open(path, "r")
