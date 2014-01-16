@@ -49,7 +49,7 @@ class Task:
             raise RuntimeError('git clone failed!')
 
     def _makeindex(self, file):
-        with cd(self._output_dir):
+        with cd(self._build_dir):
             if subprocess.call(['makeindex', file]) != 0:
                 error('makeindex failed!')
 
