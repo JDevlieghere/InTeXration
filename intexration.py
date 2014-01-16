@@ -6,6 +6,16 @@ import subprocess
 import sys
 
 
+@contextlib.contextmanager
+def cd(dirname):
+    cur_dir = os.getcwd()
+    try:
+        os.chdir(dirname)
+        yield
+    finally:
+        os.chdir(cur_dir)
+
+
 class Task:
 
     def __init__(self, url, repository, commit):
@@ -34,16 +44,12 @@ class Task:
         if subprocess.call(['git', 'clone', self._url, self._build_dir]) != 0:
             raise RuntimeError('git clone failed!')
 
-    def _compile(self, file):
-        @contextlib.contextmanager
-        def cd(dirname):
-            cur_dir = os.getcwd()
-            try:
-                os.chdir(dirname)
-                yield
-            finally:
-                os.chdir(cur_dir)
+    def _makeindex(self, file):
+        with cd(self._build_dir):
+            if subprocess.call(['makeindex', file]) != 0:
+                raise RuntimeError('makeindex failed!')
 
+    def _compile(self, file):
         output_path = self._output_dir
         with cd(self._build_dir):
             if subprocess.call(['pdflatex', '-interaction=nonstopmode', '-aux-directory=' + output_path,
@@ -58,6 +64,7 @@ class Task:
             print("ERROR: ", *objs, end='\n', file=sys.stderr)
         try:
             self._clone()
+            self._makeindex('main.tex')
             self._compile('main.tex')
             # Run twice for cross-references
             self._compile('main.tex')
