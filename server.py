@@ -1,7 +1,8 @@
 from bottle import Bottle, request, abort, static_file
-import argparse,os, json
-from task import InTeXrationTask
-
+from intexration import Task, LogHandler
+import argparse
+import os
+import json
 
 class InTeXrationServer:
     def __init__(self, host, port):
@@ -40,7 +41,7 @@ class InTeXrationServer:
             url = data['repository']['url']
             name = data['repository']['name']
             commit = data['after']
-            task = InTeXrationTask(url, name, commit)
+            task = Task(url, name, commit)
             task.run()
             return 'InTeXration task started.'
         except ValueError:
@@ -58,11 +59,12 @@ class InTeXrationServer:
     @staticmethod
     def _log(repo):
         path = os.path.join(os.getcwd(), 'out', repo, 'main.log')
-        if not os.path.isfile(path):
-            return 'No logfile found.'
-        log_file = open(path, "r", encoding='latin-1')
-        html = '<h1>' + repo + '</h1>'
-        for line in log_file.readlines():
+        loghander = LogHandler(path)
+        html = '<h1>Errors</h1>'
+        for line in loghander.get_errors():
+            html += line.rstrip() + '<br/>'
+        html += '<h1>' + repo + '</h1>'
+        for line in loghander.get_all():
             html += line.rstrip() + '<br/>'
         return html
 
