@@ -45,23 +45,23 @@ class Task:
     def _clone(self):
         if subprocess.call(['git', 'clone', self._url, self._build_dir]) != 0:
             raise RuntimeError('git clone failed!')
-        logger.debug("Cloned %s to &s", self._repository, self._build_dir)
+        logging.debug("Cloned %s to &s", self._repository, self._build_dir)
 
     def _makeindex(self, file):
         with cd(self._build_dir):
             if subprocess.call(['makeindex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
-                logger.warning('Makeindex failed.')
+                logging.warning('Makeindex failed.')
 
     def _bibtex(self, file):
         with cd(self._build_dir):
             if subprocess.call(['bibtex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
-                logger.warning('Bibtex failed.')
+                logging.warning('Bibtex failed.')
 
     def _compile(self, file):
         with cd(self._build_dir):
             if subprocess.call(['pdflatex', '-interaction=nonstopmode', file], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logger.error('Compilation (pdflatex) finished with errors.')
+                logging.error('Compilation (pdflatex) finished with errors.')
 
     def _copy(self, pdf_file, log_file):
         # PDF File
@@ -75,10 +75,10 @@ class Task:
 
     def _clean(self):
         shutil.rmtree(self._build_dir)
-        logger.debug("Directory %s cleaned.", self._build_dir)
+        logging.debug("Directory %s cleaned.", self._build_dir)
 
     def run(self):
-        logger.info("New InTeXRation task started for %s", self._repository)
+        logging.info("New InTeXRation task started for %s", self._repository)
         try:
             self._clone()
             self._compile('main.tex')
@@ -87,7 +87,7 @@ class Task:
             self._compile('main.tex')
             self._copy('main.pdf', 'main.log')
         except Exception as e:
-            logger.error(e)
+            logging.error(e)
         finally:
             self._clean()
-        logger.info("Task finished for " + self._repository)
+        logging.info("Task finished for " + self._repository)

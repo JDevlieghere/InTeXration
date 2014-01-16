@@ -27,10 +27,11 @@ def main():
         raise RuntimeError('No configuration file found!')
     if not os.path.isfile(api_keys_path):
         open(api_keys_path, 'w+').close()
-        logger.warning("No API key file found. Empty file %s created in the configuration directory.", api_keys_file)
+        logging.warning("No API key file found. Empty file %s created in the configuration directory.", api_keys_file)
     config.read(config_path)
     if not server_key in config:
         raise RuntimeError('No server information found in configuration file!')
+    logging.error("TEST")
     server = Server(host=config[server_key][host_key], port=config[server_key][port_key], api_keys=api_keys_path)
     server.start()
 

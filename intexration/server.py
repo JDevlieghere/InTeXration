@@ -6,10 +6,6 @@ from intexration.loghandler import LogHandler
 from intexration.task import Task
 
 
-# Logger
-logger = logging.getLogger('intexration')
-
-
 class Server:
     def __init__(self, host, port, api_keys):
         self._host = host
@@ -40,7 +36,7 @@ class Server:
             return False
 
         if not validate(api_key):
-            logger.warning("Request Denied: API key invalid.")
+            logging.warning("Request Denied: API key invalid.")
             abort(401, 'Unauthorized: API key invalid.')
         payload = request.forms.get('payload')
         try:
@@ -52,7 +48,7 @@ class Server:
             task.run()
             return 'InTeXration task started.'
         except ValueError:
-            logger.warning("Request Denied: Could not decode request body.")
+            logging.warning("Request Denied: Could not decode request body.")
             abort(400, 'Bad request: Could not decode request body.')
 
     @staticmethod
