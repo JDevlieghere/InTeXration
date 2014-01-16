@@ -1,3 +1,4 @@
+import configparser
 import contextlib
 import logging
 import os
@@ -75,17 +76,34 @@ class Task:
         shutil.rmtree(self._build_dir)
         logging.debug("Directory %s cleaned.", self._build_dir)
 
+    def _build(self, name, idx, bib):
+        tex = name + '.tex'
+        pdf = name + '.pdf'
+        log = name + '.log'
+        self._compile(tex)
+        self._makeindex(idx)
+        self._bibtex(bib)
+        self._compile(tex)
+        self._copy(pdf, log)
+
     def run(self):
         logging.info("New InTeXRation task started for %s", self._repository)
         try:
             self._clone()
-            self._compile('main.tex')
-            self._makeindex('main.idx')
-            self._bibtex('main')
-            self._compile('main.tex')
-            self._copy('main.pdf', 'main.log')
         except Exception as e:
             logging.error(e)
-        finally:
-            self._clean()
-        logging.info("Task finished for " + self._repository)
+        path = os.path.join(self._build_dir, '.intexration')
+        if os.path.exists(path):
+            parser = configparser.ConfigParser()
+            parser.read(path)
+            for build_name in parser.sections():
+                idx = build_name + '.idx'
+                bib = build_name + '.bib'
+                try:
+                    self._build(build_name, idx, bib)
+                except Exception as e:
+                    logging.error(e)
+        else:
+            logging.error("No .intexration file found for %s.", self._repository)
+        self._clean()
+        logging.info("Task finished for %s.", self._repository)
