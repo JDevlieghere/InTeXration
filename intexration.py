@@ -53,6 +53,10 @@ class Task:
             if subprocess.call(['makeindex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
                 logging.warning('makeindex failed!')
 
+    def _bibtex(self, file):
+        with cd(self._build_dir):
+            if subprocess.call(['bibtex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
+                logging.warning('bibtex failed!')
 
     def _compile(self, file):
         with cd(self._build_dir):
@@ -78,6 +82,7 @@ class Task:
             self._clone()
             self._compile('main.tex')
             self._makeindex('main.idx')
+            self._bibtex('main.bib')
             self._compile('main.tex')
             self._copy('main.pdf', 'main.log')
         except Exception as e:
