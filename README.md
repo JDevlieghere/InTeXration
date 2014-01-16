@@ -32,7 +32,8 @@ usage: server.py [-h] [-host HOST] [-port PORT]
 optional arguments:
   -h, --help  show this help message and exit
   -host HOST  hostname
-  -port PORT  port```
+  -port PORT  port
+  ```
 
 To run the server in the background `nohup` can be used to ignore the hangup signal.
 
