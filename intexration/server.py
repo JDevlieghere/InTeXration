@@ -1,10 +1,16 @@
+import logging
 from bottle import Bottle, request, abort, static_file
-from intexration import Task, LogHandler
-import argparse
 import os
 import json
+from intexration.loghandler import LogHandler
+from intexration.task import Task
 
-class InTeXrationServer:
+
+# Logger
+logger = logging.getLogger('intexration')
+
+
+class Server:
     def __init__(self, host, port):
         self._host = host
         self._port = port
@@ -34,6 +40,7 @@ class InTeXrationServer:
             return False
 
         if not validate(api_key):
+            logger.warning("Request denied: API key invalid.")
             abort(401, 'Unauthorized: API key invalid.')
         payload = request.forms.get('payload')
         try:
@@ -45,6 +52,7 @@ class InTeXrationServer:
             task.run()
             return 'InTeXration task started.'
         except ValueError:
+            logger.warning("Request denied: Could not decode request body.")
             abort(400, 'Bad request: Could not decode request body.')
 
     @staticmethod
@@ -67,12 +75,3 @@ class InTeXrationServer:
         for line in log_handler.get_all():
             html += line + '<br/>'
         return html
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-host', help='hostname', default='localhost')
-    parser.add_argument('-port', help='port', default=8000)
-    args = parser.parse_args()
-    server = InTeXrationServer(host=args.host, port=args.port)
-    server.start()
