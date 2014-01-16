@@ -18,13 +18,13 @@ class Build:
         return self._bib
 
     def get_tex(self):
-        return self._name + 'tex'
+        return self._name + '.tex'
 
     def get_pdf(self):
-        return self._name + 'pdf'
+        return self._name + '.pdf'
 
     def get_log(self):
-        return self._name + 'log'
+        return self._name + '.log'
 
 
 class PropertyHandler:
