@@ -2,6 +2,9 @@ import configparser
 import os
 from intexration.server import Server
 
+# Logger
+logger = logging.getLogger('intexration')
+
 # Application Constants
 api_keys_file = 'api_keys.txt'
 config_folder = 'config'
@@ -27,7 +30,10 @@ def main():
     if not server_key in config:
         raise RuntimeError('No server information found in configuration file!')
     server = Server(host=config[server_key][host_key], port=config[server_key][port_key], api_keys=api_keys_path)
-    server.start()
+    try:
+        server.start()
+    except Exception as e:
+        logger.error(e)
 
 if __name__ == '__main__':
     main()
