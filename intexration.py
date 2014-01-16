@@ -74,6 +74,9 @@ class Task:
             self._compile('main.tex')
             self._makeindex('main.idx')
             self._compile('main.tex')
+        except Exception as e:
+            error(e)
+        try:
             self._copy('main.pdf','main.log')
         except Exception as e:
             error(e)
