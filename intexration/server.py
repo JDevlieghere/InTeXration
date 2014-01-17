@@ -56,12 +56,6 @@ class Server:
         return template('templates/index')
 
     @staticmethod
-    def _css(name):
-        file_name = name + '.css'
-        path = os.path.join(os.getcwd(), 'templates')
-        return static_file(file_name, path)
-
-    @staticmethod
     def _out(repo, name):
         path = os.path.join(os.getcwd(), 'out', repo)
         file_name = name + '.pdf'

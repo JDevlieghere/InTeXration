@@ -1,5 +1,6 @@
 import configparser
 import os
+from intexration import settings
 
 
 class Build:
@@ -61,26 +62,24 @@ class LogHelper:
         return log_file.readlines()
 
     def get_warnings(self):
-        warning_prefix = 'Warning'
         warnings = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == '\n':
+            if multi_line_error and line == settings.LOG_NEW_LINE_CHAR:
                 multi_line_error = False
-            if warning_prefix in line or multi_line_error:
+            if settings.LOG_WARNING_STRING in line or multi_line_error:
                 warnings.append(line)
                 multi_line_error = True
         return warnings
 
     def get_errors(self):
-        error_prefix = "! "
         errors = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == '\n':
+            if multi_line_error and line == settings.LOG_NEW_LINE_CHAR:
                 multi_line_error = False
-            if line.startswith(error_prefix) or multi_line_error:
-                errors.append(line.replace(error_prefix, ""))
+            if line.startswith(settings.LOG_ERROR_STRING) or multi_line_error:
+                errors.append(line.replace(settings.LOG_ERROR_STRING, ""))
                 multi_line_error = True
         return errors
 
