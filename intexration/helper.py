@@ -1,4 +1,5 @@
 import configparser
+import logging
 import os
 from intexration import settings
 
@@ -56,6 +57,8 @@ class BuildHelper:
                 else:
                     bib = build_name
                 builds.append(Build(build_name, dir, idx, bib))
+        else:
+            logging.error("No .intexration file found!")
         return builds
 
 

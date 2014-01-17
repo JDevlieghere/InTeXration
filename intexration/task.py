@@ -129,7 +129,5 @@ class Task:
                 self._build(build)
             except Exception as e:
                 logging.error(e)
-        else:
-            logging.error("No .intexration file found for %s.", self._repository)
         self._clean()
         logging.info("Task finished for %s.", self._repository)
