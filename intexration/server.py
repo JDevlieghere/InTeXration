@@ -1,5 +1,5 @@
 import logging
-from bottle import Bottle, request, abort, static_file
+from bottle import Bottle, request, abort, static_file, template
 import os
 import json
 from intexration.loghandler import LogHandler
@@ -66,10 +66,4 @@ class Server:
         file_name = name + '.log'
         path = os.path.join(os.getcwd(), 'out', repo, file_name)
         log_handler = LogHandler(path)
-        html = '<h1>Errors</h1>'
-        for line in log_handler.get_errors():
-            html += line.rstrip() + '<br/>'
-        html += '<h1>Complete Log</h1>'
-        for line in log_handler.get_all():
-            html += line + '<br/>'
-        return html
+        return template('templates/hello_template', repo=repo, name=name, errors=log_handler.get_errors(), warnings=[], all=log_handler.get_all())
