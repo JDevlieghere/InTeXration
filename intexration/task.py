@@ -69,7 +69,7 @@ class Task:
                                stderr=subprocess.DEVNULL) != 0:
                 logging.error("%s:Compilation (pdflatex) finished with errors.", self._repository)
 
-    def _copy(self, dir, tex_file, idx_file, bib_file):
+    def _move(self, dir, tex_file, idx_file, bib_file):
         """Copy the source files to the root of the build directory."""
         # TeX file
         tex_source_path = os.path.join(self._build_dir, dir, tex_file)
@@ -102,7 +102,7 @@ class Task:
 
     def _build(self, build):
         """Build all."""
-        self._copy(build.get_dir(), build.get_tex(), build.get_idx(), build.get_bib())
+        self._move(build.get_dir(), build.get_tex(), build.get_idx(), build.get_bib())
         self._compile(build.get_tex())
         self._makeindex(build.get_idx())
         self._bibtex(build.get_bib())
