@@ -8,7 +8,7 @@ InTeXration requires:
 - pdflatex (part of TexX Live)
 - pip
 
-Use pip to install the Python package requirements.
+Use pip to install the required python packages:
 
 ```bash
 pip install -r requirements.txt

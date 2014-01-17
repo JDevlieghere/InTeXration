@@ -28,6 +28,7 @@ class Task:
         self._output_dir = self._create_dir('out')
 
     def _create_dir(self, prefix, suffix=''):
+        """Safely create a directory."""
         path = os.path.join(os.getcwd(), prefix, self._repository, suffix)
         try:
             os.makedirs(path)
@@ -38,32 +39,53 @@ class Task:
 
     @staticmethod
     def _convert(url):
+        """Add .git extenions to repository URL."""
         if url.startswith('https://'):
             return url + '.git'
         return url
 
     def _clone(self):
+        """Clone repository to build dir."""
         if subprocess.call(['git', 'clone', self._url, self._build_dir], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
             raise RuntimeError('git clone failed!')
         logging.debug("Cloned %s to &s", self._repository, self._build_dir)
 
     def _makeindex(self, file):
+        """Make index."""
         with cd(self._build_dir):
             if subprocess.call(['makeindex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
                 logging.warning("%s:Makeindex failed.", self._repository)
 
     def _bibtex(self, file):
+        """Compile bibtex."""
         with cd(self._build_dir):
             if subprocess.call(['bibtex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
                 logging.warning("%s:Bibtex failed.", self._repository)
 
     def _compile(self, file):
+        """Compile with pdflatex."""
         with cd(self._build_dir):
             if subprocess.call(['pdflatex', '-interaction=nonstopmode', file], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
                 logging.error("%s:Compilation (pdflatex) finished with errors.", self._repository)
 
+    def _copy(self, dir, tex_file, idx_file, bib_file):
+        """Copy the source files to the root of the build directory."""
+        # TeX file
+        tex_source_path = os.path.join(self._build_dir, dir, tex_file)
+        tex_dest_path = os.path.join(self._build_dir, tex_file)
+        shutil.copyfile(tex_source_path, tex_dest_path)
+        # idx File
+        idx_source_path = os.path.join(self._build_dir, dir, idx_file)
+        idx_dest_path = os.path.join(self._build_dir, idx_file)
+        shutil.copyfile(idx_source_path, idx_dest_path)
+        # Bibtex File
+        bib_source_path = os.path.join(self._build_dir, dir, bib_file)
+        bib_dest_path = os.path.join(self._build_dir, bib_file)
+        shutil.copyfile(bib_source_path, bib_dest_path)
+
     def _copy(self, pdf_file, log_file):
+        """Copy the PDF and Logfile to the output directory."""
         # PDF File
         pdf_source_path = os.path.join(self._build_dir, pdf_file)
         pdf_dest_path = os.path.join(self._output_dir, pdf_file)
@@ -74,10 +96,13 @@ class Task:
         shutil.copyfile(log_source_path, log_dest_path)
 
     def _clean(self):
+        """Clean the build directory."""
         shutil.rmtree(self._build_dir)
         logging.debug("Directory %s cleaned.", self._build_dir)
 
     def _build(self, build):
+        """Build all."""
+        self._copy(build.get_dir(), build.get_tex(), build.get_idx(), build.get_bib())
         self._compile(build.get_tex())
         self._makeindex(build.get_idx())
         self._bibtex(build.get_bib())
@@ -85,6 +110,7 @@ class Task:
         self._copy(build.get_pdf(), build.get_log())
 
     def run(self):
+        """Execute this task"""
         logging.info("New InTeXRation task started for %s", self._repository)
         try:
             self._clone()

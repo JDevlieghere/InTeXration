@@ -53,14 +53,14 @@ look like this.
 
 ```ini
 [file]
+dir=report
 idx=index
 bib=bibfile
 ```
 
 The name of the section indicates the name of the `.tex`-file you want to
-compile. We'll call this the *document name* from now on. The `idx` and `bib` key are both optional. If absent, InTeXration
-assumes they have the same name as their parent file. Please note that no
-extensions are used.
+compile. We'll call this the *document name* from now on. The `dir`, `idx` and
+`bib` key are both optional. If absent, InTeXration assumes that the document is located in the root of your repository and that the index an bibtex file have the same name as the document. Please note that no extensions are used.
 
 For each file that needs to be compiled, add an entry to this file.
 
@@ -70,9 +70,11 @@ Here's an example `.intexration` file:
 [main]
 
 [book]
+dir=alternative
 bib=main
 
 [print]
+dir=alternative
 ```
 
 ## URLs
