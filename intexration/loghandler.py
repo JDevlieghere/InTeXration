@@ -16,9 +16,13 @@ class LogHandler:
     def get_errors(self):
         error_prefix = "! "
         errors = []
+        multi_line_error = False
         for line in self._lines():
-            if line.startswith(error_prefix):
+            if multi_line_error and line == '\n':
+                multi_line_error = False
+            if line.startswith(error_prefix) or multi_line_error:
                 errors.append(line.replace(error_prefix, ""))
+                multi_line_error = True
         return errors
 
     def get_all(self):
