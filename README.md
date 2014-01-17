@@ -1,6 +1,3 @@
-InTeXration
-===========
-
 ![InTeXration](http://cdn.jonasdevlieghere.com/intexration.png)
 
 Features
