@@ -38,4 +38,4 @@ class LogHandler:
         return errors
 
     def get_all(self):
-        return self._lines()
+        return self._lines
