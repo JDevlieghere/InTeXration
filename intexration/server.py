@@ -53,7 +53,7 @@ class Server:
 
     @staticmethod
     def _index():
-        return 'InTeXration is up and running.'
+        return template('templates/index')
 
     @staticmethod
     def _out(repo, name):
