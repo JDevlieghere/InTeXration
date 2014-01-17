@@ -2,7 +2,7 @@ import logging
 from bottle import Bottle, request, abort, static_file, template
 import os
 import json
-from intexration.loghandler import LogHandler
+from intexration.helper import LogHelper
 from intexration.task import Task
 
 
@@ -65,6 +65,6 @@ class Server:
     def _log(repo, name):
         file_name = name + '.log'
         path = os.path.join(os.getcwd(), 'out', repo, file_name)
-        log_handler = LogHandler(path)
+        log_handler = LogHelper(path)
         return template('templates/log', repo=repo, name=name, errors=log_handler.get_errors(),
                         warnings=log_handler.get_warnings(), all=log_handler.get_all())

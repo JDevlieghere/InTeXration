@@ -1,4 +1,3 @@
-import configparser
 import contextlib
 import logging
 import os
@@ -6,9 +5,8 @@ import errno
 import shutil
 import subprocess
 
-
 # Context Swtich
-from intexration.propertyhandler import PropertyHandler
+from intexration.helper import BuildHelper
 
 
 @contextlib.contextmanager
@@ -93,7 +91,7 @@ class Task:
         except Exception as e:
             logging.error(e)
         path = os.path.join(self._build_dir, '.intexration')
-        property_handler = PropertyHandler(path)
+        property_handler = BuildHelper(path)
         for build in property_handler.get_builds():
             try:
                 self._build(build)
