@@ -40,3 +40,6 @@ nosetests.xml
 
 # Logfiles
 .log
+
+# Markdown Output
+*.html
