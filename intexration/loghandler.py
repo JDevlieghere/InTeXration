@@ -20,7 +20,7 @@ class LogHandler:
             if multi_line_error and line == '\n':
                 multi_line_error = False
             if warning_prefix in line or multi_line_error:
-                errors.append(line.replace(error_prefix, ""))
+                errors.append(line)
                 multi_line_error = True
         return errors
 
