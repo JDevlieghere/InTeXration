@@ -21,7 +21,7 @@ class Server:
         self._app.route('/log/<repo>/<name>', method=["GET", "GET"], callback=self._log)
 
     def start(self):
-        self._app.run(host=self._host, port=self._port, server='paste')
+        self._app.run(host=self._host, port=self._port)
 
     def _hook(self, api_key):
         def validate(key_to_check):
