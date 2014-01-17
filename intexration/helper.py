@@ -13,7 +13,7 @@ class Build:
         return self._name
 
     def get_idx(self):
-        return self._idx
+        return self._idx + '.idx'
 
     def get_bib(self):
         return self._bib
@@ -41,7 +41,7 @@ class BuildHelper:
                 if parser.has_option(build_name, 'idx'):
                     idx = parser[build_name]['idx']
                 else:
-                    idx = build_name + '.idx'
+                    idx = build_name
                 if parser.has_option(build_name, 'bib'):
                     bib = parser[build_name]['bib']
                 else:
