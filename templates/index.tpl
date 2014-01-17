@@ -7,7 +7,7 @@
 	<title>InTeXration</title>
 	<meta name="description" content="LaTeX Log">
 	<meta name="author" content="InTeXration">
-	<link rel="stylesheet" href="./css/style">
+	<link rel="stylesheet" href="{{base_url}}/css/style">
 </head>
 
 <body>

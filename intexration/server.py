@@ -10,6 +10,7 @@ class Server:
     def __init__(self, host, port, api_keys):
         self._host = host
         self._port = port
+        self._base_url = 'http://' + host + ':' + port
         self._api_keys = api_keys
         self._app = Bottle()
         self._route()
@@ -52,9 +53,8 @@ class Server:
             logging.warning("Request Denied: Could not decode request body.")
             abort(400, 'Bad request: Could not decode request body.')
 
-    @staticmethod
-    def _index():
-        return template('templates/index')
+    def _index(self):
+        return template('templates/index', base_url=self._baseurl)
 
     @staticmethod
     def _css(name):
@@ -68,10 +68,9 @@ class Server:
         file_name = name + '.pdf'
         return static_file(file_name, path)
 
-    @staticmethod
-    def _log(repo, name):
+    def _log(self, repo, name):
         file_name = name + '.log'
         path = os.path.join(os.getcwd(), 'out', repo, file_name)
         log_handler = LogHelper(path)
         return template('templates/log', repo=repo, name=name, errors=log_handler.get_errors(),
-                        warnings=log_handler.get_warnings(), all=log_handler.get_all())
+                        warnings=log_handler.get_warnings(), all=log_handler.get_all(), base_url=self._baseurl)
