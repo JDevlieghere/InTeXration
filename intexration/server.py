@@ -66,4 +66,5 @@ class Server:
         file_name = name + '.log'
         path = os.path.join(os.getcwd(), 'out', repo, file_name)
         log_handler = LogHandler(path)
-        return template('templates/log', repo=repo, name=name, errors=log_handler.get_errors(), warnings=[], all=log_handler.get_all())
+        return template('templates/log', repo=repo, name=name, errors=log_handler.get_errors(),
+                        warnings=log_handler.get_warnings(), all=log_handler.get_all())
