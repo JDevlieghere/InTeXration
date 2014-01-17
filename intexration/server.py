@@ -19,6 +19,7 @@ class Server:
         self._app.route('/hook/<api_key>', method="POST", callback=self._hook)
         self._app.route('/out/<repo>/<name>', method=["GET", "GET"], callback=self._out)
         self._app.route('/log/<repo>/<name>', method=["GET", "GET"], callback=self._log)
+        self._app.route('/css/<name>', method="GET", callback=self._css)
 
     def start(self):
         self._app.run(host=self._host, port=self._port)
@@ -54,6 +55,12 @@ class Server:
     @staticmethod
     def _index():
         return template('templates/index')
+
+    @staticmethod
+    def _css(name):
+        file_name = name + '.css'
+        path = os.path.join(os.getcwd(), 'templates')
+        return static_file(file_name, path)
 
     @staticmethod
     def _out(repo, name):

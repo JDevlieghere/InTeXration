@@ -7,7 +7,7 @@
 	<title>{{repo}} - {{name}}</title>
 	<meta name="description" content="LaTeX Log">
 	<meta name="author" content="InTeXration">
-	<link rel="stylesheet" href="templates/styles.css?v=1.0">
+	<link rel="stylesheet" href="./css/style">
 </head>
 
 <body>
