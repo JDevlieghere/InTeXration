@@ -10,7 +10,6 @@ class Server:
     def __init__(self, host, port, api_keys):
         self._host = host
         self._port = port
-        self._base_url = 'http://' + host + ':' + port
         self._api_keys = api_keys
         self._app = Bottle()
         self._route()
@@ -20,7 +19,6 @@ class Server:
         self._app.route('/hook/<api_key>', method="POST", callback=self._hook)
         self._app.route('/out/<repo>/<name>', method=["GET", "GET"], callback=self._out)
         self._app.route('/log/<repo>/<name>', method=["GET", "GET"], callback=self._log)
-        self._app.route('/css/<name>', method="GET", callback=self._css)
 
     def start(self):
         self._app.run(host=self._host, port=self._port)
@@ -53,8 +51,9 @@ class Server:
             logging.warning("Request Denied: Could not decode request body.")
             abort(400, 'Bad request: Could not decode request body.')
 
-    def _index(self):
-        return template('templates/index', base_url=self._baseurl)
+    @staticmethod
+    def _index():
+        return template('templates/index')
 
     @staticmethod
     def _css(name):
@@ -68,9 +67,10 @@ class Server:
         file_name = name + '.pdf'
         return static_file(file_name, path)
 
-    def _log(self, repo, name):
+    @staticmethod
+    def _log(repo, name):
         file_name = name + '.log'
         path = os.path.join(os.getcwd(), 'out', repo, file_name)
         log_handler = LogHelper(path)
         return template('templates/log', repo=repo, name=name, errors=log_handler.get_errors(),
-                        warnings=log_handler.get_warnings(), all=log_handler.get_all(), base_url=self._baseurl)
+                        warnings=log_handler.get_warnings(), all=log_handler.get_all())
