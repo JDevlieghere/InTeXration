@@ -24,7 +24,7 @@ class Server:
         self._app.run(host=self._host, port=self._port, server='cherrypy')
 
     def _hook(self, api_key):
-        api_helper = ApiHelper(os.path.join(settings.DATA, settings.API_KEY_FILE))
+        api_helper = ApiHelper(settings.API_KEY_FILE)
         if not api_helper.is_valid(api_key):
             logging.warning("Request Denied: API key invalid.")
             abort(401, 'Unauthorized: API key invalid.')

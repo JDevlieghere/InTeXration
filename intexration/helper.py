@@ -70,7 +70,7 @@ class LogHelper:
     @staticmethod
     def _read_lines(path):
         """Read all lines form log file"""
-        if not os.path.isfile(path):
+        if not os.path.exists(path):
             raise RuntimeError("The logfile does not exist")
         log_file = open(path, "r", encoding='latin-1')
         return log_file.readlines()
