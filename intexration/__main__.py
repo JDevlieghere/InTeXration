@@ -14,6 +14,7 @@ def main():
     parser.add_argument('-port', help='Change the port')
     parser.add_argument('-add', help='Add API key')
     parser.add_argument('-remove', help='Remove API key')
+    parser.add_argument('-list', help='List API keys')
 
     args = parser.parse_args()
     if args.host is not None:
@@ -28,6 +29,9 @@ def main():
     if args.remove is not None:
         ApiHelper(settings.API_KEY_FILE).add(args.remove)
         logging.info("API key %s removed.", args.remove)
+    if args.list is not None:
+        for line in ApiHelper(settings.API_KEY_FILE).get_all():
+            print(line)
 
     if not settings.all_files_exist():
         raise RuntimeError("Some necessary files were missing. Please consult the log.")
