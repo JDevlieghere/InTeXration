@@ -27,7 +27,7 @@ def main():
         logging.info("API key added.")
     if args.remove is not None:
         ApiHelper(settings.API_KEY_FILE).add(args.remove)
-        logging.ino("API key %s removed.", args.remove)
+        logging.info("API key %s removed.", args.remove)
 
     if not settings.all_files_exist():
         raise RuntimeError("Some necessary files were missing. Please consult the log.")
