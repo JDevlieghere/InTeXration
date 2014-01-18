@@ -14,7 +14,7 @@ def main():
     parser.add_argument('-port', help='Change the port')
     parser.add_argument('-add', help='Add API key')
     parser.add_argument('-remove', help='Remove API key')
-    parser.add_argument('-list', help='List API keys')
+    parser.add_argument('-list', help='List API keys', action='store_true')
 
     args = parser.parse_args()
     if args.host is not None:
