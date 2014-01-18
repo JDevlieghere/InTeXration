@@ -66,12 +66,18 @@ formatter=default
 handlers=error_file
 ```
 
+## Installation
+Run the `setup.py` file
+```bash
+python setup.py install
+```
+
 ## Starting the server
-Starting the server is as easy as running `intexration.py`. However, if you
+Starting the server is as easy as running the InTeXration module. However, if you
 want to run InTeXration in the background, you can use the `nohup` command.
 
 ```bash
-nohup python intexration.py > /dev/null 2>&1 &
+nohup python -m intexration > /dev/null 2>&1 &
 ```
 You will be show the process id, which you will need in order to stop the
 server, if necessary.
