@@ -25,7 +25,7 @@ def main():
     if not settings.SERVER_KEY in config:
         raise RuntimeError('No server information found in configuration file!')
     server = Server(host=config[settings.SERVER_KEY][settings.HOST_KEY],
-                    port=config[settings.SERVER_KEY][settings.PORT_KEY], api_keys=api_keys_path)
+                    port=config[settings.SERVER_KEY][settings.PORT_KEY])
     server.start()
 
 if __name__ == '__main__':

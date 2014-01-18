@@ -1,4 +1,5 @@
 import configparser
+import csv
 import logging
 import os
 from intexration import settings
@@ -100,3 +101,18 @@ class LogHelper:
 
     def get_all(self):
         return self._lines
+
+
+class ApiHelper:
+    def __init__(self, path):
+        self._path = path
+
+    def is_valid(self, key_to_check):
+        if not os.path.isfile(self._path):
+            raise RuntimeError("No API key file found.")
+        with open(self._path, newline='') as key_file:
+            key_reader = csv.reader(key_file, delimiter=',', quotechar='')
+            for row in key_reader:
+                if key_to_check in row:
+                    return True
+        return False

@@ -3,15 +3,14 @@ from bottle import Bottle, request, abort, static_file, template
 import os
 import json
 from intexration import settings
-from intexration.helper import LogHelper
+from intexration.helper import LogHelper, ApiHelper
 from intexration.task import Task
 
 
 class Server:
-    def __init__(self, host, port, api_keys):
+    def __init__(self, host, port):
         self._host = host
         self._port = port
-        self._api_keys = api_keys
         self._app = Bottle()
         self._route()
 
@@ -25,18 +24,8 @@ class Server:
         self._app.run(host=self._host, port=self._port, server='cherrypy')
 
     def _hook(self, api_key):
-        def validate(key_to_check):
-            path = self._api_keys
-            if not os.path.isfile(path):
-                return False
-            key_file = open(path, "r")
-            for line in key_file.readlines():
-                key = line.rstrip()
-                if key_to_check == key:
-                    return True
-            return False
-
-        if not validate(api_key):
+        api_helper = ApiHelper(os.path.join(settings.DATA, settings.API_KEY_FILE))
+        if not api_helper.is_valid(api_key):
             logging.warning("Request Denied: API key invalid.")
             abort(401, 'Unauthorized: API key invalid.')
         payload = request.forms.get('payload')
