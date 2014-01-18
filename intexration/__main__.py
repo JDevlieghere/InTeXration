@@ -34,7 +34,7 @@ def main():
         logging.info("API key added.")
         quit_when_done = True
     if args.remove is not None:
-        ApiHelper(settings.API_KEY_FILE).add(args.remove)
+        ApiHelper(settings.API_KEY_FILE).remove(args.remove)
         logging.info("API key %s removed.", args.remove)
         quit_when_done = True
     if args.list is not None:
