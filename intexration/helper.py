@@ -111,7 +111,7 @@ class ApiHelper:
         if not os.path.isfile(self._path):
             raise RuntimeError("No API key file found.")
         with open(self._path, newline='') as key_file:
-            key_reader = csv.reader(key_file, delimiter=',', quotechar='')
+            key_reader = csv.reader(key_file, delimiter=',')
             for row in key_reader:
                 if key_to_check in row:
                     return True
