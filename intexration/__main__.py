@@ -37,7 +37,7 @@ def main():
         ApiHelper(settings.API_KEY_FILE).remove(args.remove)
         logging.info("API key %s removed.", args.remove)
         quit_when_done = True
-    if args.list is not None:
+    if args.list:
         for line in ApiHelper(settings.API_KEY_FILE).get_all():
             print(line[0])
         quit_when_done = True
