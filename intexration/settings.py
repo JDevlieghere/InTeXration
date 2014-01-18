@@ -1,8 +1,9 @@
 import os
 
+# Directories
 ROOT = os.path.abspath(os.path.dirname(__file__))
-
 CONFIG = config_folder = os.path.join(ROOT, 'config')
+TEMPLATES = config_folder = os.path.join(ROOT, 'templates')
 
 # Files
 API_KEY_FILE = 'api_keys.txt'
