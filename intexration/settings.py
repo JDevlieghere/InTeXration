@@ -45,10 +45,11 @@ def get_config(section, key):
 
 def set_config(section, key, value):
     config = configparser.ConfigParser()
-    config.read(CONFIG_FILE)
     try:
         config.set(section, key, value)
     except configparser.ConfigParser.NoSectionError:
         config.add_section(section)
         set_config(section, key, value)
+    with open(CONFIG_FILE, 'w') as configfile:
+        config.write(configfile)
 
