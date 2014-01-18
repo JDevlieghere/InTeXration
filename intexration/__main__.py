@@ -8,7 +8,7 @@ from intexration.server import Server
 
 
 # Logger
-logging.config.fileConfig(os.path.join(settings.CONFIG, settings.LOGGING_FILE))
+# logging.config.fileConfig(os.path.join(settings.CONFIG, settings.LOGGING_FILE))
 
 
 def main():
