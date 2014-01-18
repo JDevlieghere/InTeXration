@@ -46,7 +46,7 @@ def get_config(section, key):
 def set_config(section, key, value):
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
-    config[section][key] = value
-    with open(CONFIG_FILE, 'w') as configfile:
+    config.set(section, key, value)
+    with open(CONFIG_FILE, 'w+') as configfile:
         config.write(configfile)
 
