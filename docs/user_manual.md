@@ -16,13 +16,15 @@ Use the command line argument `-add` to authorize an API key:
 python -m intexration -add 0F304A9A-997A-4207-A1BF-3C74A009F5A0
 ```
 
-#### Displaying or Removing
+#### Listing
 
 To list all API keys currently registered, use the `-list` argument.
 ```bash
 python -m intexration -list
 ```
 A list of keys will be printed to the standard output stream.
+
+#### Removing
 
 To remove an API key, simply use the `-remove` argument.
 ```bash

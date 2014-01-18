@@ -16,6 +16,7 @@ class Server:
 
     def _route(self):
         self._app.route('/', method="GET", callback=self._index)
+        self._app.route('/<name>', method="GET", callback=self._static)
         self._app.route('/hook/<api_key>', method="POST", callback=self._hook)
         self._app.route('/out/<repo>/<name>', method=["GET", "GET"], callback=self._out)
         self._app.route('/log/<repo>/<name>', method=["GET", "GET"], callback=self._log)
@@ -43,7 +44,11 @@ class Server:
 
     @staticmethod
     def _index():
-        return template('templates/index')
+        return template(os.path.join(settings.TEMPLATES, 'index.tpl'), root=settings.SERVER_ROOT)
+
+    @staticmethod
+    def _static(name):
+        return static_file(name, settings.STATIC)
 
     @staticmethod
     def _out(repo, name):
@@ -56,5 +61,5 @@ class Server:
         file_name = name + '.log'
         path = os.path.join(settings.ROOT, 'out', repo, file_name)
         log_handler = LogHelper(path)
-        return template(os.path.join(settings.TEMPLATES, 'log'), repo=repo, name=name, errors=log_handler.get_errors(),
+        return template(os.path.join(settings.TEMPLATES, 'log'), root=settings.SERVER_ROOT, repo=repo, name=name, errors=log_handler.get_errors(),
                         warnings=log_handler.get_warnings(), all=log_handler.get_all())

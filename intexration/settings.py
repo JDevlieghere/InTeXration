@@ -7,6 +7,7 @@ ROOT = os.path.abspath(os.path.dirname(__file__))
 CONFIG = os.path.join(ROOT, 'config')
 DATA = os.path.join(ROOT, 'data')
 TEMPLATES = os.path.join(ROOT, 'templates')
+STATIC = os.path.join(ROOT, 'static')
 
 # Files
 API_KEY_FILE = os.path.join(DATA, 'api_keys.csv')
@@ -22,7 +23,6 @@ PORT_KEY = 'port'
 LOG_NEW_LINE_CHAR = '\n'
 LOG_ERROR_STRING = '! '
 LOG_WARNING_STRING = 'Warning'
-
 
 def all_files_exist():
     if not os.path.exists(API_KEY_FILE):
@@ -50,3 +50,5 @@ def set_config(section, key, value):
     with open(CONFIG_FILE, 'w+') as configfile:
         config.write(configfile)
 
+# Server Root
+SERVER_ROOT = 'http://'+get_config('SERVER', 'host')+':'+get_config('SERVER', 'port')+'/'
