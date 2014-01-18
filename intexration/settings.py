@@ -45,6 +45,7 @@ def get_config(section, key):
 
 def set_config(section, key, value):
     config = configparser.ConfigParser()
+    config.read(CONFIG_FILE)
     try:
         config.set(section, key, value)
     except configparser.Error:
