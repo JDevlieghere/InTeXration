@@ -40,16 +40,13 @@ def all_files_exist():
 def get_config(section, key):
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
-    return config.get(section, key)
+    return config[section][key]
 
 
 def set_config(section, key, value):
     config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
-    try:
-        config.set(section, key, value)
-    except configparser.Error:
-        logging.error("Unable to update config file.")
+    config[section][key] = value
     with open(CONFIG_FILE, 'w') as configfile:
         config.write(configfile)
 
