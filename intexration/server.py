@@ -65,7 +65,7 @@ class Server:
     @staticmethod
     def _log(repo, name):
         file_name = name + '.log'
-        path = os.path.join(os.settings.ROOT, 'out', repo, file_name)
+        path = os.path.join(settings.ROOT, 'out', repo, file_name)
         log_handler = LogHelper(path)
         return template('templates/log', repo=repo, name=name, errors=log_handler.get_errors(),
                         warnings=log_handler.get_warnings(), all=log_handler.get_all())
