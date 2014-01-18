@@ -135,4 +135,3 @@ class ApiHelper:
             key_writer = csv.writer(key_file, delimiter=',')
             for row in rows:
                 key_writer.writerow(row)
-

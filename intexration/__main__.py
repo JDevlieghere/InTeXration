@@ -16,6 +16,9 @@ def main():
     parser.add_argument('-remove', help='Remove API key')
     parser.add_argument('-list', help='List API keys', action='store_true')
 
+    if not settings.all_files_exist():
+        raise RuntimeError("Some necessary files were missing. Please consult the log.")
+
     args = parser.parse_args()
     if args.host is not None:
         settings.set_config('SERVER', 'host', args.host)
@@ -31,10 +34,8 @@ def main():
         logging.info("API key %s removed.", args.remove)
     if args.list is not None:
         for line in ApiHelper(settings.API_KEY_FILE).get_all():
-            print(line)
+            print(line[0])
 
-    if not settings.all_files_exist():
-        raise RuntimeError("Some necessary files were missing. Please consult the log.")
 
     server = Server(host=settings.get_config('SERVER', 'host'),
                     port=settings.get_config('SERVER', 'port'))
