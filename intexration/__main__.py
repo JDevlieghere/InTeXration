@@ -1,6 +1,5 @@
 import argparse
 import logging.config
-import os
 from intexration import settings
 from intexration.server import Server
 
@@ -15,10 +14,10 @@ def main():
 
     args = parser.parse_args()
     if args.host is not None:
-        settings.set_config('host', args.host)
+        settings.set_config('SERVER', 'host', args.host)
         logging.INFO("Host changed to %s", args.host)
     if args.port is not None:
-        settings.set_config('port', args.port)
+        settings.set_config('SERVER', 'port', args.port)
         logging.INFO("Port changed to %s", args.port)
 
     if not settings.all_files_exist():
