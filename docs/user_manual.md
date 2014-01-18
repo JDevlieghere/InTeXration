@@ -8,23 +8,27 @@ for information on how to install InTeXration.
 
 ## Adding an API key
 
-API keys are stored in a text file named `api_keys.txt` inside the `config`
-directory. Each line contains exactly one key. Please note that leading or
-trailing whitespaces are **not** allowed.
-
 Using GUID's as API keys is recommended. You can generate those
 [here](http://www.guidgenerator.com/).
 
-Here's an example of the `api_keys.txt`:
-
-```
-0f304a9a-997a-4207-a1bf-3c74a009f5a0
-787d8249-36bf-49cb-848b-a24c331881a2
-e1271300-0247-4cdc-92ee-b6beec6a497d
+Use the command line argument `-add` to authorize an API key:
+```bash
+python -m intexration -add 0F304A9A-997A-4207-A1BF-3C74A009F5A0
 ```
 
-Adding a key does not require the server to restart. You can add keys add run-
-time.
+#### Displaying or Removing
+
+To list all API keys currently registered, use the `-list` argument.
+```bash
+python -m intexration -list
+```
+A list of keys will be printed to the standard output stream.
+
+To remove an API key, simply use the `-remove` argument.
+```bash
+python -m intexration -remove 0F304A9A-997A-4207-A1BF-3C74A009F5A0
+```
+
 
 ## WebHook
 
@@ -39,7 +43,7 @@ Please note there is no trailing `/` which would invalidate the URL.
 For example, using `server.com` as host, `8000` as port and the first API key
 fromt he list above, the URL becomes:
 ```
-http://server.com:8000/hook/0f304a9a-997a-4207-a1bf-3c74a009f5a0
+http://server.com:8000/hook/0F304A9A-997A-4207-A1BF-3C74A009F5A0
 ```
 
 Once your WebHook URL is created, add it to your repository. Navigate to the
