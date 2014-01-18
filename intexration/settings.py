@@ -47,9 +47,8 @@ def set_config(section, key, value):
     config = configparser.ConfigParser()
     try:
         config.set(section, key, value)
-    except configparser.ConfigParser.NoSectionError:
-        config.add_section(section)
-        set_config(section, key, value)
+    except configparser.Error:
+        logging.error("Unable to update config file.")
     with open(CONFIG_FILE, 'w') as configfile:
         config.write(configfile)
 
