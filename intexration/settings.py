@@ -38,16 +38,14 @@ def all_files_exist():
 
 
 def get_config(section, key):
-    path = os.path.join(CONFIG, CONFIG_FILE)
     config = configparser.ConfigParser()
-    config.read(path)
+    config.read(CONFIG_FILE)
     return config.get(section, key)
 
 
 def set_config(section, key, value):
-    path = os.path.join(CONFIG, CONFIG_FILE)
     config = configparser.ConfigParser()
-    config.read(path)
+    config.read(CONFIG_FILE)
     try:
         config.set(section, key, value)
     except configparser.ConfigParser.NoSectionError:
