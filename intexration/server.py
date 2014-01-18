@@ -2,6 +2,7 @@ import logging
 from bottle import Bottle, request, abort, static_file, template
 import os
 import json
+from intexration import settings
 from intexration.helper import LogHelper
 from intexration.task import Task
 
@@ -57,14 +58,14 @@ class Server:
 
     @staticmethod
     def _out(repo, name):
-        path = os.path.join(os.getcwd(), 'out', repo)
+        path = os.path.join(settings.ROOT, 'out', repo)
         file_name = name + '.pdf'
         return static_file(file_name, path)
 
     @staticmethod
     def _log(repo, name):
         file_name = name + '.log'
-        path = os.path.join(os.getcwd(), 'out', repo, file_name)
+        path = os.path.join(os.settings.ROOT, 'out', repo, file_name)
         log_handler = LogHelper(path)
         return template('templates/log', repo=repo, name=name, errors=log_handler.get_errors(),
                         warnings=log_handler.get_warnings(), all=log_handler.get_all())

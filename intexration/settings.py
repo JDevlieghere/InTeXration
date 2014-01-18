@@ -1,7 +1,7 @@
 import os
 
-# Paths
-ROOT = os.getcwd()
+ROOT = os.path.abspath(os.path.dirname(__file__))
+
 CONFIG = config_folder = os.path.join(ROOT, 'config')
 
 # Files

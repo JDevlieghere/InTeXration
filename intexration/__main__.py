@@ -4,6 +4,9 @@ import os
 from intexration import settings
 from intexration.server import Server
 
+
+
+
 # Logger
 logging.config.fileConfig(os.path.join(settings.CONFIG, settings.LOGGING_FILE))
 
@@ -26,4 +29,5 @@ def main():
     server.start()
 
 if __name__ == '__main__':
+    print(settings.ROOT)
     main()
