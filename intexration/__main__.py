@@ -1,6 +1,7 @@
 import argparse
 import logging.config
 from intexration import settings
+from intexration.helper import ApiHelper
 from intexration.server import Server
 
 # Logger
@@ -11,6 +12,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-host', help='Change the hostname')
     parser.add_argument('-port', help='Change the port')
+    parser.add_argument('-add', help='Add API key')
+    parser.add_argument('-remove', help='Remove API key')
 
     args = parser.parse_args()
     if args.host is not None:
@@ -19,6 +22,12 @@ def main():
     if args.port is not None:
         settings.set_config('SERVER', 'port', args.port)
         logging.info("Port changed to %s", args.port)
+    if args.add is not None:
+        ApiHelper(settings.API_KEY_FILE).add(args.add)
+        logging.info("API key added.")
+    if args.remove is not None:
+        ApiHelper(settings.API_KEY_FILE).add(args.remove)
+        logging.ino("API key %s removed.", args.remove)
 
     if not settings.all_files_exist():
         raise RuntimeError("Some necessary files were missing. Please consult the log.")
