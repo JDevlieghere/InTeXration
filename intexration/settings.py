@@ -26,13 +26,13 @@ LOG_WARNING_STRING = 'Warning'
 
 def all_files_exist():
     if not os.path.exists(API_KEY_FILE):
-        logging.ERROR("File with API keys not found.")
+        logging.error("File with API keys not found.")
         return False
     if not os.path.exists(CONFIG_FILE):
-        logging.ERROR("Configuration file not found.")
+        logging.error("Configuration file not found.")
         return False
     if not os.path.exists(LOGGING_FILE):
-        logging.ERROR("Log configuration file not found.")
+        logging.error("Log configuration file not found.")
         return False
     return True
 
