@@ -34,7 +34,7 @@ class Server:
             data = json.loads(payload)
             url = data['repository']['url']
             name = data['repository']['name']
-            owner = data['repository']['author']['name']
+            owner = data['repository']['owner']['name']
             commit = data['after']
             task = Task(url, name, owner, commit)
             task.run()
