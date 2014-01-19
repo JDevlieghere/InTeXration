@@ -34,35 +34,6 @@ class Build:
         return self._name + '.log'
 
 
-class BuildHelper:
-    def __init__(self, path):
-        self._path = path
-
-    def get_builds(self):
-        """Return all builds from the .intexration file."""
-        builds = []
-        if os.path.exists(self._path):
-            parser = configparser.ConfigParser()
-            parser.read(self._path)
-            for build_name in parser.sections():
-                if parser.has_option(build_name, 'dir'):
-                    dir = parser[build_name]['dir']
-                else:
-                    dir = ''
-                if parser.has_option(build_name, 'idx'):
-                    idx = parser[build_name]['idx']
-                else:
-                    idx = build_name
-                if parser.has_option(build_name, 'bib'):
-                    bib = parser[build_name]['bib']
-                else:
-                    bib = build_name
-                builds.append(Build(build_name, dir, idx, bib))
-        else:
-            logging.error("No .intexration file found!")
-        return builds
-
-
 class LogHelper:
     def __init__(self, path):
         self._lines = self._read_lines(path)

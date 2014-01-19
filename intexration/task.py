@@ -1,13 +1,11 @@
+import configparser
 import contextlib
 import logging
 import os
 import errno
 import shutil
 import subprocess
-
-# Context Swtich
 from intexration import config
-from intexration.helper import BuildHelper
 
 
 @contextlib.contextmanager
@@ -23,28 +21,21 @@ def cd(dirname):
 class Task:
     def __init__(self, url, repository, owner, commit):
         self._url = url
-        self._repository = self._convert(repository)
+        self._repository = repository
         self._owner = owner
         self._commit = commit
-        self._build_dir = self._create_dir('build', commit)
-        self._output_dir = self._create_dir('out')
+        self._build_dir = self._create_dir(config.PATH_BUILD, commit)
+        self._output_dir = self._create_dir(config.PATH_OUT)
 
-    def _create_dir(self, prefix, suffix=''):
+    def _create_dir(self, root, suffix=''):
         """Safely create a directory."""
-        path = os.path.join(config.PATH_ROOT, prefix, self._owner, self._repository, suffix)
+        path = os.path.join(root, self._owner, self._repository, suffix)
         try:
             os.makedirs(path)
         except OSError as e:
             if e.errno != errno.EEXIST:
                 raise
         return path
-
-    @staticmethod
-    def _convert(url):
-        """Add .git extenions to repository URL."""
-        if url.startswith('https://'):
-            return url + '.git'
-        return url
 
     def _clone(self):
         """Clone repository to build dir."""
@@ -53,54 +44,39 @@ class Task:
             raise RuntimeError('git clone failed!')
         logging.debug("Cloned %s", self._repository)
 
-    def _makeindex(self, file):
+    def _makeindex(self, document):
         """Make index."""
-        with cd(self._build_dir):
-            if subprocess.call(['makeindex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
+        working_dir = os.path.join(self._build_dir, document.subdir)
+        with cd(working_dir):
+            if subprocess.call(['makeindex', document.idx], stdout=subprocess.DEVNULL,
+                               stderr=subprocess.DEVNULL) != 0:
                 logging.warning("%s:Makeindex failed.", self._repository)
 
-    def _bibtex(self, file):
+    def _bibtex(self, document):
         """Compile bibtex."""
-        with cd(self._build_dir):
-            if subprocess.call(['bibtex', file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
+        working_dir = os.path.join(self._build_dir, document.subdir)
+        with cd(working_dir):
+            if subprocess.call(['bibtex', document.bib], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
                 logging.warning("%s:Bibtex failed.", self._repository)
 
-    def _compile(self, file):
+    def _compile(self, document):
         """Compile with pdflatex."""
-        with cd(self._build_dir):
-            if subprocess.call(['pdflatex', '-interaction=nonstopmode', file], stdout=subprocess.DEVNULL,
+        working_dir = os.path.join(self._build_dir, document.subdir)
+        with cd(working_dir):
+            if subprocess.call(['pdflatex', '-interaction=nonstopmode', document.tex], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
                 logging.error("%s:Compilation (pdflatex) finished with errors.", self._repository)
 
-    def _move(self, dir, tex_file, idx_file, bib_file):
-        """Copy the source files to the root of the build directory."""
-        # TeX file
-        tex_source_path = os.path.join(self._build_dir, dir, tex_file)
-        tex_dest_path = os.path.join(self._build_dir, tex_file)
-        shutil.copyfile(tex_source_path, tex_dest_path)
-        # idx File
-        try:
-            idx_source_path = os.path.join(self._build_dir, dir, idx_file)
-            idx_dest_path = os.path.join(self._build_dir, idx_file)
-            shutil.copyfile(idx_source_path, idx_dest_path)
-        except IOError:
-            logging.debug("No index file to copy.")
-        try:
-            bib_source_path = os.path.join(self._build_dir, dir, bib_file)
-            bib_dest_path = os.path.join(self._build_dir, bib_file)
-            shutil.copyfile(bib_source_path, bib_dest_path)
-        except IOError:
-            logging.debug("No BibTex file to copy.")
-
-    def _copy(self, pdf_file, log_file):
+    def _copy(self, document):
         """Copy the PDF and Logfile to the output directory."""
+        working_dir = os.path.join(self._build_dir, document.subdir)
         # PDF File
-        pdf_source_path = os.path.join(self._build_dir, pdf_file)
-        pdf_dest_path = os.path.join(self._output_dir, pdf_file)
+        pdf_source_path = os.path.join(working_dir, document.pdf)
+        pdf_dest_path = os.path.join(self._output_dir, document.pdf)
         shutil.copyfile(pdf_source_path, pdf_dest_path)
         # Log File
-        log_source_path = os.path.join(self._build_dir, log_file)
-        log_dest_path = os.path.join(self._output_dir, log_file)
+        log_source_path = os.path.join(working_dir, document.log)
+        log_dest_path = os.path.join(self._output_dir, document.log)
         shutil.copyfile(log_source_path, log_dest_path)
 
     def _clean(self):
@@ -108,15 +84,13 @@ class Task:
         shutil.rmtree(self._build_dir)
         logging.debug("Directory %s cleaned.", self._build_dir)
 
-    def _build(self, build):
+    def _build(self, document):
         """Build all."""
-        if build.get_dir() != '':
-            self._move(build.get_dir(), build.get_tex(), build.get_idx(), build.get_bib())
-        self._compile(build.get_tex())
-        self._makeindex(build.get_idx())
-        self._bibtex(build.get_bib())
-        self._compile(build.get_tex())
-        self._copy(build.get_pdf(), build.get_log())
+        self._compile(document)
+        self._makeindex(document)
+        self._bibtex(document)
+        self._compile(document)
+        self._copy(document)
 
     def run(self):
         """Execute this task"""
@@ -126,11 +100,50 @@ class Task:
         except Exception as e:
             logging.error(e)
         path = os.path.join(self._build_dir, '.intexration')
-        property_handler = BuildHelper(path)
-        for build in property_handler.get_builds():
+        parser = DocumentParser(path)
+        for build in parser.documents():
             try:
                 self._build(build)
             except Exception as e:
                 logging.error(e)
         self._clean()
         logging.info("Task finished for %s.", self._repository)
+
+
+class BuildDocument:
+    def __init__(self, name, subdir, idx, bib):
+        self.subdir = subdir
+        self.idx = idx + '.idx'
+        self.bib = bib
+        self.tex = name + '.tex'
+        self.pdf = name + '.pdf'
+        self.log = name + '.log'
+
+
+class DocumentParser:
+    def __init__(self, path):
+        self._path = path
+
+    def documents(self):
+        """Return all builds from the .intexration file."""
+        documents = []
+        if os.path.exists(self._path):
+            parser = configparser.ConfigParser()
+            parser.read(self._path)
+            for build_name in parser.sections():
+                if parser.has_option(build_name, 'dir'):
+                    subdir = parser[build_name]['dir']
+                else:
+                    subdir = ''
+                if parser.has_option(build_name, 'idx'):
+                    idx = parser[build_name]['idx']
+                else:
+                    idx = build_name
+                if parser.has_option(build_name, 'bib'):
+                    bib = parser[build_name]['bib']
+                else:
+                    bib = build_name
+                documents.append(BuildDocument(build_name, subdir, idx, bib))
+        else:
+            logging.error("No .intexration file found!")
+        return documents
