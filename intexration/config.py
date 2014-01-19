@@ -3,16 +3,18 @@ import os
 import configparser
 
 # Directories
-ROOT = os.path.abspath(os.path.dirname(__file__))
-CONFIG = os.path.join(ROOT, 'config')
-DATA = os.path.join(ROOT, 'data')
-TEMPLATES = os.path.join(ROOT, 'templates')
-STATIC = os.path.join(ROOT, 'static')
+PATH_ROOT = os.path.abspath(os.path.dirname(__file__))
+PATH_CONFIG = os.path.join(PATH_ROOT, 'config')
+PATH_DATA = os.path.join(PATH_ROOT, 'data')
+PATH_TEMPLATES = os.path.join(PATH_ROOT, 'templates')
+PATH_STATIC = os.path.join(PATH_ROOT, 'static')
+PATH_OUTPUT = os.path.join(PATH_ROOT, 'out')
+PATH_BUILD = os.path.join(PATH_ROOT, 'build')
 
 # Files
-API_KEY_FILE = os.path.join(DATA, 'api_keys.csv')
-CONFIG_FILE = os.path.join(CONFIG, 'settings.cfg')
-LOGGING_FILE = os.path.join(CONFIG, 'logger.cfg')
+FILE_API_KEY = os.path.join(PATH_DATA, 'api_keys.csv')
+FILE_CONFI = os.path.join(PATH_CONFIG, 'settings.cfg')
+FILE_LOGGING = os.path.join(PATH_CONFIG, 'logger.cfg')
 
 # Configuration Keys
 SERVER_KEY = 'SERVER'
@@ -25,13 +27,13 @@ LOG_ERROR_STRING = '! '
 LOG_WARNING_STRING = 'Warning'
 
 def all_files_exist():
-    if not os.path.exists(API_KEY_FILE):
+    if not os.path.exists(FILE_API_KEY):
         logging.error("File with API keys not found.")
         return False
-    if not os.path.exists(CONFIG_FILE):
+    if not os.path.exists(FILE_CONFI):
         logging.error("Configuration file not found.")
         return False
-    if not os.path.exists(LOGGING_FILE):
+    if not os.path.exists(FILE_LOGGING):
         logging.error("Log configuration file not found.")
         return False
     return True
@@ -39,15 +41,15 @@ def all_files_exist():
 
 def get_config(section, key):
     config = configparser.ConfigParser()
-    config.read(CONFIG_FILE)
+    config.read(FILE_CONFI)
     return config[section][key]
 
 
 def set_config(section, key, value):
     config = configparser.ConfigParser()
-    config.read(CONFIG_FILE)
+    config.read(FILE_CONFI)
     config.set(section, key, value)
-    with open(CONFIG_FILE, 'w+') as configfile:
+    with open(FILE_CONFI, 'w+') as configfile:
         config.write(configfile)
 
 # Server Root

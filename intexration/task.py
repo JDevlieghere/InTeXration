@@ -6,13 +6,13 @@ import shutil
 import subprocess
 
 # Context Swtich
-from intexration import settings
+from intexration import config
 from intexration.helper import BuildHelper
 
 
 @contextlib.contextmanager
 def cd(dirname):
-    cur_dir = settings.ROOT
+    cur_dir = config.PATH_ROOT
     try:
         os.chdir(dirname)
         yield
@@ -31,7 +31,7 @@ class Task:
 
     def _create_dir(self, prefix, suffix=''):
         """Safely create a directory."""
-        path = os.path.join(settings.ROOT, prefix, self._owner, self._repository, suffix)
+        path = os.path.join(config.PATH_ROOT, prefix, self._owner, self._repository, suffix)
         try:
             os.makedirs(path)
         except OSError as e:

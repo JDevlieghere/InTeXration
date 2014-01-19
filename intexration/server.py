@@ -2,7 +2,7 @@ import logging
 from bottle import Bottle, request, abort, static_file, template
 import os
 import json
-from intexration import settings
+from intexration import config
 from intexration.helper import LogHelper, ApiHelper
 from intexration.task import Task
 
@@ -25,7 +25,7 @@ class Server:
         self._app.run(host=self._host, port=self._port, server='cherrypy')
 
     def _hook(self, api_key):
-        api_helper = ApiHelper(settings.API_KEY_FILE)
+        api_helper = ApiHelper(config.FILE_API_KEY)
         if not api_helper.is_valid(api_key):
             logging.warning("Request Denied: API key invalid.")
             abort(401, 'Unauthorized: API key invalid.')
@@ -45,22 +45,22 @@ class Server:
 
     @staticmethod
     def _index():
-        return template(os.path.join(settings.TEMPLATES, 'index.tpl'), root=settings.SERVER_ROOT)
+        return template(os.path.join(config.PATH_TEMPLATES, 'index.tpl'), root=config.SERVER_ROOT)
 
     @staticmethod
     def _static(name):
-        return static_file(name, settings.STATIC)
+        return static_file(name, config.PATH_STATIC)
 
     @staticmethod
     def _out(owner, repo, name):
-        path = os.path.join(settings.ROOT, 'out', owner, repo)
+        path = os.path.join(config.PATH_ROOT, 'out', owner, repo)
         file_name = name + '.pdf'
         return static_file(file_name, path)
 
     @staticmethod
     def _log(owner, repo, name):
         file_name = name + '.log'
-        path = os.path.join(settings.ROOT, 'out', owner, repo, file_name)
+        path = os.path.join(config.PATH_ROOT, 'out', owner, repo, file_name)
         log_handler = LogHelper(path)
-        return template(os.path.join(settings.TEMPLATES, 'log.tpl'), root=settings.SERVER_ROOT, repo=repo, name=name,
+        return template(os.path.join(config.PATH_TEMPLATES, 'log.tpl'), root=config.SERVER_ROOT, repo=repo, name=name,
                         errors=log_handler.get_errors(), warnings=log_handler.get_warnings(), all=log_handler.get_all())

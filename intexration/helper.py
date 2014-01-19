@@ -2,7 +2,7 @@ import configparser
 import csv
 import logging
 import os
-from intexration import settings
+from intexration import config
 
 
 class Build:
@@ -80,9 +80,9 @@ class LogHelper:
         warnings = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == settings.LOG_NEW_LINE_CHAR:
+            if multi_line_error and line == config.LOG_NEW_LINE_CHAR:
                 multi_line_error = False
-            if settings.LOG_WARNING_STRING in line or multi_line_error:
+            if config.LOG_WARNING_STRING in line or multi_line_error:
                 warnings.append(line)
                 multi_line_error = True
         return warnings
@@ -92,10 +92,10 @@ class LogHelper:
         errors = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == settings.LOG_NEW_LINE_CHAR:
+            if multi_line_error and line == config.LOG_NEW_LINE_CHAR:
                 multi_line_error = False
-            if line.startswith(settings.LOG_ERROR_STRING) or multi_line_error:
-                errors.append(line.replace(settings.LOG_ERROR_STRING, ""))
+            if line.startswith(config.LOG_ERROR_STRING) or multi_line_error:
+                errors.append(line.replace(config.LOG_ERROR_STRING, ""))
                 multi_line_error = True
         return errors
 
