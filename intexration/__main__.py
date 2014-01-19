@@ -22,11 +22,11 @@ def main():
     quit_when_done = False
     args = parser.parse_args()
     if args.host is not None:
-        config.set_config('SERVER', 'host', args.host)
+        config.write('SERVER', 'host', args.host)
         logging.info("Host changed to %s", args.host)
         quit_when_done = True
     if args.port is not None:
-        config.set_config('SERVER', 'port', args.port)
+        config.write('SERVER', 'port', args.port)
         quit_when_done = True
         logging.info("Port changed to %s", args.port)
     if args.add is not None:
@@ -44,8 +44,8 @@ def main():
     if quit_when_done:
         quit()
 
-    server = Server(host=config.get_config('SERVER', 'host'),
-                    port=config.get_config('SERVER', 'port'))
+    server = Server(host=config.read('SERVER', 'host'),
+                    port=config.read('SERVER', 'port'))
     server.start()
 
 if __name__ == '__main__':

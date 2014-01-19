@@ -39,13 +39,13 @@ def all_files_exist():
     return True
 
 
-def get_config(section, key):
+def read(section, key):
     config = configparser.ConfigParser()
     config.read(FILE_CONFI)
     return config[section][key]
 
 
-def set_config(section, key, value):
+def write(section, key, value):
     config = configparser.ConfigParser()
     config.read(FILE_CONFI)
     config.set(section, key, value)
@@ -53,4 +53,4 @@ def set_config(section, key, value):
         config.write(configfile)
 
 # Server Root
-SERVER_ROOT = 'http://'+get_config('SERVER', 'host')+':'+get_config('SERVER', 'port')+'/'
+SERVER_ROOT = 'http://'+read('SERVER', 'host')+':'+read('SERVER', 'port')+'/'
