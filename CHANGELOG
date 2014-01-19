@@ -1,0 +1,4 @@
+v 1.0.0 dev
+  - CHANGELOG added
+  - Installation with setup.py
+  - Command line configuration
