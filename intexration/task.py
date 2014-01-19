@@ -21,15 +21,14 @@ def cd(dirname):
 class Task:
     def __init__(self, url, repository, owner, commit):
         self._url = url
-        self._repository = repository
         self._owner = owner
-        self._commit = commit
-        self._build_dir = self._create_dir(config.PATH_BUILD, commit)
+        self._repository = repository
+        self._build_dir = self._create_dir(config.PATH_BUILD,  commit)
         self._output_dir = self._create_dir(config.PATH_OUT)
 
-    def _create_dir(self, root, suffix=''):
+    def _create_dir(self, root, commit=''):
         """Safely create a directory."""
-        path = os.path.join(root, self._owner, self._repository, suffix)
+        path = os.path.join(root, self._owner, self._repository, commit)
         try:
             os.makedirs(path)
         except OSError as e:
@@ -37,12 +36,15 @@ class Task:
                 raise
         return path
 
+    def title(self):
+        return self._owner+'/'+self._repository
+
     def _clone(self):
         """Clone repository to build dir."""
         if subprocess.call(['git', 'clone', self._url, self._build_dir], stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) != 0:
             raise RuntimeError('git clone failed!')
-        logging.debug("Cloned %s", self._repository)
+        logging.debug("Cloned %s", self.title())
 
     def _makeindex(self, document):
         """Make index."""
@@ -50,14 +52,14 @@ class Task:
         with cd(working_dir):
             if subprocess.call(['makeindex', document.idx], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logging.warning("%s:Makeindex failed.", self._repository)
+                logging.warning("%s:Makeindex failed.", self.title())
 
     def _bibtex(self, document):
         """Compile bibtex."""
         working_dir = os.path.join(self._build_dir, document.subdir)
         with cd(working_dir):
             if subprocess.call(['bibtex', document.bib], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
-                logging.warning("%s:Bibtex failed.", self._repository)
+                logging.warning("%s:Bibtex failed.", self.title())
 
     def _compile(self, document):
         """Compile with pdflatex."""
@@ -65,10 +67,10 @@ class Task:
         with cd(working_dir):
             if subprocess.call(['pdflatex', '-interaction=nonstopmode', document.tex], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logging.error("%s:Compilation (pdflatex) finished with errors.", self._repository)
+                logging.error("%s:Compilation finished with errors.", self.title())
 
     def _copy(self, document):
-        """Copy the PDF and Logfile to the output directory."""
+        """Copy the PDF and log to the output directory."""
         working_dir = os.path.join(self._build_dir, document.subdir)
         # PDF File
         pdf_source_path = os.path.join(working_dir, document.pdf)
@@ -94,20 +96,19 @@ class Task:
 
     def run(self):
         """Execute this task"""
-        logging.info("New InTeXRation task started for %s", self._repository)
+        logging.info("New InTeXRation task started for %s", self.title())
         try:
             self._clone()
         except Exception as e:
             logging.error(e)
-        path = os.path.join(self._build_dir, '.intexration')
-        parser = DocumentParser(path)
+        parser = DocumentParser(self._build_dir)
         for build in parser.documents():
             try:
                 self._build(build)
             except Exception as e:
                 logging.error(e)
         self._clean()
-        logging.info("Task finished for %s.", self._repository)
+        logging.info("Task finished for %s.", self.title())
 
 
 class BuildDocument:
@@ -121,8 +122,8 @@ class BuildDocument:
 
 
 class DocumentParser:
-    def __init__(self, path):
-        self._path = path
+    def __init__(self, root):
+        self._path = os.path.join(root, '.intexration')
 
     def documents(self):
         """Return all builds from the .intexration file."""
