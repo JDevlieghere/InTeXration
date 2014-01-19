@@ -19,29 +19,29 @@ def main():
     if not config.all_files_exist():
         raise RuntimeError("Some necessary files were missing. Please consult the log.")
 
-    quit_when_done = False
+    config_mode = False
     args = parser.parse_args()
     if args.host is not None:
         config.write('SERVER', 'host', args.host)
         logging.info("Host changed to %s", args.host)
-        quit_when_done = True
+        config_mode = True
     if args.port is not None:
         config.write('SERVER', 'port', args.port)
-        quit_when_done = True
+        config_mode = True
         logging.info("Port changed to %s", args.port)
     if args.add is not None:
         ApiHelper(config.FILE_API_KEY).add(args.add)
         logging.info("API key added.")
-        quit_when_done = True
+        config_mode = True
     if args.remove is not None:
         ApiHelper(config.FILE_API_KEY).remove(args.remove)
         logging.info("API key %s removed.", args.remove)
-        quit_when_done = True
+        config_mode = True
     if args.list:
         for line in ApiHelper(config.FILE_API_KEY).get_all():
             print(line[0])
-        quit_when_done = True
-    if quit_when_done:
+        config_mode = True
+    if config_mode:
         quit()
 
     server = Server(host=config.read('SERVER', 'host'),
