@@ -5,7 +5,7 @@ setup(
     version='1.0.0dev1',
     packages=['intexration'],
     package_dir={'config': 'intexration'},
-    package_data={'intexration': ['config/*.cfg', 'data/*.csv', 'logs/*.log', 'templates/*.tpl', 'static/*']},
+    package_data={'intexration': ['config/*.cfg', 'data/*.csv', 'logs/*.log', 'templates/*.tpl', 'static/*/*']},
     url='https://github.com/JDevlieghere/InTeXration',
     license='Apache License, Version 2.0',
     author='Jonas Devlieghere',

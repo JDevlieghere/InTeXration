@@ -2,57 +2,7 @@ body {
     font-family: sans-serif;
 }
 
-h1 {
-    font-size: 16pt;
-}
-
-.container {
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.container:before,
-.container:after {
-  display: table;
-  content: " ";
-}
-
-.container:after {
-  clear: both;
-}
-
-.container:before,
-.container:after {
-  display: table;
-  content: " ";
-}
-
-.container:after {
-  clear: both;
-}
-
-@media (min-width: 768px) {
-  .container {
-    width: 750px;
-  }
-}
-
-@media (min-width: 992px) {
-  .container {
-    width: 970px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .container {
-    width: 1170px;
-  }
-}
-
 .log {
-
     font-family: "Courier New", Courier, monospace
 }
 
@@ -63,6 +13,7 @@ h1 {
   overflow: auto;
 }
 .callout h1 {
+  font-size: 16pt;
   margin-top: 0;
   margin-bottom: 5px;
 }

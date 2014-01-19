@@ -21,16 +21,17 @@ def cd(dirname):
 
 
 class Task:
-    def __init__(self, url, repository, commit):
+    def __init__(self, url, repository, owner, commit):
         self._url = url
         self._repository = self._convert(repository)
+        self._owner = owner
         self._commit = commit
         self._build_dir = self._create_dir('build', commit)
         self._output_dir = self._create_dir('out')
 
     def _create_dir(self, prefix, suffix=''):
         """Safely create a directory."""
-        path = os.path.join(settings.ROOT, prefix, self._repository, suffix)
+        path = os.path.join(settings.ROOT, prefix, self._owner, self._repository, suffix)
         try:
             os.makedirs(path)
         except OSError as e:
@@ -47,7 +48,8 @@ class Task:
 
     def _clone(self):
         """Clone repository to build dir."""
-        if subprocess.call(['git', 'clone', self._url, self._build_dir], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
+        if subprocess.call(['git', 'clone', self._url, self._build_dir], stdout=subprocess.DEVNULL,
+                           stderr=subprocess.DEVNULL) != 0:
             raise RuntimeError('git clone failed!')
         logging.debug("Cloned %s", self._repository)
 

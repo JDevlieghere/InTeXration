@@ -16,10 +16,10 @@ class Server:
 
     def _route(self):
         self._app.route('/', method="GET", callback=self._index)
-        self._app.route('/<name>', method="GET", callback=self._static)
         self._app.route('/hook/<api_key>', method="POST", callback=self._hook)
-        self._app.route('/out/<repo>/<name>', method=["GET", "GET"], callback=self._out)
-        self._app.route('/log/<repo>/<name>', method=["GET", "GET"], callback=self._log)
+        self._app.route('/out/<owner>/<repo>/<name>', method=["GET", "GET"], callback=self._out)
+        self._app.route('/log/<owner>/<repo>/<name>', method=["GET", "GET"], callback=self._log)
+        self._app.route('/<name:path>', method="GET", callback=self._static)
 
     def start(self):
         self._app.run(host=self._host, port=self._port, server='cherrypy')
@@ -34,8 +34,9 @@ class Server:
             data = json.loads(payload)
             url = data['repository']['url']
             name = data['repository']['name']
+            owner = data['repository']['author']['name']
             commit = data['after']
-            task = Task(url, name, commit)
+            task = Task(url, name, owner, commit)
             task.run()
             return 'InTeXration task started.'
         except ValueError:
@@ -51,15 +52,15 @@ class Server:
         return static_file(name, settings.STATIC)
 
     @staticmethod
-    def _out(repo, name):
-        path = os.path.join(settings.ROOT, 'out', repo)
+    def _out(owner, repo, name):
+        path = os.path.join(settings.ROOT, 'out', owner, repo)
         file_name = name + '.pdf'
         return static_file(file_name, path)
 
     @staticmethod
-    def _log(repo, name):
+    def _log(owner, repo, name):
         file_name = name + '.log'
-        path = os.path.join(settings.ROOT, 'out', repo, file_name)
+        path = os.path.join(settings.ROOT, 'out', owner, repo, file_name)
         log_handler = LogHelper(path)
-        return template(os.path.join(settings.TEMPLATES, 'log'), root=settings.SERVER_ROOT, repo=repo, name=name, errors=log_handler.get_errors(),
-                        warnings=log_handler.get_warnings(), all=log_handler.get_all())
+        return template(os.path.join(settings.TEMPLATES, 'log.tpl'), root=settings.SERVER_ROOT, repo=repo, name=name,
+                        errors=log_handler.get_errors(), warnings=log_handler.get_warnings(), all=log_handler.get_all())
