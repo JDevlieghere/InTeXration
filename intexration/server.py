@@ -17,7 +17,7 @@ class Server:
     def _route(self):
         self._app.route('/', method="GET", callback=self._index)
         self._app.route('/hook/<api_key>', method="POST", callback=self._hook)
-        self._app.route('/out/<owner>/<repo>/<name>', method=["GET", "GET"], callback=self._out)
+        self._app.route('/pdf/<owner>/<repo>/<name>', method=["GET", "GET"], callback=self._out)
         self._app.route('/log/<owner>/<repo>/<name>', method=["GET", "GET"], callback=self._log)
         self._app.route('/<name:path>', method="GET", callback=self._static)
 

@@ -1,10 +1,9 @@
 # Planned Features
 
-This documents contains a list of features planned for upcomming releases. 
+This documents contains a list of features planned for upcomming releases.
 
 ## Started
 
-  - Repository owner part of URL to prevent collisions
 
 ## Planned
 

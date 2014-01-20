@@ -96,19 +96,19 @@ file. One for the PDF and one for a HTML page showing the compilation log.
 
 URL to download the PDF:
 ```
-http://[host]:[port]/out/[repository name]]/[document name]
+http://[host]:[port]/pdf/[repository_owner]/[repository name]]/[document name]
 ```
 
 URL with build logs:
 ```
-http://[host]:[port]/log/[repository name]]/[document name]
+http://[host]:[port]/log/[repository_owner]/[repository name]]/[document name]
 ```
 
-For example, using `server.com` as host, `8000` as port, `repo` as repository name and `main` as document
-name, the URLs become:
+For example, using `server.com` as host, `8000` as port, `repo` as repository
+name, `owner` as repository owner and `main` as document name, the URLs become:
 ```
-http://server.com:8000/out/repo/main
-http://server.com:8000/log/repo/main
+http://server.com:8000/pdf/owner/repo/main
+http://server.com:8000/log/owner/repo/main
 ```
 
 These URLs can be included as links in your README.md to allow interested

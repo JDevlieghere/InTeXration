@@ -12,7 +12,7 @@ This project is in a very early development phase. Documentation might be missin
 
 - [Installation](https://github.com/JDevlieghere/InTeXration/blob/master/docs/install.md)
 - [User's Manual](https://github.com/JDevlieghere/InTeXration/blob/master/docs/user_manual.md)
-- [Planned Features](https://github.com/JDevlieghere/InTeXration/blob/master/docs/planned_featues.md)
+- [Planned Features](https://github.com/JDevlieghere/InTeXration/blob/master/docs/planned_features.md)
 
 License
 -------
