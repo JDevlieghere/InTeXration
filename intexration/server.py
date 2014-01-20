@@ -4,6 +4,7 @@ import os
 import json
 from intexration import config
 from intexration.document import Document, DocumentParser, DocumentExplorer
+from intexration.helper import ApiHelper
 from intexration.task import Task
 
 
