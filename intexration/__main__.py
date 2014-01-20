@@ -17,7 +17,7 @@ def main():
     parser.add_argument('-ar', help='Remove API key')
     parser.add_argument('-al', help='List API keys', action='store_true')
     parser.add_argument('-ae', help='Export API key file to given directory')
-    parser.add_argument('-ae', help='Improt API key file from given directory')
+    parser.add_argument('-ai', help='Improt API key file from given directory')
     parser.add_argument('-ce', help='Export configuration file to given directory')
     parser.add_argument('-ci', help='Import configuration file from given directory')
 
