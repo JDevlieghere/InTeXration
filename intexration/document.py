@@ -115,7 +115,7 @@ class DocumentExplorer:
             for repo in self.all_repos(owner):
                 for name in self.all_names(owner, repo):
                     path = os.path.join(self.root, owner, repo)
-                    documents.append(Document(path, name))
+                    documents.append(Document(name, path))
         return documents
 
 
