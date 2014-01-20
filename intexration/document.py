@@ -1,7 +1,7 @@
 import configparser
 import logging
 import os
-from build.lib.intexration import config
+from intexration import config
 
 __author__ = 'Jonas'
 
