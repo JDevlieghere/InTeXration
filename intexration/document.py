@@ -1,3 +1,4 @@
+import configparser
 import logging
 import os
 
@@ -117,6 +118,3 @@ class DocumentExplorer:
                     path = os.path.join(self.root, owner, repo)
                     documents.append(Document(name, path))
         return documents
-
-
-
