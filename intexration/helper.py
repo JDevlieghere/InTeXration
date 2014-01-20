@@ -1,8 +1,7 @@
-import configparser
 import csv
 import logging
 import os
-from pip.vendor.distlib._backport import shutil
+import shutil
 from intexration import config
 
 

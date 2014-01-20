@@ -1,6 +1,5 @@
 import argparse
 import logging.config
-import os
 from intexration import config
 from intexration.helper import ApiHelper
 from intexration.server import Server
