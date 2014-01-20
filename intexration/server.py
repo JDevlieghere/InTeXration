@@ -47,7 +47,7 @@ class Server:
     def _index():
         #return template(os.path.join(config.PATH_TEMPLATES, 'index.tpl'), root=config.SERVER_ROOT)
         return template(os.path.join(config.PATH_TEMPLATES, 'list.tpl'), root=config.SERVER_ROOT,
-                        documents=DocumentExplorer(config.PATH_ROOT).all_documents())
+                        documents=DocumentExplorer(config.PATH_OUTPUT).all_documents())
 
     @staticmethod
     def _static(name):
