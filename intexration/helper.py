@@ -2,6 +2,7 @@ import configparser
 import csv
 import logging
 import os
+from pip.vendor.distlib._backport import shutil
 from intexration import config
 
 
@@ -106,3 +107,16 @@ class ApiHelper:
             key_writer = csv.writer(key_file, delimiter=',')
             for row in rows:
                 key_writer.writerow(row)
+
+    def export_file(self, dir):
+        path = os.path.join(dir, config.BASENAME_API)
+        shutil.copyfile(self._path, path)
+        logging.info("API key file exported to %s", path)
+
+    def import_file(self, dir):
+        path = os.path.join(dir, config.BASENAME_API)
+        if not os.path.exists(path):
+            logging.error("Importing API key file failed: %s not found.", config.BASENAME_API)
+            return
+        shutil.copyfile(path, self._path)
+        logging.info("API key file imported from %s", path)

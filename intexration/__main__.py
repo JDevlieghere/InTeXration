@@ -16,6 +16,8 @@ def main():
     parser.add_argument('-aa', help='Add API key')
     parser.add_argument('-ar', help='Remove API key')
     parser.add_argument('-al', help='List API keys', action='store_true')
+    parser.add_argument('-ae', help='Export API key file to given directory')
+    parser.add_argument('-ae', help='Improt API key file from given directory')
     parser.add_argument('-ce', help='Export configuration file to given directory')
     parser.add_argument('-ci', help='Import configuration file from given directory')
 
@@ -43,6 +45,12 @@ def main():
     if args.al:
         for line in ApiHelper(config.FILE_API_KEY).get_all():
             print(line[0])
+        config_mode = True
+    if args.ae:
+        ApiHelper(config.FILE_API_KEY).export_file(args.ae)
+        config_mode = True
+    if args.ai:
+        ApiHelper(config.FILE_API_KEY).export_file(args.ai)
         config_mode = True
     if args.ce:
         config.export_file(args.ce)

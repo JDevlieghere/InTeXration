@@ -13,23 +13,25 @@ PATH_STATIC = os.path.join(PATH_ROOT, 'static')
 PATH_OUTPUT = os.path.join(PATH_ROOT, 'out')
 PATH_BUILD = os.path.join(PATH_ROOT, 'build')
 
+# Base names
+BASENAME_CFG = 'settings.cfg'
+BASENAME_API = 'api_keys.csv'
+BASENAME_LOG = 'logger.cfg'
+
 # Files
-FILE_API_KEY = os.path.join(PATH_DATA, 'api_keys.csv')
-FILE_CONFIG = os.path.join(PATH_CONFIG, 'settings.cfg')
-FILE_LOGGING = os.path.join(PATH_CONFIG, 'logger.cfg')
+FILE_API_KEY = os.path.join(PATH_DATA, BASENAME_API)
+FILE_CONFIG = os.path.join(PATH_CONFIG, BASENAME_CFG)
+FILE_LOGGING = os.path.join(PATH_CONFIG, BASENAME_LOG)
 
 # Configuration Keys
-SERVER_KEY = 'SERVER'
-HOST_KEY = 'host'
-PORT_KEY = 'port'
+KEY_SERVER = 'SERVER'
+KEY_HOST = 'host'
+KEY_PORT = 'port'
 
 # LateX Log
 LOG_NEW_LINE_CHAR = '\n'
 LOG_ERROR_STRING = '! '
 LOG_WARNING_STRING = 'Warning'
-
-# Config
-CONFIG_BASENAME = 'settings.cfg'
 
 
 def all_files_exist():
@@ -60,15 +62,15 @@ def write(section, key, value):
 
 
 def export_file(dir):
-    path = os.path.join(dir, CONFIG_BASENAME)
+    path = os.path.join(dir, BASENAME_CFG)
     shutil.copyfile(FILE_CONFIG, path)
     logging.info("Configuration exported to %s", path)
 
 
 def import_file(dir):
-    path = os.path.join(dir, CONFIG_BASENAME)
+    path = os.path.join(dir, BASENAME_CFG)
     if not os.path.exists(path):
-        logging.error("Importing configuration failed: %s does not exist", CONFIG_BASENAME)
+        logging.error("Importing configuration failed: %s not found.", BASENAME_CFG)
         return
     shutil.copyfile(path, FILE_CONFIG)
     logging.info("Configuration imported from %s", path)
