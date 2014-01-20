@@ -3,7 +3,7 @@ from bottle import Bottle, request, abort, static_file, template
 import os
 import json
 from intexration import config
-from intexration.helper import Document, ApiHelper
+from intexration.document import Document, DocumentParser, DocumentExplorer
 from intexration.task import Task
 
 
@@ -45,7 +45,9 @@ class Server:
 
     @staticmethod
     def _index():
-        return template(os.path.join(config.PATH_TEMPLATES, 'index.tpl'), root=config.SERVER_ROOT)
+        #return template(os.path.join(config.PATH_TEMPLATES, 'index.tpl'), root=config.SERVER_ROOT)
+        return template(os.path.join(config.PATH_TEMPLATES, 'list.tpl'), root=config.SERVER_ROOT,
+                        documents=DocumentExplorer(config.PATH_ROOT).all_documents())
 
     @staticmethod
     def _static(name):

@@ -2,56 +2,7 @@ import csv
 import logging
 import os
 import shutil
-from sys import path
 from intexration import config
-
-
-class Document:
-    def __init__(self, name, root):
-        self.name = name
-        self.root = root
-        self._lines = self._read_log()
-
-    def log_file(self):
-        return os.path.join(self.root, self.name + '.log')
-
-    def pdf_file(self):
-        return os.path.join(self.root, self.name + '.pdf')
-
-    def _read_log(self):
-        """Read all lines form log file"""
-        path = self.log_file()
-        if not os.path.exists(path):
-            raise RuntimeError("The logfile does not exist")
-        log_file = open(path, "r", encoding='latin-1')
-        return log_file.readlines()
-
-    def get_warnings(self):
-        """Parse warnings from log file."""
-        warnings = []
-        multi_line_error = False
-        for line in self._lines:
-            if multi_line_error and line == config.LOG_NEW_LINE_CHAR:
-                multi_line_error = False
-            if config.LOG_WARNING_STRING in line or multi_line_error:
-                warnings.append(line)
-                multi_line_error = True
-        return warnings
-
-    def get_errors(self):
-        """Parse errors from logfile."""
-        errors = []
-        multi_line_error = False
-        for line in self._lines:
-            if multi_line_error and line == config.LOG_NEW_LINE_CHAR:
-                multi_line_error = False
-            if line.startswith(config.LOG_ERROR_STRING) or multi_line_error:
-                errors.append(line.replace(config.LOG_ERROR_STRING, ""))
-                multi_line_error = True
-        return errors
-
-    def get_log(self):
-        return self._lines
 
 
 class ApiHelper:
