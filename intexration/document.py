@@ -51,11 +51,17 @@ class Document:
         self.root = root
         self._lines = self._read_log()
 
+    def log_name(self):
+        self.name + '.log'
+
     def log_file(self):
-        return os.path.join(self.root, self.name + '.log')
+        return os.path.join(self.root, self.log_name())
+
+    def pdf_name(self):
+        self.name + '.pdf'
 
     def pdf_file(self):
-        return os.path.join(self.root, self.name + '.pdf')
+        return os.path.join(self.root, self.pdf_name())
 
     def _read_log(self):
         """Read all lines form log file"""

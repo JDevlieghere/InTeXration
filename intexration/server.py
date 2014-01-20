@@ -57,9 +57,7 @@ class Server:
     @staticmethod
     def _out(owner, repo, name):
         document = Document(name, Server.root(owner, repo))
-        logging.debug(name)
-        logging.debug(Server.root(owner, repo))
-        return static_file(document.pdf_file(), document.root)
+        return static_file(document.pdf_name(), document.root)
 
     @staticmethod
     def _log(owner, repo, name):
