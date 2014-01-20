@@ -2,45 +2,25 @@ import csv
 import logging
 import os
 import shutil
+from sys import path
 from intexration import config
 
 
-class Build:
-    def __init__(self, name, dir, idx, bib):
-        self._name = name
-        self._dir = dir
-        self._idx = idx
-        self._bib = bib
+class Document:
+    def __init__(self, name, root):
+        self.name = name
+        self.root = root
+        self._lines = self._read_log()
 
-    def get_name(self):
-        return self._name
+    def log_file(self):
+        return os.path.join(self.root, self.name + '.log')
 
-    def get_dir(self):
-        return self._dir
+    def pdf_file(self):
+        return os.path.join(self.root, self.name + '.pdf')
 
-    def get_idx(self):
-        return self._idx + '.idx'
-
-    def get_bib(self):
-        return self._bib
-
-    def get_tex(self):
-        return self._name + '.tex'
-
-    def get_pdf(self):
-        return self._name + '.pdf'
-
-    def get_log(self):
-        return self._name + '.log'
-
-
-class LogHelper:
-    def __init__(self, path):
-        self._lines = self._read_lines(path)
-
-    @staticmethod
-    def _read_lines(path):
+    def _read_log(self):
         """Read all lines form log file"""
+        path = self.log_file()
         if not os.path.exists(path):
             raise RuntimeError("The logfile does not exist")
         log_file = open(path, "r", encoding='latin-1')
@@ -70,7 +50,7 @@ class LogHelper:
                 multi_line_error = True
         return errors
 
-    def get_all(self):
+    def get_log(self):
         return self._lines
 
 

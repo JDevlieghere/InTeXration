@@ -3,7 +3,7 @@ from bottle import Bottle, request, abort, static_file, template
 import os
 import json
 from intexration import config
-from intexration.helper import LogHelper, ApiHelper
+from intexration.helper import Document, ApiHelper
 from intexration.task import Task
 
 
@@ -53,14 +53,15 @@ class Server:
 
     @staticmethod
     def _out(owner, repo, name):
-        path = os.path.join(config.PATH_OUTPUT, owner, repo)
-        file_name = name + '.pdf'
-        return static_file(file_name, path)
+        document = Document(name, Server.root(owner, repo))
+        return static_file(document.pdf_file(), document.root)
 
     @staticmethod
     def _log(owner, repo, name):
-        file_name = name + '.log'
-        path = os.path.join(config.PATH_OUTPUT, owner, repo, file_name)
-        log_handler = LogHelper(path)
+        document = Document(name, Server.root(owner, repo))
         return template(os.path.join(config.PATH_TEMPLATES, 'log.tpl'), root=config.SERVER_ROOT, repo=repo, name=name,
-                        errors=log_handler.get_errors(), warnings=log_handler.get_warnings(), all=log_handler.get_all())
+                        errors=document.get_errors(), warnings=document.get_warnings(), all=document.get_log())
+
+    @staticmethod
+    def root(owner, repo):
+        return os.path.join(config.PATH_OUTPUT, owner, repo)
