@@ -44,7 +44,7 @@ class Task:
         if subprocess.call(['git', 'clone', self._url, self._build_dir], stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) != 0:
             raise RuntimeError('git clone failed!')
-        logging.debug("Cloned %s", self.title())
+        logging.info("Cloned %s", self.title())
 
     def _makeindex(self, document):
         """Make index."""
@@ -84,7 +84,6 @@ class Task:
     def _clean(self):
         """Clean the build directory."""
         shutil.rmtree(self._build_dir)
-        logging.debug("Directory %s cleaned.", self._build_dir)
 
     def _build(self, document):
         """Build all."""
@@ -96,7 +95,7 @@ class Task:
 
     def run(self):
         """Execute this task"""
-        logging.info("New InTeXRation task started for %s", self.title())
+        logging.info("Task created for %s", self.title())
         try:
             self._clone()
         except Exception as e:
