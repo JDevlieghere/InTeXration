@@ -67,7 +67,7 @@ class Task:
         with cd(working_dir):
             if subprocess.call(['pdflatex', '-interaction=nonstopmode', document.tex], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logging.error("Compilation finished with errors for %s", self.title())
+                logging.warning("Compilation finished with errors for %s", self.title())
 
     def _copy(self, document):
         """Copy the PDF and log to the output directory."""
