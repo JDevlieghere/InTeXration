@@ -53,14 +53,14 @@ class Server:
 
     @staticmethod
     def _out(owner, repo, name):
-        path = os.path.join(config.PATH_ROOT, 'out', owner, repo)
+        path = os.path.join(config.PATH_OUTPUT, owner, repo)
         file_name = name + '.pdf'
         return static_file(file_name, path)
 
     @staticmethod
     def _log(owner, repo, name):
         file_name = name + '.log'
-        path = os.path.join(config.PATH_ROOT, 'out', owner, repo, file_name)
+        path = os.path.join(config.PATH_OUTPUT, owner, repo, file_name)
         log_handler = LogHelper(path)
         return template(os.path.join(config.PATH_TEMPLATES, 'log.tpl'), root=config.SERVER_ROOT, repo=repo, name=name,
                         errors=log_handler.get_errors(), warnings=log_handler.get_warnings(), all=log_handler.get_all())

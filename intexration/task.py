@@ -24,7 +24,7 @@ class Task:
         self._owner = owner
         self._repository = repository
         self._build_dir = self._create_dir(config.PATH_BUILD,  commit)
-        self._output_dir = self._create_dir(config.PATH_OUT)
+        self._output_dir = self._create_dir(config.PATH_OUTPUT)
 
     def _create_dir(self, root, commit=''):
         """Safely create a directory."""
