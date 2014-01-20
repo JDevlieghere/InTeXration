@@ -53,13 +53,13 @@ class Document:
         self._lines = self._read_log()
 
     def log_name(self):
-        self.name + '.log'
+        return self.name + '.log'
 
     def log_file(self):
         return os.path.join(self.root, self.log_name())
 
     def pdf_name(self):
-        self.name + '.pdf'
+        return self.name + '.pdf'
 
     def pdf_file(self):
         return os.path.join(self.root, self.pdf_name())
