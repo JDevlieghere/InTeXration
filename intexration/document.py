@@ -60,7 +60,7 @@ class Document:
         """Read all lines form log file"""
         path = self.log_file()
         if not os.path.exists(path):
-            raise RuntimeError("The logfile does not exist")
+            logging.error("Log file not found at %s", path)
         log_file = open(path, "r", encoding='latin-1')
         return log_file.readlines()
 
@@ -115,7 +115,6 @@ class DocumentExplorer:
             for repo in self.all_repos(owner):
                 for name in self.all_names(owner, repo):
                     path = os.path.join(self.root, owner, repo)
-                    logging.debug(path)
                     documents.append(Document(name, path))
         return documents
 
