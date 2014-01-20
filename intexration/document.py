@@ -106,7 +106,7 @@ class DocumentExplorer:
         names = []
         for file in os.listdir(os.path.join(self.root, owner, repo)):
             if file.endswith('.log'):
-                names.append(file)
+                names.append(file.replace('.log',''))
         return names
 
     def all_documents(self):
