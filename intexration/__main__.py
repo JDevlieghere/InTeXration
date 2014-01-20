@@ -19,8 +19,6 @@ def main():
     if not config.all_files_exist():
         raise RuntimeError("Some necessary files were missing. Please consult the log.")
 
-    logging.info("Testing")
-
     config_mode = False
     args = parser.parse_args()
     if args.host is not None:

@@ -27,7 +27,7 @@ class Server:
     def _hook(self, api_key):
         api_helper = ApiHelper(config.FILE_API_KEY)
         if not api_helper.is_valid(api_key):
-            logging.warning("Request Denied: API key invalid.")
+            logging.warning("Request Denied: API key invalid")
             abort(401, 'Unauthorized: API key invalid.')
         payload = request.forms.get('payload')
         try:
@@ -40,7 +40,7 @@ class Server:
             task.run()
             return 'InTeXration task started.'
         except ValueError:
-            logging.warning("Request Denied: Could not decode request body.")
+            logging.warning("Request Denied: Could not decode request body")
             abort(400, 'Bad request: Could not decode request body.')
 
     @staticmethod

@@ -23,8 +23,8 @@ class Task:
         self._url = url
         self._owner = owner
         self._repository = repository
-        self._build_dir = self._create_dir(config.PATH_BUILD,  commit)
-        self._output_dir = self._create_dir(config.PATH_OUTPUT)
+        self.build_dir = self._create_dir(config.PATH_BUILD,  commit)
+        self.output_dir = self._create_dir(config.PATH_OUTPUT)
 
     def _create_dir(self, root, commit=''):
         """Safely create a directory."""
@@ -41,49 +41,49 @@ class Task:
 
     def _clone(self):
         """Clone repository to build dir."""
-        if subprocess.call(['git', 'clone', self._url, self._build_dir], stdout=subprocess.DEVNULL,
+        if subprocess.call(['git', 'clone', self._url, self.build_dir], stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) != 0:
-            raise RuntimeError('git clone failed!')
+            logging.error("Clone failed for %s", self.title())
         logging.info("Cloned %s", self.title())
 
     def _makeindex(self, document):
         """Make index."""
-        working_dir = os.path.join(self._build_dir, document.subdir)
+        working_dir = os.path.join(self.build_dir, document.subdir)
         with cd(working_dir):
             if subprocess.call(['makeindex', document.idx], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logging.warning("%s:Makeindex failed.", self.title())
+                logging.warning("Makeindex failed  for %s", self.title())
 
     def _bibtex(self, document):
         """Compile bibtex."""
-        working_dir = os.path.join(self._build_dir, document.subdir)
+        working_dir = os.path.join(self.build_dir, document.subdir)
         with cd(working_dir):
             if subprocess.call(['bibtex', document.bib], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
-                logging.warning("%s:Bibtex failed.", self.title())
+                logging.warning("Bibtex failed for %s", self.title())
 
     def _compile(self, document):
         """Compile with pdflatex."""
-        working_dir = os.path.join(self._build_dir, document.subdir)
+        working_dir = os.path.join(self.build_dir, document.subdir)
         with cd(working_dir):
             if subprocess.call(['pdflatex', '-interaction=nonstopmode', document.tex], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logging.error("%s:Compilation finished with errors.", self.title())
+                logging.error("Compilation finished with errors for %s", self.title())
 
     def _copy(self, document):
         """Copy the PDF and log to the output directory."""
-        working_dir = os.path.join(self._build_dir, document.subdir)
+        working_dir = os.path.join(self.build_dir, document.subdir)
         # PDF File
         pdf_source_path = os.path.join(working_dir, document.pdf)
-        pdf_dest_path = os.path.join(self._output_dir, document.pdf)
+        pdf_dest_path = os.path.join(self.output_dir, document.pdf)
         shutil.copyfile(pdf_source_path, pdf_dest_path)
         # Log File
         log_source_path = os.path.join(working_dir, document.log)
-        log_dest_path = os.path.join(self._output_dir, document.log)
+        log_dest_path = os.path.join(self.output_dir, document.log)
         shutil.copyfile(log_source_path, log_dest_path)
 
     def _clean(self):
         """Clean the build directory."""
-        shutil.rmtree(self._build_dir)
+        shutil.rmtree(self.build_dir)
 
     def _build(self, document):
         """Build all."""
@@ -100,14 +100,14 @@ class Task:
             self._clone()
         except Exception as e:
             logging.error(e)
-        parser = DocumentParser(self._build_dir)
+        parser = DocumentParser(self)
         for build in parser.documents():
             try:
                 self._build(build)
             except Exception as e:
                 logging.error(e)
         self._clean()
-        logging.info("Task finished for %s.", self.title())
+        logging.info("Task finished for %s", self.title())
 
 
 class BuildDocument:
@@ -121,15 +121,16 @@ class BuildDocument:
 
 
 class DocumentParser:
-    def __init__(self, root):
-        self._path = os.path.join(root, '.intexration')
+    def __init__(self, task):
+        self._task = task
 
     def documents(self):
         """Return all builds from the .intexration file."""
+        path = os.path.join(self._task.build_dir, '.intexration')
         documents = []
-        if os.path.exists(self._path):
+        if os.path.exists(path):
             parser = configparser.ConfigParser()
-            parser.read(self._path)
+            parser.read(path)
             for build_name in parser.sections():
                 if parser.has_option(build_name, 'dir'):
                     subdir = parser[build_name]['dir']
@@ -145,5 +146,5 @@ class DocumentParser:
                     bib = build_name
                 documents.append(BuildDocument(build_name, subdir, idx, bib))
         else:
-            logging.error("No .intexration file found!")
+            logging.error("No .intexration file found for %s", self._task.title())
         return documents
