@@ -167,3 +167,4 @@ class Build:
         logging.info("Build started for %s", self.name())
         CloneTask(self.input_dir, self.repository, self.owner, self.commit)
         CompileTask(self.input_dir, self.output_dir)
+        logging.info("Build finished for %s", self.name())
