@@ -42,6 +42,19 @@ class Server:
             logging.warning("Request Denied: Could not decode request body")
             abort(400, 'Bad request: Could not decode request body.')
 
+    def _out(self, owner, repo, name):
+        document = Document(name, self.output_dir(owner, repo))
+        return static_file(document.pdf_name(), document.root)
+
+    def _log(self, owner, repo, name):
+        document = Document(name, self.output_dir(owner, repo))
+        return template(os.path.join(config.PATH_TEMPLATES, 'log'), root=config.SERVER_ROOT, repo=repo, name=name,
+                        errors=document.get_errors(), warnings=document.get_warnings(), all=document.get_log())
+
+    @staticmethod
+    def output_dir(owner, repo):
+        return os.path.join(config.PATH_OUTPUT, owner, repo)
+
     @staticmethod
     def _index():
         return template(os.path.join(config.PATH_TEMPLATES, 'index'), root=config.SERVER_ROOT)
@@ -51,19 +64,3 @@ class Server:
     @staticmethod
     def _static(name):
         return static_file(name, config.PATH_STATIC)
-
-    @staticmethod
-    def _out(owner, repo, name):
-        document = Document(name, Server.root(owner, repo))
-        return static_file(document.pdf_name(), document.root)
-
-    @staticmethod
-    def _log(owner, repo, name):
-        logging.debug(Server.root(owner, repo))
-        document = Document(name, Server.root(owner, repo))
-        return template(os.path.join(config.PATH_TEMPLATES, 'log'), root=config.SERVER_ROOT, repo=repo, name=name,
-                        errors=document.get_errors(), warnings=document.get_warnings(), all=document.get_log())
-
-    @staticmethod
-    def root(owner, repo):
-        return os.path.join(config.PATH_OUTPUT, owner, repo)
