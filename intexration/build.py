@@ -68,6 +68,7 @@ class Compile:
         shutil.copyfile(log_source_path, log_dest_path)
 
     def run(self):
+        logging.info("Compiling %s", self.name)
         self._compile()
         self._makeindex()
         self._bibtex()
@@ -115,6 +116,7 @@ class CompileTask:
         self.output_dir = output_dir
 
     def run(self):
+        logging.info("Compile task started")
         intexration_config = IntexrationConfig(os.path.join(self.input_dir, self.config_name))
         for name in intexration_config.names():
             task_input = os.path.join(self.input_dir, intexration_config.dir(name))
@@ -140,6 +142,7 @@ class CloneTask:
 
     def _clone(self):
         """Clone repository to build dir."""
+        logging.info("Cloning from %s", self.url())
         if subprocess.call(['git', 'clone',  self.url(), self.input_dir()], stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) != 0:
             logging.error("Clone failed")
