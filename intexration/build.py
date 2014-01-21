@@ -4,6 +4,7 @@ import logging
 import os
 import shutil
 import subprocess
+import errno
 
 
 @contextlib.contextmanager
@@ -14,6 +15,15 @@ def cd(dirname):
         yield
     finally:
         os.chdir(cur_dir)
+
+def create_dir(path):
+    """Safely create a directory."""
+    try:
+        os.makedirs(path)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+    return path
 
 
 class Task:
@@ -108,3 +118,36 @@ class Build:
         for name in intexration_config.names():
             task_input = os.path.join(self.input, intexration_config.dir(name))
             Task(task_input, self.output, name, intexration_config.idx(name), intexration_config.bib(name)).run()
+
+
+class NameNeeded:
+
+    input_dir = 'build'
+    output_dir = 'out'
+
+    def __init__(self, root, repository, owner, commit):
+        self.root = root
+        self.owner = owner
+        self.repository = repository
+        self.commit = commit
+
+    def url(self):
+        return 'https://github.com/' + self.owner + '/' + self.repository + '.git'
+
+    def input(self):
+        path = os.path.join(self.root, self.input_dir, self.owner, self.repository, self.commit)
+        return create_dir(path)
+
+    def output(self):
+        path = os.path.join(self.root, self.output_dir, self.owner, self.repository)
+        return create_dir(path)
+
+    def _clone(self):
+        """Clone repository to build dir."""
+        if subprocess.call(['git', 'clone',  self.url(), self.input()], stdout=subprocess.DEVNULL,
+                           stderr=subprocess.DEVNULL) != 0:
+            logging.error("Clone failed")
+
+    def run(self):
+        self._clone()
+        Build(self.input(), self.output()).run()
