@@ -83,8 +83,9 @@ class IntexrationConfig:
     bib_key = 'bib'
 
     def __init__(self, path):
+        logging.debug(path)
         if not os.path.exists(path):
-            raise RuntimeError("InTeXration config file does not exist")
+            raise RuntimeError("InTeXration config file not found")
         parser = configparser.ConfigParser()
         parser.read(path)
 
