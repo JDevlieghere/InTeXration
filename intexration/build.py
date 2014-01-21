@@ -168,6 +168,6 @@ class Build:
 
     def run(self):
         logging.info("Build started for %s", self.name())
-        CloneTask(self.input_dir, self.repository, self.owner, self.commit)
-        CompileTask(self.input_dir, self.output_dir)
+        CloneTask(self.input_dir, self.repository, self.owner, self.commit).run()
+        CompileTask(self.input_dir, self.output_dir).run()
         logging.info("Build finished for %s", self.name())
