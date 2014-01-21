@@ -9,14 +9,20 @@
 
 	<title>InTeXration</title>
 
-	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{root}}css/style.css">
-	</head>
+</head>
+
 <body>
 <div class="container">
-	<div class="status">
-	    <img src="{{root}}img/intexration.png" alt="InTeXration" />
+
+	% for document in documents:
+	<div class="document">
+		<h1>{{document.name}}</h1>
 	</div>
+	% end
+
+
 </div>
 
 </body>

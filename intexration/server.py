@@ -3,11 +3,16 @@ from bottle import Bottle, request, abort, static_file, template
 import os
 import json
 from intexration import config
-from intexration.helper import LogHelper, ApiHelper
-from intexration.task import Task
+from intexration.build import Build
+from intexration.document import Document
+from intexration.helper import ApiHelper
 
 
 class Server:
+
+    output_name = 'out'
+    master_name = 'master'
+
     def __init__(self, host, port):
         self._host = host
         self._port = port
@@ -32,35 +37,36 @@ class Server:
         payload = request.forms.get('payload')
         try:
             data = json.loads(payload)
-            url = data['repository']['url']
-            name = data['repository']['name']
-            owner = data['repository']['owner']['name']
-            commit = data['after']
-            task = Task(url, name, owner, commit)
-            task.run()
-            return 'InTeXration task started.'
+            if self.master_name in data['ref']:
+                owner = data['repository']['owner']['name']
+                repository = data['repository']['name']
+                commit = data['after']
+                Build(config.PATH_ROOT, owner, repository, commit).run()
+                return "InTeXration task started."
+            else:
+                return ""
         except ValueError:
             logging.warning("Request Denied: Could not decode request body")
             abort(400, 'Bad request: Could not decode request body.')
 
+    def _out(self, owner, repo, name):
+        document = Document(name, self.output_dir(owner, repo))
+        return static_file(document.pdf_name(), document.root)
+
+    def _log(self, owner, repo, name):
+        document = Document(name, self.output_dir(owner, repo))
+        return template(os.path.join(config.PATH_TEMPLATES, 'log.tpl'), root=config.SERVER_ROOT, repo=repo, name=name,
+                        errors=document.get_errors(), warnings=document.get_warnings(), all=document.get_log())
+
+    def output_dir(self, owner, repo):
+        return os.path.join(config.PATH_ROOT, self.output_name, owner, repo)
+
     @staticmethod
     def _index():
         return template(os.path.join(config.PATH_TEMPLATES, 'index.tpl'), root=config.SERVER_ROOT)
+        #return template(os.path.join(config.PATH_TEMPLATES, 'list.tpl'), root=config.SERVER_ROOT,
+        #                documents=DocumentExplorer(config.PATH_OUTPUT).all_documents())
 
     @staticmethod
     def _static(name):
         return static_file(name, config.PATH_STATIC)
-
-    @staticmethod
-    def _out(owner, repo, name):
-        path = os.path.join(config.PATH_OUTPUT, owner, repo)
-        file_name = name + '.pdf'
-        return static_file(file_name, path)
-
-    @staticmethod
-    def _log(owner, repo, name):
-        file_name = name + '.log'
-        path = os.path.join(config.PATH_OUTPUT, owner, repo, file_name)
-        log_handler = LogHelper(path)
-        return template(os.path.join(config.PATH_TEMPLATES, 'log.tpl'), root=config.SERVER_ROOT, repo=repo, name=name,
-                        errors=log_handler.get_errors(), warnings=log_handler.get_warnings(), all=log_handler.get_all())
