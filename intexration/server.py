@@ -37,7 +37,7 @@ class Server:
         payload = request.forms.get('payload')
         try:
             data = json.loads(payload)
-            if self.master_name in data['refs']:
+            if self.master_name in data['ref']:
                 owner = data['repository']['owner']['name']
                 repository = data['repository']['name']
                 commit = data['after']
