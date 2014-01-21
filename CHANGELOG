@@ -1,3 +1,8 @@
+v 1.1.0 dev
+  - Repository owner part of URL to prevent collisions
+  - Only compile commits to master branch
+  - Command line parameters added for importing and exporting
+
 v 1.0.0 dev
   - CHANGELOG added
   - Installation with setup.py
