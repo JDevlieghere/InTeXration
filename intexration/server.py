@@ -10,7 +10,7 @@ from intexration.helper import ApiHelper
 
 class Server:
 
-    output_dir = 'out'
+    output_name = 'out'
 
     def __init__(self, host, port):
         self._host = host
@@ -55,7 +55,7 @@ class Server:
                         errors=document.get_errors(), warnings=document.get_warnings(), all=document.get_log())
 
     def output_dir(self, owner, repo):
-        return os.path.join(config.PATH_ROOT, self.output_dir, owner, repo)
+        return os.path.join(config.PATH_ROOT, self.output_name, owner, repo)
 
     @staticmethod
     def _index():
