@@ -27,9 +27,9 @@ def create_dir(path):
 
 
 class Task:
-    def __init__(self, input, output, name, idx, bib):
-        self.input = input
-        self.output = output
+    def __init__(self, input_dir, output_dir, name, idx, bib):
+        self.input_dir = input_dir
+        self.output_dir = output_dir
         self.name = name
         self.idx = idx
         self.bib = bib
@@ -39,31 +39,31 @@ class Task:
 
     def _makeindex(self):
         """Make index."""
-        with cd(self.input):
+        with cd(self.input_dir):
             if subprocess.call(['makeindex', self.idx], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
                 logging.warning("Makeindex failed")
 
     def _bibtex(self):
         """Compile bibtex."""
-        with cd(self.input):
+        with cd(self.input_dir):
             if subprocess.call(['bibtex', self.bib], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
                 logging.warning("Bibtex failed")
 
     def _compile(self):
         """Compile with pdflatex."""
-        with cd(self.input):
+        with cd(self.input_dir):
             if subprocess.call(['pdflatex', '-interaction=nonstopmode', self.tex], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
                 logging.warning("Compilation finished with errors")
 
-    def _copy(self, document):
+    def _copy(self):
         """Copy the PDF and log to the output directory."""
-        pdf_source_path = os.path.join(self.input, self.pdf)
-        pdf_dest_path = os.path.join(self.output, self.pdf)
+        pdf_source_path = os.path.join(self.input_dir, self.pdf)
+        pdf_dest_path = os.path.join(self.output_dir, self.pdf)
         shutil.copyfile(pdf_source_path, pdf_dest_path)
-        log_source_path = os.path.join(self.input, self.log)
-        log_dest_path = os.path.join(self.output, self.log)
+        log_source_path = os.path.join(self.input_dir, self.log)
+        log_dest_path = os.path.join(self.output_dir, self.log)
         shutil.copyfile(log_source_path, log_dest_path)
 
     def run(self):
@@ -109,21 +109,21 @@ class Build:
 
     config_name = '.intexration'
 
-    def __init__(self, input, output):
-        self.input = input
-        self.output = output
+    def __init__(self, input_dir, output_dir):
+        self.input_dir = input_dir
+        self.output_dir = output_dir
 
     def run(self):
-        intexration_config = IntexrationConfig(os.path.join(self.input, self.config_name))
+        intexration_config = IntexrationConfig(os.path.join(self.input_dir, self.config_name))
         for name in intexration_config.names():
-            task_input = os.path.join(self.input, intexration_config.dir(name))
-            Task(task_input, self.output, name, intexration_config.idx(name), intexration_config.bib(name)).run()
+            task_input = os.path.join(self.input_dir, intexration_config.dir(name))
+            Task(task_input, self.output_dir, name, intexration_config.idx(name), intexration_config.bib(name)).run()
 
 
 class NameNeeded:
 
-    input_dir = 'build'
-    output_dir = 'out'
+    input_name = 'build'
+    output_name = 'out'
 
     def __init__(self, root, repository, owner, commit):
         self.root = root
@@ -134,20 +134,20 @@ class NameNeeded:
     def url(self):
         return 'https://github.com/' + self.owner + '/' + self.repository + '.git'
 
-    def input(self):
-        path = os.path.join(self.root, self.input_dir, self.owner, self.repository, self.commit)
+    def input_dir(self):
+        path = os.path.join(self.root, self.input_name, self.owner, self.repository, self.commit)
         return create_dir(path)
 
-    def output(self):
-        path = os.path.join(self.root, self.output_dir, self.owner, self.repository)
+    def output_dir(self):
+        path = os.path.join(self.root, self.output_name, self.owner, self.repository)
         return create_dir(path)
 
     def _clone(self):
         """Clone repository to build dir."""
-        if subprocess.call(['git', 'clone',  self.url(), self.input()], stdout=subprocess.DEVNULL,
+        if subprocess.call(['git', 'clone',  self.url(), self.input_dir()], stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) != 0:
             logging.error("Clone failed")
 
     def run(self):
         self._clone()
-        Build(self.input(), self.output()).run()
+        Build(self.input_dir(), self.output_dir()).run()
