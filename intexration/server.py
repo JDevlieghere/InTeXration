@@ -55,7 +55,7 @@ class Server:
 
     def _log(self, owner, repo, name):
         document = Document(name, self.output_dir(owner, repo))
-        return template(os.path.join(config.PATH_TEMPLATES, 'log'), root=config.SERVER_ROOT, repo=repo, name=name,
+        return template(os.path.join(config.PATH_TEMPLATES, 'log.tpl'), root=config.SERVER_ROOT, repo=repo, name=name,
                         errors=document.get_errors(), warnings=document.get_warnings(), all=document.get_log())
 
     def output_dir(self, owner, repo):
@@ -63,7 +63,7 @@ class Server:
 
     @staticmethod
     def _index():
-        return template(os.path.join(config.PATH_TEMPLATES, 'index'), root=config.SERVER_ROOT)
+        return template(os.path.join(config.PATH_TEMPLATES, 'index.tpl'), root=config.SERVER_ROOT)
         #return template(os.path.join(config.PATH_TEMPLATES, 'list.tpl'), root=config.SERVER_ROOT,
         #                documents=DocumentExplorer(config.PATH_OUTPUT).all_documents())
 
