@@ -1,4 +1,3 @@
-import configparser
 import contextlib
 import logging
 import os
@@ -20,12 +19,14 @@ def cd(dirname):
 
 
 class Task:
-    def __init__(self, url, repository, owner, commit):
-        self._url = url
+    def __init__(self, repository, owner, commit):
         self._owner = owner
         self._repository = repository
         self.build_dir = self._create_dir(config.PATH_BUILD,  commit)
         self.output_dir = self._create_dir(config.PATH_OUTPUT)
+
+    def url(self):
+        return 'https://github.com/' + self._owner + '/' + self._repository + '.git'
 
     def _create_dir(self, root, commit=''):
         """Safely create a directory."""
@@ -42,7 +43,7 @@ class Task:
 
     def _clone(self):
         """Clone repository to build dir."""
-        if subprocess.call(['git', 'clone', self._url, self.build_dir], stdout=subprocess.DEVNULL,
+        if subprocess.call(['git', 'clone',  self.url(), self.build_dir], stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) != 0:
             logging.error("Clone failed for %s", self.title())
         logging.info("Cloned %s", self.title())
