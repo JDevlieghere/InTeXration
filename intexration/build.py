@@ -86,8 +86,8 @@ class IntexrationConfig:
         logging.debug(path)
         if not os.path.exists(path):
             raise RuntimeError("InTeXration config file not found")
-        parser = configparser.ConfigParser()
-        parser.read(path)
+        self.parser = configparser.ConfigParser()
+        self.parser.read(path)
 
     def names(self):
         return self.parser.sections()
