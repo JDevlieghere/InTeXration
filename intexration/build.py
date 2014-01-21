@@ -153,13 +153,17 @@ class Build:
     input_name = 'build'
     output_name = 'out'
 
-    def __init__(self, root, repository, owner, commit):
+    def __init__(self, root, owner, repository, commit):
         self.input_dir = os.path.join(root, self.input_name)
         self.output_dir = os.path.join(root, self.output_name)
         self.repository = repository
         self.owner = owner
         self.commit = commit
 
+    def name(self):
+        return self.owner+'/'+self.repository
+
     def run(self):
+        logging.info("Build started for %s", self.name())
         CloneTask(self.input_dir, self.repository, self.owner, self.commit)
         CompileTask(self.input_dir, self.output_dir)

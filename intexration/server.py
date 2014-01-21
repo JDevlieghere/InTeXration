@@ -33,10 +33,10 @@ class Server:
         payload = request.forms.get('payload')
         try:
             data = json.loads(payload)
-            repository = data['repository']['name']
             owner = data['repository']['owner']['name']
+            repository = data['repository']['name']
             commit = data['after']
-            Build(config.PATH_ROOT, repository, owner, commit).run()
+            Build(config.PATH_ROOT, owner, repository, commit).run()
             return 'InTeXration task started.'
         except ValueError:
             logging.warning("Request Denied: Could not decode request body")
