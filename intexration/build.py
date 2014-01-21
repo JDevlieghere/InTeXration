@@ -27,6 +27,10 @@ def create_dir(path):
     return path
 
 
+def clean(path):
+    shutil.rmtree(path)
+
+
 class Compile:
     def __init__(self, input_dir, output_dir, name, idx, bib):
         self.input_dir = input_dir
@@ -83,7 +87,6 @@ class IntexrationConfig:
     bib_key = 'bib'
 
     def __init__(self, path):
-        logging.debug(path)
         if not os.path.exists(path):
             raise RuntimeError("InTeXration config file not found")
         self.parser = configparser.ConfigParser()
@@ -146,7 +149,7 @@ class CloneTask:
         logging.info("Cloning from %s", self.url())
         if subprocess.call(['git', 'clone',  self.url(), self.clone_dir()], stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) != 0:
-            logging.error("Clone failed")
+            raise RuntimeError("Clone failed")
 
     def run(self):
         self._clone()
@@ -170,6 +173,11 @@ class Build:
     def run(self):
         logging.info("Build started for %s", self.name())
         clone_task = CloneTask(self.input_dir, self.repository, self.owner, self.commit)
-        clone_task.run()
-        CompileTask(clone_task.clone_dir(), self.output_dir).run()
+        try:
+            clone_task.run()
+            CompileTask(clone_task.clone_dir(), self.output_dir).run()
+        except RuntimeError as e:
+            logging.error(e)
+        finally:
+            clean(clone_task.clone_dir())
         logging.info("Build finished for %s", self.name())
