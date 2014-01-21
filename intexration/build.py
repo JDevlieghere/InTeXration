@@ -150,9 +150,12 @@ class CloneTask:
 
 class Build:
 
-    def __init__(self, input_dir, output_dir, repository, owner, commit):
-        self.input_dir = input_dir
-        self.output_dir = output_dir
+    input_name = 'build'
+    output_name = 'out'
+
+    def __init__(self, root, repository, owner, commit):
+        self.input_dir = os.path.join(root, self.input_name)
+        self.input_dir = os.path.join(root, self.output_name)
         self.repository = repository
         self.owner = owner
         self.commit = commit
@@ -160,9 +163,3 @@ class Build:
     def run(self):
         CloneTask(self.input_dir, self.repository, self.owner, self.commit)
         CompileTask(self.input_dir, self.output_dir)
-
-
-
-
-
-

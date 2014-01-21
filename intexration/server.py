@@ -3,9 +3,9 @@ from bottle import Bottle, request, abort, static_file, template
 import os
 import json
 from intexration import config
-from intexration.document import Document, DocumentParser, DocumentExplorer
+from intexration.build import Build
+from intexration.document import Document
 from intexration.helper import ApiHelper
-from intexration.task import Task
 
 
 class Server:
@@ -33,12 +33,10 @@ class Server:
         payload = request.forms.get('payload')
         try:
             data = json.loads(payload)
-            url = data['repository']['url']
-            name = data['repository']['name']
+            repository = data['repository']['name']
             owner = data['repository']['owner']['name']
             commit = data['after']
-            task = Task(url, name, owner, commit)
-            task.run()
+            Build(config.PATH_ROOT, repository, owner, commit).run()
             return 'InTeXration task started.'
         except ValueError:
             logging.warning("Request Denied: Could not decode request body")

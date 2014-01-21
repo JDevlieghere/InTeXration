@@ -1,49 +1,6 @@
-import configparser
 import logging
 import os
 from intexration import config
-
-__author__ = 'Jonas'
-
-
-class BuildDocument:
-    def __init__(self, name, subdir, idx, bib):
-        self.subdir = subdir
-        self.idx = idx + '.idx'
-        self.bib = bib
-        self.tex = name + '.tex'
-        self.pdf = name + '.pdf'
-        self.log = name + '.log'
-
-
-class DocumentParser:
-    def __init__(self, task):
-        self._task = task
-
-    def documents(self):
-        """Return all builds from the .intexration file."""
-        path = os.path.join(self._task.build_dir, '.intexration')
-        documents = []
-        if os.path.exists(path):
-            parser = configparser.ConfigParser()
-            parser.read(path)
-            for build_name in parser.sections():
-                if parser.has_option(build_name, 'dir'):
-                    subdir = parser[build_name]['dir']
-                else:
-                    subdir = ''
-                if parser.has_option(build_name, 'idx'):
-                    idx = parser[build_name]['idx']
-                else:
-                    idx = build_name
-                if parser.has_option(build_name, 'bib'):
-                    bib = parser[build_name]['bib']
-                else:
-                    bib = build_name
-                documents.append(BuildDocument(build_name, subdir, idx, bib))
-        else:
-            logging.error("No .intexration file found for %s", self._task.title())
-        return documents
 
 
 class Document:
