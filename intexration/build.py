@@ -16,6 +16,7 @@ def cd(dirname):
     finally:
         os.chdir(cur_dir)
 
+
 def create_dir(path):
     """Safely create a directory."""
     try:
@@ -26,7 +27,7 @@ def create_dir(path):
     return path
 
 
-class Task:
+class Compile:
     def __init__(self, input_dir, output_dir, name, idx, bib):
         self.input_dir = input_dir
         self.output_dir = output_dir
@@ -105,7 +106,7 @@ class IntexrationConfig:
         return name
 
 
-class Build:
+class CompileTask:
 
     config_name = '.intexration'
 
@@ -117,13 +118,12 @@ class Build:
         intexration_config = IntexrationConfig(os.path.join(self.input_dir, self.config_name))
         for name in intexration_config.names():
             task_input = os.path.join(self.input_dir, intexration_config.dir(name))
-            Task(task_input, self.output_dir, name, intexration_config.idx(name), intexration_config.bib(name)).run()
+            Compile(task_input, self.output_dir, name, intexration_config.idx(name), intexration_config.bib(name)).run()
 
 
-class NameNeeded:
+class CloneTask:
 
-    input_name = 'build'
-    output_name = 'out'
+    clone_name = 'build'
 
     def __init__(self, root, repository, owner, commit):
         self.root = root
@@ -134,12 +134,8 @@ class NameNeeded:
     def url(self):
         return 'https://github.com/' + self.owner + '/' + self.repository + '.git'
 
-    def input_dir(self):
+    def clone_dir(self):
         path = os.path.join(self.root, self.input_name, self.owner, self.repository, self.commit)
-        return create_dir(path)
-
-    def output_dir(self):
-        path = os.path.join(self.root, self.output_name, self.owner, self.repository)
         return create_dir(path)
 
     def _clone(self):
@@ -150,4 +146,23 @@ class NameNeeded:
 
     def run(self):
         self._clone()
-        Build(self.input_dir(), self.output_dir()).run()
+
+
+class Build:
+
+    def __init__(self, input_dir, output_dir, repository, owner, commit):
+        self.input_dir = input_dir
+        self.output_dir = output_dir
+        self.repository = repository
+        self.owner = owner
+        self.commit = commit
+
+    def run(self):
+        CloneTask(self.input_dir, self.repository, self.owner, self.commit)
+        CompileTask(self.input_dir, self.output_dir)
+
+
+
+
+
+
