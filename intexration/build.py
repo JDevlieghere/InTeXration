@@ -137,13 +137,13 @@ class CloneTask:
         return 'https://github.com/' + self.owner + '/' + self.repository + '.git'
 
     def clone_dir(self):
-        path = os.path.join(self.root, self.input_name, self.owner, self.repository, self.commit)
+        path = os.path.join(self.root, self.clone_name, self.owner, self.repository, self.commit)
         return create_dir(path)
 
     def _clone(self):
         """Clone repository to build dir."""
         logging.info("Cloning from %s", self.url())
-        if subprocess.call(['git', 'clone',  self.url(), self.input_dir()], stdout=subprocess.DEVNULL,
+        if subprocess.call(['git', 'clone',  self.url(), self.clone_dir()], stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) != 0:
             logging.error("Clone failed")
 
