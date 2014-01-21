@@ -55,7 +55,7 @@ class Server:
                         errors=document.get_errors(), warnings=document.get_warnings(), all=document.get_log())
 
     def output_dir(self, owner, repo):
-        return os.path.join(config.PATH_ROOT, 'out', owner, repo)
+        return os.path.join(config.PATH_ROOT, self.output_dir, owner, repo)
 
     @staticmethod
     def _index():
