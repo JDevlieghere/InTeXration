@@ -30,20 +30,20 @@ class Task:
     def _makeindex(self):
         """Make index."""
         with cd(self.input):
-            if subprocess.call(['makeindex', document.idx], stdout=subprocess.DEVNULL,
+            if subprocess.call(['makeindex', self.idx], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
                 logging.warning("Makeindex failed")
 
     def _bibtex(self):
         """Compile bibtex."""
         with cd(self.input):
-            if subprocess.call(['bibtex', document.bib], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
+            if subprocess.call(['bibtex', self.bib], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
                 logging.warning("Bibtex failed")
 
     def _compile(self):
         """Compile with pdflatex."""
         with cd(self.input):
-            if subprocess.call(['pdflatex', '-interaction=nonstopmode', document.tex], stdout=subprocess.DEVNULL,
+            if subprocess.call(['pdflatex', '-interaction=nonstopmode', self.tex], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
                 logging.warning("Compilation finished with errors")
 
