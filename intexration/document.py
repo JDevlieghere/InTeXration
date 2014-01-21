@@ -69,6 +69,7 @@ class Document:
         path = self.log_file()
         if not os.path.exists(path):
             logging.error("Log file not found at %s", path)
+            raise RuntimeWarning("Log file not found at %s", path)
         log_file = open(path, "r", encoding='latin-1')
         return log_file.readlines()
 
