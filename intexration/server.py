@@ -11,7 +11,7 @@ from intexration.helper import ApiHelper
 class Server:
 
     output_name = 'out'
-    master_name = 'main'
+    master_name = 'master'
 
     def __init__(self, host, port):
         self._host = host
@@ -37,7 +37,6 @@ class Server:
         payload = request.forms.get('payload')
         try:
             data = json.loads(payload)
-            logging.debug(data['ref'])
             if self.master_name in data['ref']:
                 owner = data['repository']['owner']['name']
                 repository = data['repository']['name']
