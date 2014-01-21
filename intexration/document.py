@@ -55,18 +55,18 @@ class Document:
     def log_name(self):
         return self.name + '.log'
 
-    def log_file(self):
+    def log_path(self):
         return os.path.join(self.root, self.log_name())
 
     def pdf_name(self):
         return self.name + '.pdf'
 
-    def pdf_file(self):
+    def pdf_path(self):
         return os.path.join(self.root, self.pdf_name())
 
     def _read_log(self):
         """Read all lines form log file"""
-        path = self.log_file()
+        path = self.log_path()
         if not os.path.exists(path):
             logging.error("Log file not found at %s", path)
             raise RuntimeWarning("Log file not found at %s", path)
