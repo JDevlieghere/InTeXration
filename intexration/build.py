@@ -155,7 +155,7 @@ class Build:
 
     def __init__(self, root, repository, owner, commit):
         self.input_dir = os.path.join(root, self.input_name)
-        self.input_dir = os.path.join(root, self.output_name)
+        self.output_dir = os.path.join(root, self.output_name)
         self.repository = repository
         self.owner = owner
         self.commit = commit
