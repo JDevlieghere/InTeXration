@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='InTeXration',
-    version='2.0.0dev',
+    version='1.0.0dev',
     packages=['intexration'],
     package_dir={'config': 'intexration'},
     package_data={'intexration': ['config/*.cfg', 'data/*.csv', 'logs/*.log', 'templates/*.tpl', 'static/*/*']},
