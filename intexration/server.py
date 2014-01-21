@@ -11,6 +11,7 @@ from intexration.helper import ApiHelper
 class Server:
 
     output_name = 'out'
+    master_name = 'main'
 
     def __init__(self, host, port):
         self._host = host
@@ -36,11 +37,14 @@ class Server:
         payload = request.forms.get('payload')
         try:
             data = json.loads(payload)
-            owner = data['repository']['owner']['name']
-            repository = data['repository']['name']
-            commit = data['after']
-            Build(config.PATH_ROOT, owner, repository, commit).run()
-            return 'InTeXration task started.'
+            if self.master_name in data['refs']:
+                owner = data['repository']['owner']['name']
+                repository = data['repository']['name']
+                commit = data['after']
+                Build(config.PATH_ROOT, owner, repository, commit).run()
+                return "InTeXration task started."
+            else:
+                return ""
         except ValueError:
             logging.warning("Request Denied: Could not decode request body")
             abort(400, 'Bad request: Could not decode request body.')
