@@ -10,8 +10,6 @@ PATH_CONFIG = os.path.join(PATH_ROOT, 'config')
 PATH_DATA = os.path.join(PATH_ROOT, 'data')
 PATH_TEMPLATES = os.path.join(PATH_ROOT, 'templates')
 PATH_STATIC = os.path.join(PATH_ROOT, 'static')
-PATH_OUTPUT = os.path.join(PATH_ROOT, 'out')
-PATH_BUILD = os.path.join(PATH_ROOT, 'build')
 
 # Base names
 BASENAME_CFG = 'settings.cfg'

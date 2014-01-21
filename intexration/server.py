@@ -9,6 +9,9 @@ from intexration.helper import ApiHelper
 
 
 class Server:
+
+    output_dir = 'out'
+
     def __init__(self, host, port):
         self._host = host
         self._port = port
@@ -51,9 +54,8 @@ class Server:
         return template(os.path.join(config.PATH_TEMPLATES, 'log'), root=config.SERVER_ROOT, repo=repo, name=name,
                         errors=document.get_errors(), warnings=document.get_warnings(), all=document.get_log())
 
-    @staticmethod
-    def output_dir(owner, repo):
-        return os.path.join(config.PATH_OUTPUT, owner, repo)
+    def output_dir(self, owner, repo):
+        return os.path.join(config.PATH_ROOT, self.output_dir, owner, repo)
 
     @staticmethod
     def _index():
