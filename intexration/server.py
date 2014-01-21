@@ -59,7 +59,7 @@ class Server:
 
     @staticmethod
     def _log(owner, repo, name):
-        logging.debug()
+        logging.debug(Server.root(owner, repo))
         document = Document(name, Server.root(owner, repo))
         return template(os.path.join(config.PATH_TEMPLATES, 'log'), root=config.SERVER_ROOT, repo=repo, name=name,
                         errors=document.get_errors(), warnings=document.get_warnings(), all=document.get_log())
