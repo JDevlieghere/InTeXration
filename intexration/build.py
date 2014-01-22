@@ -27,11 +27,15 @@ def create_dir(path):
     return path
 
 
-def empty(path):
+def empty(path, files_only):
+    logging.debug("Empty %s", path)
     for content in os.listdir(path):
         content_path = os.path.join(path, content)
         try:
             os.remove(content_path)
+        except OSError:
+            if not files_only:
+                os.rmdir(content_path)
         except Exception as e:
             logging.error(e)
 
@@ -162,7 +166,7 @@ class CloneTask:
         return create_dir(path)
 
     def _clean(self):
-        empty(os.path.join(self.root, self.clone_name, self.owner, self.repository))
+        empty(os.path.join(self.root, self.clone_name, self.owner, self.repository), False)
 
     def _clone(self):
         """Clone repository to build dir."""
@@ -209,7 +213,7 @@ class CloneBuild(Build):
     def run(self):
         logging.info("Build (clone) started for %s", self.name())
         clone_task = CloneTask(self.input_dir, self.repository, self.owner, self.commit)
-        empty(self.output_dir)
+        empty(os.path.join(self.output_dir, self.repository, self.owner), True)
         try:
             clone_task.run()
         except RuntimeError as e:
