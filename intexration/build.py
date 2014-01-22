@@ -225,12 +225,12 @@ class LazyBuild(Build):
         self.output_dir = os.path.join(root, self.output_name)
         self.repository = repository
         self.owner = owner
-        self.name = name
+        self.document_name = name
 
     def run(self):
         logging.info("Build (lazy) started for %s", self.name())
         try:
-            IntexrationTask(self.commit_dir(), self.output_dir).run_only(self.name)
+            IntexrationTask(self.commit_dir(), self.output_dir).run_only(self.document_name)
         except RuntimeError as e:
             logging.error(e)
 
