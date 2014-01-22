@@ -90,7 +90,7 @@ class CompileTask:
         self._bibtex()
         self._compile()
         self._copy()
-        logging.info("Compiling %s finished.", self.name)
+        logging.info("Result copied to %s", self.output_dir)
 
 
 class IntexrationConfig:
@@ -233,6 +233,8 @@ class LazyBuild(Build):
             IntexrationTask(self.commit_dir(), self.output_dir).run_only(self.document_name)
         except Exception as e:
             logging.error(e)
+        finally:
+            clean(self.commit_dir())
 
     def commit_dir(self):
         dir = os.path.join(self.input_dir, self.owner, self.repository)
