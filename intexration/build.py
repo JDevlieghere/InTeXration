@@ -144,6 +144,15 @@ class CloneTask:
         path = os.path.join(self.root, self.clone_name, self.owner, self.repository, self.commit)
         return create_dir(path)
 
+    def _clean(self):
+        dir = os.path.join(self.root, self.clone_name, self.owner, self.repository)
+        for commit_dir in os.listdir(dir):
+            path = os.path.join(dir, commit_dir)
+            try:
+                os.remove(path)
+            except Exception as e:
+                logging.error(e)
+
     def _clone(self):
         """Clone repository to build dir."""
         logging.info("Cloning from %s", self.url())
@@ -152,6 +161,7 @@ class CloneTask:
             raise RuntimeError("Clone failed")
 
     def run(self):
+        self._clean()
         self._clone()
 
 
