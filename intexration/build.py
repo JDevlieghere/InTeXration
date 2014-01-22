@@ -27,6 +27,15 @@ def create_dir(path):
     return path
 
 
+def empty(path):
+    for content in os.listdir(path):
+        content_path = os.path.join(dir, content)
+        try:
+            os.remove(content_path)
+        except Exception as e:
+            logging.error(e)
+
+
 def clean(path):
     shutil.rmtree(path)
 
@@ -153,13 +162,7 @@ class CloneTask:
         return create_dir(path)
 
     def _clean(self):
-        dir = os.path.join(self.root, self.clone_name, self.owner, self.repository)
-        for commit_dir in os.listdir(dir):
-            path = os.path.join(dir, commit_dir)
-            try:
-                os.remove(path)
-            except Exception as e:
-                logging.error(e)
+        empty(os.path.join(self.root, self.clone_name, self.owner, self.repository))
 
     def _clone(self):
         """Clone repository to build dir."""
@@ -206,6 +209,7 @@ class CloneBuild(Build):
     def run(self):
         logging.info("Build (clone) started for %s", self.name())
         clone_task = CloneTask(self.input_dir, self.repository, self.owner, self.commit)
+        empty(self.output_dir)
         try:
             clone_task.run()
         except RuntimeError as e:
