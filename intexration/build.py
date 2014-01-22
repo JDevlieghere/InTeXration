@@ -128,7 +128,7 @@ class IntexrationTask:
     config_name = '.intexration'
 
     def __init__(self, input_dir, output_dir):
-        print(os.listdir(input_dir))
+        logging.debug(os.listdir(input_dir))
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.config = IntexrationConfig(os.path.join(self.input_dir, self.config_name))

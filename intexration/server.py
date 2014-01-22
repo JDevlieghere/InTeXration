@@ -56,7 +56,7 @@ class Server:
     def _out(self, owner, repository, name):
         try:
             document = Document(name, self.output_dir(owner, repository))
-        except RuntimeWarning:
+        except Exception:
             LazyBuild(config.PATH_ROOT, owner, repository, name).run()
             document = Document(name, self.output_dir(owner, repository))
         return static_file(document.pdf_name(), document.root)
