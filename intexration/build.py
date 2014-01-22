@@ -213,7 +213,7 @@ class CloneBuild(Build):
     def run(self):
         logging.info("Build (clone) started for %s", self.name())
         clone_task = CloneTask(self.input_dir, self.repository, self.owner, self.commit)
-        empty(os.path.join(self.output_dir, self.repository, self.owner), True)
+        empty(os.path.join(self.output_dir, self.owner, self.repository), True)
         try:
             clone_task.run()
         except RuntimeError as e:
