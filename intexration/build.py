@@ -90,6 +90,7 @@ class CompileTask:
         self._bibtex()
         self._compile()
         self._copy()
+        logging.info("Compiling %s finished.", self.name)
 
 
 class IntexrationConfig:
