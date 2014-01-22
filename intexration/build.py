@@ -28,7 +28,6 @@ def create_dir(path):
 
 
 def empty(path, files_only):
-    logging.debug("Empty %s", path)
     for content in os.listdir(path):
         content_path = os.path.join(path, content)
         try:
@@ -237,6 +236,7 @@ class LazyBuild(Build):
     def commit_dir(self):
         dir = os.path.join(self.input_dir, self.owner, self.repository)
         commit_dirs = os.listdir(dir)
+        logging.debug(commit_dirs)
         if not len(commit_dirs) == 1:
             raise RuntimeError("Unable to determine commit directory for lazy build")
         return commit_dirs[1]
