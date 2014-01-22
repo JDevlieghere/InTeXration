@@ -235,7 +235,7 @@ class LazyBuild(Build):
             logging.error(e)
 
     def commit_dir(self):
-        dir = os.path.join(self.root, self.clone_name, self.owner, self.repository)
+        dir = os.path.join(self.input_dir, self.owner, self.repository)
         commit_dirs = os.listdir(dir)
         if len(commit_dirs) != 1:
             raise RuntimeError("Unable to determine commit directory for lazy build")
