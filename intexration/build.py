@@ -239,4 +239,4 @@ class LazyBuild(Build):
         logging.debug(commit_dirs)
         if not len(commit_dirs) == 1:
             raise RuntimeError("Unable to determine commit directory for lazy build")
-        return os.path.join(self.input_dir, commit_dirs[1])
+        return os.path.join(self.input_dir, commit_dirs[0])
