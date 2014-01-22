@@ -29,7 +29,7 @@ def create_dir(path):
 
 def empty(path):
     for content in os.listdir(path):
-        content_path = os.path.join(dir, content)
+        content_path = os.path.join(path, content)
         try:
             os.remove(content_path)
         except Exception as e:
