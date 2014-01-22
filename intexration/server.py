@@ -3,7 +3,7 @@ from bottle import Bottle, request, abort, static_file, template
 import os
 import json
 from intexration import config
-from intexration.build import Build, CloneBuild
+from intexration.build import Build, CloneBuild, LazyBuild
 from intexration.document import Document
 from intexration.helper import ApiHelper
 
@@ -57,7 +57,7 @@ class Server:
         try:
             document = Document(name, self.output_dir(owner, repository))
         except RuntimeWarning:
-            CloneBuild(config.PATH_ROOT, owner, repository, name).run()
+            LazyBuild(config.PATH_ROOT, owner, repository, name).run()
             document = Document(name, self.output_dir(owner, repository))
         return static_file(document.pdf_name(), document.root)
 
