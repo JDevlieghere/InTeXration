@@ -59,6 +59,10 @@ def write(section, key, value):
         config.write(configfile)
 
 
+def str2bool(v):
+    return v.lower() in ("yes", "true", "t", "1")
+
+
 def export_file(dir):
     path = os.path.join(dir, BASENAME_CFG)
     shutil.copyfile(FILE_CONFIG, path)

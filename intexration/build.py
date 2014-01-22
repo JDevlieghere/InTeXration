@@ -199,3 +199,38 @@ class Build:
         finally:
             clean(clone_task.clone_dir())
         logging.info("Build finished for %s", self.name())
+
+
+class CloneBuild(Build):
+
+    def run(self):
+        logging.info("Build (clone) started for %s", self.name())
+        clone_task = CloneTask(self.input_dir, self.repository, self.owner, self.commit)
+        try:
+            clone_task.run()
+        except RuntimeError as e:
+            logging.error(e)
+
+
+class LazyBuild(Build):
+
+    def __init__(self, root, owner, repository, name):
+        self.input_dir = os.path.join(root, self.input_name)
+        self.output_dir = os.path.join(root, self.output_name)
+        self.repository = repository
+        self.owner = owner
+        self.name = name
+
+    def run(self):
+        logging.info("Build (lazy) started for %s", self.name())
+        try:
+            IntexrationTask(self.commit_dir(), self.output_dir).run_only(self.name)
+        except RuntimeError as e:
+            logging.error(e)
+
+    def commit_dir(self):
+        dir = os.path.join(self.root, self.clone_name, self.owner, self.repository)
+        commit_dirs = os.listdir(dir)
+        if len(commit_dirs) != 1:
+            raise RuntimeError("Unable to determine commit directory for lazy build")
+        return commit_dirs[1]
