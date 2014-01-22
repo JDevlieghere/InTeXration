@@ -31,7 +31,7 @@ def clean(path):
     shutil.rmtree(path)
 
 
-class Compile:
+class CompileTask:
     def __init__(self, input_dir, output_dir, name, idx, bib):
         self.input_dir = input_dir
         self.output_dir = output_dir
@@ -111,20 +111,28 @@ class IntexrationConfig:
         return name
 
 
-class CompileTask:
+class IntexrationTask:
 
     config_name = '.intexration'
 
     def __init__(self, input_dir, output_dir):
         self.input_dir = input_dir
         self.output_dir = output_dir
+        self.config = IntexrationConfig(os.path.join(self.input_dir, self.config_name))
 
     def run(self):
         logging.info("Compile task started")
-        intexration_config = IntexrationConfig(os.path.join(self.input_dir, self.config_name))
-        for name in intexration_config.names():
-            task_input = os.path.join(self.input_dir, intexration_config.dir(name))
-            Compile(task_input, self.output_dir, name, intexration_config.idx(name), intexration_config.bib(name)).run()
+        for name in self.config.names():
+            task_input = os.path.join(self.input_dir, self.config.dir(name))
+            CompileTask(task_input, self.output_dir, name, self.config.idx(name),
+                        self.config.bib(name)).run()
+
+    def run_only(self, name):
+        if not name in self.config.names():
+            raise RuntimeError("Build not in intexration config")
+        task_input = os.path.join(self.input_dir, self.config.dir(name))
+        CompileTask(task_input, self.output_dir, name, self.config.idx(name),
+                    self.config.bib(name)).run()
 
 
 class CloneTask:
@@ -185,7 +193,7 @@ class Build:
         clone_task = CloneTask(self.input_dir, self.repository, self.owner, self.commit)
         try:
             clone_task.run()
-            CompileTask(clone_task.clone_dir(), self.output_dir).run()
+            IntexrationTask(clone_task.clone_dir(), self.output_dir).run()
         except RuntimeError as e:
             logging.error(e)
         finally:
