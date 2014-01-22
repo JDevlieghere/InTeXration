@@ -152,7 +152,7 @@ class CloneTask:
 
     clone_name = 'build'
 
-    def __init__(self, root, repository, owner, commit):
+    def __init__(self, root, owner, repository, commit):
         self.root = root
         self.owner = owner
         self.repository = repository
