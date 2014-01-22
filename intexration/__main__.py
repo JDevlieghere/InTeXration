@@ -62,8 +62,8 @@ def main():
 
     server = Server(host=config.read('SERVER', 'host'),
                     port=config.read('SERVER', 'port'),
-                    branch=config.read('COMPILATION', 'branch',
-                    lazy=config.str2bool(config.read('COMPILATION', 'lazy'))))
+                    branch=config.read('COMPILATION', 'branch'),
+                    lazy=config.str2bool(config.read('COMPILATION', 'lazy')))
     server.start()
 
 if __name__ == '__main__':
