@@ -35,7 +35,7 @@ def empty(path, files_only):
             os.remove(content_path)
         except OSError:
             if not files_only:
-                os.rmdir(content_path)
+                os.rmtree(content_path)
         except Exception as e:
             logging.error(e)
 
