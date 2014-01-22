@@ -184,8 +184,8 @@ class Build:
     output_name = 'out'
 
     def __init__(self, root, owner, repository, commit):
-        self.input_dir = os.path.join(root, self.input_name)
-        self.output_dir = os.path.join(root, self.output_name)
+        self.input_dir = create_dir(os.path.join(root, self.input_name))
+        self.output_dir = create_dir(os.path.join(root, self.output_name))
         self.owner = owner
         self.repository = repository
         self.commit = commit
@@ -221,8 +221,8 @@ class CloneBuild(Build):
 class LazyBuild(Build):
 
     def __init__(self, root, owner, repository, name):
-        self.input_dir = os.path.join(root, self.input_name)
-        self.output_dir = os.path.join(root, self.output_name)
+        self.input_dir = create_dir(os.path.join(root, self.input_name))
+        self.output_dir = create_dir(os.path.join(root, self.output_name))
         self.repository = repository
         self.owner = owner
         self.document_name = name
