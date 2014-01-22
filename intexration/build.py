@@ -231,7 +231,7 @@ class LazyBuild(Build):
         logging.info("Build (lazy) started for %s", self.name())
         try:
             IntexrationTask(self.commit_dir(), self.output_dir).run_only(self.document_name)
-        except RuntimeError as e:
+        except Exception as e:
             logging.error(e)
 
     def commit_dir(self):
