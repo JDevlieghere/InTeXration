@@ -150,8 +150,6 @@ class IntexrationTask:
 
 class CloneTask:
 
-    clone_name = 'build'
-
     def __init__(self, root, owner, repository, commit):
         self.root = root
         self.owner = owner
@@ -162,11 +160,11 @@ class CloneTask:
         return 'https://github.com/' + self.owner + '/' + self.repository + '.git'
 
     def clone_dir(self):
-        path = os.path.join(self.root, self.clone_name, self.owner, self.repository, self.commit)
+        path = os.path.join(self.root, self.owner, self.repository, self.commit)
         return create_dir(path)
 
     def _clean(self):
-        empty(os.path.join(self.root, self.clone_name, self.owner, self.repository), False)
+        empty(os.path.join(self.root, self.owner, self.repository), False)
 
     def _clone(self):
         """Clone repository to build dir."""
