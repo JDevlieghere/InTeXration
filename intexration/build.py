@@ -188,8 +188,8 @@ class Build:
     def __init__(self, root, owner, repository, commit):
         self.input_dir = os.path.join(root, self.input_name)
         self.output_dir = os.path.join(root, self.output_name)
-        self.repository = repository
         self.owner = owner
+        self.repository = repository
         self.commit = commit
 
     def name(self):
@@ -197,7 +197,7 @@ class Build:
 
     def run(self):
         logging.info("Build started for %s", self.name())
-        clone_task = CloneTask(self.input_dir, self.repository, self.owner, self.commit)
+        clone_task = CloneTask(self.input_dir, self.owner, self.repository, self.commit)
         try:
             clone_task.run()
             IntexrationTask(clone_task.clone_dir(), self.output_dir).run()
@@ -212,7 +212,7 @@ class CloneBuild(Build):
 
     def run(self):
         logging.info("Build (clone) started for %s", self.name())
-        clone_task = CloneTask(self.input_dir, self.repository, self.owner, self.commit)
+        clone_task = CloneTask(self.input_dir, self.owner, self.repository,  self.commit)
         empty(os.path.join(self.output_dir, self.owner, self.repository), True)
         try:
             clone_task.run()
