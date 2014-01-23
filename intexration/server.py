@@ -58,8 +58,8 @@ class Server:
         try:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):
-            Build(config.PATH_ROOT, owner, repository, name).run()
             try:
+                Build(config.PATH_ROOT, owner, repository, name).run()
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning):
                 abort(404, "The requested document does not exist.")
@@ -69,8 +69,8 @@ class Server:
         try:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):
-            Build(config.PATH_ROOT, owner, repository, name).run()
             try:
+                Build(config.PATH_ROOT, owner, repository, name).run()
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning):
                 abort(404, "The requested document does not exist.")
