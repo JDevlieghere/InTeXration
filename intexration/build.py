@@ -190,7 +190,7 @@ class Build:
         self.repository = repository
         self.commit = commit
         self.input_dir = create_dir(os.path.join(root, self.input_name))
-        self.output_dir = create_dir(os.path.join(root, self.output_name), self.owner, self.repository)
+        self.output_dir = create_dir(os.path.join(root, self.output_name, self.owner, self.repository))
 
     def name(self):
         return self.owner+'/'+self.repository
@@ -227,7 +227,7 @@ class LazyBuild(Build):
         self.owner = owner
         self.document_name = name
         self.input_dir = create_dir(os.path.join(root, self.input_name))
-        self.output_dir = create_dir(os.path.join(root, self.output_name), self.owner, self.repository)
+        self.output_dir = create_dir(os.path.join(root, self.output_name, self.owner, self.repository))
 
     def run(self):
         logging.info("Build (lazy) started for %s", self.name())
