@@ -4,7 +4,7 @@ import os
 import json
 from build.lib.intexration import build
 from intexration import config
-from intexration.build import Build, CloneBuild, LazyBuild
+from intexration.build import Build
 from intexration.document import Document
 from intexration.helper import ApiHelper
 
