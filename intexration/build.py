@@ -92,7 +92,6 @@ class CompileTask:
         self._bibtex()
         self._compile()
         self._copy()
-        logging.info("Result copied to %s", self.output_dir)
 
 
 class IntexrationConfig:
