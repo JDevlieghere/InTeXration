@@ -2,9 +2,8 @@ import logging
 from bottle import Bottle, request, abort, static_file, template
 import os
 import json
-from build.lib.intexration import build
 from intexration import config
-from intexration.build import Build
+from intexration.build import Build, empty
 from intexration.document import Document
 from intexration.helper import ApiHelper
 
@@ -46,7 +45,7 @@ class Server:
                 if not self._lazy:
                     Build(config.PATH_ROOT, owner, repository, commit).run()
                 else:
-                    build.empty(os.path.join(self.output_dir(owner, repository)))
+                    empty(os.path.join(self.output_dir(owner, repository)))
                 return "InTeXration task started."
             else:
                 return ""
