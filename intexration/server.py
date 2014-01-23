@@ -2,6 +2,7 @@ import logging
 from bottle import Bottle, request, abort, static_file, template
 import os
 import json
+from build.lib.intexration import build
 from intexration import config
 from intexration.build import Build, CloneBuild, LazyBuild
 from intexration.document import Document
@@ -45,7 +46,7 @@ class Server:
                 if not self._lazy:
                     Build(config.PATH_ROOT, owner, repository, commit).run()
                 else:
-                    CloneBuild(config.PATH_ROOT, owner, repository, commit).run()
+                    build.empty(os.path.join(self.output_dir(owner, repository)))
                 return "InTeXration task started."
             else:
                 return ""
@@ -57,7 +58,7 @@ class Server:
         try:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):
-            LazyBuild(config.PATH_ROOT, owner, repository, name).run()
+            Build(config.PATH_ROOT, owner, repository, name).run()
             try:
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning):
@@ -68,7 +69,7 @@ class Server:
         try:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):
-            LazyBuild(config.PATH_ROOT, owner, repository, name).run()
+            Build(config.PATH_ROOT, owner, repository, name).run()
             try:
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning):
