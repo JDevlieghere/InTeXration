@@ -41,7 +41,7 @@ def empty(path, files_only):
             logging.error(e)
 
 
-def clean(path):
+def remove(path):
     shutil.rmtree(path)
 
 
@@ -165,9 +165,6 @@ class CloneTask:
         path = os.path.join(self.root, self.owner, self.repository, self.commit)
         return create_dir(path)
 
-    def _clean(self):
-        empty(os.path.join(self.root, self.owner, self.repository), False)
-
     def _clone(self):
         """Clone repository to build dir."""
         logging.info("Cloning from %s", self.url())
@@ -176,7 +173,6 @@ class CloneTask:
             raise RuntimeError("Clone failed")
 
     def run(self):
-        self._clean()
         self._clone()
 
 
@@ -204,7 +200,7 @@ class Build:
         except RuntimeError as e:
             logging.error(e)
         finally:
-            clean(clone_task.clone_dir())
+            remove(clone_task.clone_dir())
         logging.info("Build finished for %s", self.name())
 
 
@@ -215,6 +211,7 @@ class CloneBuild(Build):
         clone_task = CloneTask(self.input_dir, self.owner, self.repository,  self.commit)
         empty(os.path.join(self.output_dir, self.owner, self.repository), True)
         try:
+            empty(os.path.join(self.input_dir, self.owner, self.repository), False)
             clone_task.run()
         except RuntimeError as e:
             logging.error(e)
@@ -236,7 +233,7 @@ class LazyBuild(Build):
         except Exception as e:
             logging.error(e)
         finally:
-            clean(self.commit_dir())
+            remove(self.commit_dir())
 
     def commit_dir(self):
         dir = os.path.join(self.input_dir, self.owner, self.repository)
