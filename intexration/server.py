@@ -43,7 +43,7 @@ class Server:
                 repository = data['repository']['name']
                 commit = data['after']
                 build = Build(config.PATH_ROOT, owner, repository, commit)
-                manager = BuildManager.Instance().run(build)
+                manager = BuildManager.Instance()
                 if not self._lazy:
                     manager.run(build)
                 else:
@@ -60,7 +60,7 @@ class Server:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):
             try:
-                BuildManager.Instance().deque(owner, repository)
+                BuildManager.Instance().dequeue(owner, repository)
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning):
                 abort(404, "The requested document does not exist.")
@@ -71,7 +71,7 @@ class Server:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):
             try:
-                BuildManager.Instance().deque(owner, repository)
+                BuildManager.Instance().dequeue(owner, repository)
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning):
                 abort(404, "The requested document does not exist.")
