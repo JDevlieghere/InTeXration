@@ -73,7 +73,7 @@ class Server:
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning):
                 abort(404, "The requested document does not exist.")
-        return template(os.path.join(config.PATH_TEMPLATES, 'log.tpl'),
+        return template(os.path.join(config.PATH_TEMPLATES, 'log'),
                         root=config.SERVER_ROOT, repo=repository, name=name, errors=document.get_errors(),
                         warnings=document.get_warnings(), all=document.get_log())
 
@@ -82,7 +82,7 @@ class Server:
 
     @staticmethod
     def _index():
-        return template(os.path.join(config.PATH_TEMPLATES, 'index.tpl'), root=config.SERVER_ROOT)
+        return template(os.path.join(config.PATH_TEMPLATES, 'index'), root=config.SERVER_ROOT)
         #return template(os.path.join(config.PATH_TEMPLATES, 'list.tpl'), root=config.SERVER_ROOT,
         #                documents=DocumentExplorer(config.PATH_OUTPUT).all_documents())
 
