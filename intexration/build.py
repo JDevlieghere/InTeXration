@@ -5,6 +5,8 @@ import os
 import shutil
 import subprocess
 import errno
+from threading import Thread
+from singleton import Singleton
 
 
 @contextlib.contextmanager
@@ -201,3 +203,26 @@ class Build:
         finally:
             remove(clone_task.clone_dir())
         logging.info("Build finished for %s", self.name())
+
+@Singleton
+class BuildManager:
+
+    separator = '/'
+
+    def __init__(self):
+        self.queue = {}
+
+    def run(self, build):
+        thread = Thread(target=build.run)
+        thread.start()
+
+    def run_blocking(self, build):
+        build.run()
+
+    def enqueue(self, build):
+        key = build.owner+self.separator+build.repository
+        self.queue[key] = build
+
+    def dequeue(self, owner, repository):
+        key = owner+self.separator+repository
+        self.run_blocking(self.queue[key])

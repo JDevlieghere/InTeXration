@@ -3,7 +3,7 @@ from bottle import Bottle, request, abort, static_file, template
 import os
 import json
 from intexration import config
-from intexration.build import Build, empty
+from intexration.build import Build, empty, BuildManager
 from intexration.document import Document
 from intexration.helper import ApiHelper
 
@@ -42,10 +42,12 @@ class Server:
                 owner = data['repository']['owner']['name']
                 repository = data['repository']['name']
                 commit = data['after']
+                build = Build(config.PATH_ROOT, owner, repository, commit)
+                manager = BuildManager.Instance().run(build)
                 if not self._lazy:
-                    Build(config.PATH_ROOT, owner, repository, commit).run()
+                    manager.run(build)
                 else:
-                    empty(os.path.join(self.output_dir(owner, repository)))
+                    manager.enqueue(build)
                 return "InTeXration task started."
             else:
                 return ""
@@ -58,7 +60,7 @@ class Server:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):
             try:
-                Build(config.PATH_ROOT, owner, repository, name).run()
+                BuildManager.Instance().deque(owner, repository)
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning):
                 abort(404, "The requested document does not exist.")
@@ -69,7 +71,7 @@ class Server:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):
             try:
-                Build(config.PATH_ROOT, owner, repository, name).run()
+                BuildManager.Instance().deque(owner, repository)
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning):
                 abort(404, "The requested document does not exist.")
