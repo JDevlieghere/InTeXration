@@ -27,7 +27,7 @@ def create_dir(path):
     return path
 
 
-def empty(path, files_only):
+def empty(path, files_only=True):
     if not os.path.exists(path):
         return
     for content in os.listdir(path):
