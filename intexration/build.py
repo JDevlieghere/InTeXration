@@ -28,6 +28,8 @@ def create_dir(path):
 
 
 def empty(path, files_only):
+    if not os.path.exists(path):
+        return
     for content in os.listdir(path):
         content_path = os.path.join(path, content)
         try:
