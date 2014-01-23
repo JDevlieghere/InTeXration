@@ -56,13 +56,23 @@ class Server:
     def _out(self, owner, repository, name):
         try:
             document = Document(name, self.output_dir(owner, repository))
-        except Exception:
+        except (RuntimeError, RuntimeWarning):
             LazyBuild(config.PATH_ROOT, owner, repository, name).run()
-            document = Document(name, self.output_dir(owner, repository))
+            try:
+                document = Document(name, self.output_dir(owner, repository))
+            except (RuntimeError, RuntimeWarning):
+                abort(404, "The requested document does not exist.")
         return static_file(document.pdf_name(), document.root)
 
     def _log(self, owner, repository, name):
-        document = Document(name, self.output_dir(owner, repository))
+        try:
+            document = Document(name, self.output_dir(owner, repository))
+        except (RuntimeError, RuntimeWarning):
+            LazyBuild(config.PATH_ROOT, owner, repository, name).run()
+            try:
+                document = Document(name, self.output_dir(owner, repository))
+            except (RuntimeError, RuntimeWarning):
+                abort(404, "The requested document does not exist.")
         return template(os.path.join(config.PATH_TEMPLATES, 'log.tpl'),
                         root=config.SERVER_ROOT, repo=repository, name=name, errors=document.get_errors(),
                         warnings=document.get_warnings(), all=document.get_log())
