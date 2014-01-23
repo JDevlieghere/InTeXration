@@ -46,6 +46,7 @@ class Server:
                 manager = BuildManager.Instance()
                 if not self._lazy:
                     manager.run(build)
+                    logging.debug("Debug statement")
                 else:
                     manager.enqueue(build)
                 return "InTeXration task started."
@@ -62,7 +63,7 @@ class Server:
             try:
                 BuildManager.Instance().dequeue(owner, repository)
                 document = Document(name, self.output_dir(owner, repository))
-            except (RuntimeError, RuntimeWarning):
+            except (RuntimeError, RuntimeWarning, KeyError):
                 abort(404, "The requested document does not exist.")
         return static_file(document.pdf_name(), document.root)
 
@@ -73,7 +74,7 @@ class Server:
             try:
                 BuildManager.Instance().dequeue(owner, repository)
                 document = Document(name, self.output_dir(owner, repository))
-            except (RuntimeError, RuntimeWarning):
+            except (RuntimeError, RuntimeWarning, KeyError):
                 abort(404, "The requested document does not exist.")
         return template(os.path.join(config.PATH_TEMPLATES, 'log'),
                         root=config.SERVER_ROOT, repo=repository, name=name, errors=document.get_errors(),
