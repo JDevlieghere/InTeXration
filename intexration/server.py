@@ -46,7 +46,6 @@ class Server:
                 manager = BuildManager.Instance()
                 if not self._lazy:
                     manager.run(build)
-                    logging.debug("Debug statement")
                 else:
                     manager.enqueue(build)
                 return "InTeXration task started."
