@@ -63,20 +63,20 @@ class CompileTask:
         with cd(self.input_dir):
             if subprocess.call(['makeindex', self.idx], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logging.warning("Makeindex failed")
+                logging.warning("Makeindex failed for %s", self.name)
 
     def _bibtex(self):
         """Compile bibtex."""
         with cd(self.input_dir):
             if subprocess.call(['bibtex', self.bib], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
-                logging.warning("Bibtex failed")
+                logging.warning("Bibtex failed for %s", self.name)
 
     def _compile(self):
         """Compile with pdflatex."""
         with cd(self.input_dir):
             if subprocess.call(['pdflatex', '-interaction=nonstopmode', self.tex], stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logging.warning("Compilation finished with errors")
+                logging.warning("Compilation finished with errors for %s", self.name)
 
     def _copy(self):
         """Copy the PDF and log to the output directory."""
