@@ -36,9 +36,9 @@ class Document:
         warnings = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == self.config.constant('warning'):
+            if multi_line_error and line == self.config.constant('latex_warning'):
                 multi_line_error = False
-            if self.config.constant('warning') in line or multi_line_error:
+            if self.config.constant('latex_warning') in line or multi_line_error:
                 warnings.append(line)
                 multi_line_error = True
         return warnings
@@ -50,8 +50,8 @@ class Document:
         for line in self._lines:
             if multi_line_error and line == self.config.constant('newline'):
                 multi_line_error = False
-            if line.startswith(self.config.constant('error')) or multi_line_error:
-                errors.append(line.replace(self.config.constant('error'), ""))
+            if line.startswith(self.config.constant('latex_error')) or multi_line_error:
+                errors.append(line.replace(self.config.constant('latex_error'), ""))
                 multi_line_error = True
         return errors
 
