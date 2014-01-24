@@ -5,7 +5,7 @@ from intexration.intexration import IntexrationConfig
 from intexration.server import Server
 
 # Config
-config = IntexrationConfig.Instance()
+config = IntexrationConfig.instance()
 
 # Logger
 logging.config.fileConfig(config.file_path('logger'))
