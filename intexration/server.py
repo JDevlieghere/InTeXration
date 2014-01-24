@@ -12,14 +12,15 @@ class Server:
 
     output_name = 'out'
 
-    def __init__(self, host, port, branch, lazy):
+    def __init__(self, host, port, branch, lazy, threaded):
         self._host = host
         self._port = port
         self._branch = branch
         self._lazy = lazy
+        self._threaded = threaded
         self._app = Bottle()
         self._route()
-        self.config = IntexrationConfig.Instance()
+        self.config = IntexrationConfig.instance()
 
     def _route(self):
         self._app.route('/', method="GET", callback=self._index)
@@ -43,8 +44,8 @@ class Server:
                 owner = data['repository']['owner']['name']
                 repository = data['repository']['name']
                 commit = data['after']
-                build = Build(self.config.root, owner, repository, commit)
-                manager = BuildManager.Instance()
+                build = Build(self.config.root, owner, repository, commit, self.threaded)
+                manager = BuildManager.instance()
                 if not self._lazy:
                     manager.run(build)
                 else:
@@ -62,7 +63,7 @@ class Server:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):
             try:
-                BuildManager.Instance().dequeue(owner, repository)
+                BuildManager.instance().dequeue(owner, repository)
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning, KeyError):
                 abort(404, "The requested document does not exist.")
@@ -74,7 +75,7 @@ class Server:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):
             try:
-                BuildManager.Instance().dequeue(owner, repository)
+                BuildManager.instance().dequeue(owner, repository)
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning, KeyError):
                 abort(404, "The requested document does not exist.")

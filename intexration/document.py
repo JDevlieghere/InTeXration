@@ -8,7 +8,7 @@ class Document:
         self.name = name
         self.root = root
         self._lines = self._read_log()
-        self.config = IntexrationConfig.Instance()
+        self.config = IntexrationConfig.instance()
 
     def log_name(self):
         return self.name + '.log'

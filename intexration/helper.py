@@ -8,7 +8,7 @@ from intexration.intexration import IntexrationConfig
 class ApiHelper:
     def __init__(self, path):
         self._path = path
-        self.config = IntexrationConfig.Instance()
+        self.config = IntexrationConfig.instance()
 
     def is_valid(self, key_to_check):
         with open(self._path, newline='') as key_file:

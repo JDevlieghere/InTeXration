@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import errno
 from threading import Thread
+from intexration.intexration import IntexrationConfig
 from intexration.singleton import Singleton
 
 
@@ -131,9 +132,10 @@ class IntexrationTask:
 
     config_name = '.intexration'
 
-    def __init__(self, input_dir, output_dir):
+    def __init__(self, input_dir, output_dir, threaded=True):
         self.input_dir = input_dir
         self.output_dir = output_dir
+        self.threaded = threaded
         self.config = IntexrationBuildConfig(os.path.join(self.input_dir, self.config_name))
 
     def run(self):
@@ -142,7 +144,10 @@ class IntexrationTask:
         for name in self.config.names():
             task_input = os.path.join(self.input_dir, self.config.dir(name))
             task = CompileTask(task_input, self.output_dir, name, self.config.idx(name), self.config.bib(name))
-            threads.append(Thread(target=task.run))
+            if self.threaded:
+                threads.append(Thread(target=task.run))
+            else:
+                task.run()
         # Start all threads
         [t.start() for t in threads]
         # Join all threads
@@ -189,10 +194,11 @@ class Build:
     input_name = 'build'
     output_name = 'out'
 
-    def __init__(self, root, owner, repository, commit):
+    def __init__(self, root, owner, repository, commit, threaded=True):
         self.owner = owner
         self.repository = repository
         self.commit = commit
+        self.threaded = threaded
         self.input_dir = create_dir(os.path.join(root, self.input_name))
         self.output_dir = create_dir(os.path.join(root, self.output_name, self.owner, self.repository))
 
@@ -201,7 +207,7 @@ class Build:
 
     def run(self):
         logging.info("Build started for %s", self.name())
-        clone_task = CloneTask(self.input_dir, self.owner, self.repository, self.commit)
+        clone_task = CloneTask(self.input_dir, self.owner, self.repository, self.commit, self.threaded)
         try:
             clone_task.run()
             IntexrationTask(clone_task.clone_dir(), self.output_dir).run()
