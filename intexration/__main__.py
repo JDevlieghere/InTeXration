@@ -8,7 +8,7 @@ from intexration.server import Server
 config = IntexrationConfig.Instance()
 
 # Logger
-#logging.config.fileConfig(config.file_path('logger'))
+logging.config.fileConfig(config.file_path('logger'))
 
 
 def main():
