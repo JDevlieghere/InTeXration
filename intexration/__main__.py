@@ -1,11 +1,14 @@
 import argparse
 import logging.config
-from intexration import config
 from intexration.helper import ApiHelper
+from intexration.intexration import IntexrationConfig
 from intexration.server import Server
 
+# Config
+config = IntexrationConfig.Instance()
+
 # Logger
-logging.config.fileConfig(config.FILE_LOGGING)
+#logging.config.fileConfig(config.file_path('logger'))
 
 
 def main():
@@ -20,9 +23,6 @@ def main():
     parser.add_argument('-ce', metavar='DIR', help='Export configuration file to given directory')
     parser.add_argument('-ci', metavar='DIR', help='Import configuration file from given directory')
 
-    if not config.all_files_exist():
-        raise RuntimeError("Some necessary files were missing. Please consult the log.")
-
     config_mode = False
     args = parser.parse_args()
     if args.host is not None:
@@ -34,28 +34,28 @@ def main():
         config_mode = True
         logging.info("Port changed to %s", args.port)
     if args.aa is not None:
-        ApiHelper(config.FILE_API_KEY).add(args.aa)
+        ApiHelper(config.file_path('api')).add(args.aa)
         logging.info("API key added.")
         config_mode = True
     if args.ar is not None:
-        ApiHelper(config.FILE_API_KEY).remove(args.ar)
+        ApiHelper(config.file_path('api')).remove(args.ar)
         logging.info("API key %s removed.", args.remove)
         config_mode = True
     if args.al:
-        for line in ApiHelper(config.FILE_API_KEY).get_all():
+        for line in ApiHelper(config.file_path('api')).get_all():
             print(line[0])
         config_mode = True
     if args.ae:
-        ApiHelper(config.FILE_API_KEY).export_file(args.ae)
+        ApiHelper(config.file_path('api')).export_file(args.ae)
         config_mode = True
     if args.ai:
-        ApiHelper(config.FILE_API_KEY).export_file(args.ai)
+        ApiHelper(config.file_path('api')).export_file(args.ai)
         config_mode = True
     if args.ce:
-        config.export_file(args.ce)
+        config.file_export(args.ce)
         config_mode = True
     if args.ci:
-        config.import_file(args.cs)
+        config.file_import(args.cs)
         config_mode = True
     if config_mode:
         quit()

@@ -2,13 +2,13 @@ import csv
 import logging
 import os
 import shutil
-from intexration.config import Config
+from intexration.intexration import IntexrationConfig
 
 
 class ApiHelper:
     def __init__(self, path):
         self._path = path
-        self.config = Config.Instance()
+        self.config = IntexrationConfig.Instance()
 
     def is_valid(self, key_to_check):
         with open(self._path, newline='') as key_file:

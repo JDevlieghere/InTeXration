@@ -7,6 +7,7 @@ from intexration.intexration import IntexrationConfig
 from intexration.document import Document
 from intexration.helper import ApiHelper
 
+
 class Server:
 
     output_name = 'out'

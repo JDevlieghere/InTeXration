@@ -9,14 +9,12 @@ from intexration.singleton import Singleton
 class IntexrationConfig:
 
     file_names = {
-        'config': 'settings.cfg',
-        'api': 'api_keys.csv',
-        'logger': 'logger.cfg'
+        'config': 'config/settings.cfg',
+        'api': 'data/api_keys.csv',
+        'logger': 'config/logger.cfg'
     }
 
     dir_names = {
-        'config': 'config',
-        'data': 'data',
         'templates': 'templates',
         'static': 'static'
     }
@@ -59,7 +57,7 @@ class IntexrationConfig:
     def read(self, section, key):
         file = self.file_path('config')
         self.config.read(file)
-        return self[section][key]
+        return self.config[section][key]
 
     def write(self, section, key, value):
         file = self.file_path('config')
@@ -83,3 +81,7 @@ class IntexrationConfig:
 
     def server_root(self):
         return 'http://'+self.read('SERVER', 'host')+':'+self.read('SERVER', 'port')+'/'
+
+    @staticmethod
+    def str2bool(v):
+        return v.lower() in ("yes", "true", "t", "1")
