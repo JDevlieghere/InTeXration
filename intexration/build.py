@@ -140,8 +140,9 @@ class IntexrationTask:
         logging.info("Compile task started")
         for name in self.config.names():
             task_input = os.path.join(self.input_dir, self.config.dir(name))
-            CompileTask(task_input, self.output_dir, name, self.config.idx(name),
-                        self.config.bib(name)).run()
+            task = CompileTask(task_input, self.output_dir, name, self.config.idx(name), self.config.bib(name))
+            Thread(target=task.run).start()
+
 
     def run_only(self, name):
         if not name in self.config.names():
