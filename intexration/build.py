@@ -207,10 +207,10 @@ class Build:
 
     def run(self):
         logging.info("Build started for %s", self.name())
-        clone_task = CloneTask(self.input_dir, self.owner, self.repository, self.commit, self.threaded)
+        clone_task = CloneTask(self.input_dir, self.owner, self.repository, self.commit)
         try:
             clone_task.run()
-            IntexrationTask(clone_task.clone_dir(), self.output_dir).run()
+            IntexrationTask(clone_task.clone_dir(), self.output_dir, self.threaded).run()
         except RuntimeError as e:
             logging.error(e)
         finally:
