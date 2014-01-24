@@ -44,7 +44,7 @@ class Server:
                 owner = data['repository']['owner']['name']
                 repository = data['repository']['name']
                 commit = data['after']
-                build = Build(self.config.root, owner, repository, commit, self.threaded)
+                build = Build(self.config.root, owner, repository, commit, self._threaded)
                 manager = BuildManager.instance()
                 if not self._lazy:
                     manager.run(build)
