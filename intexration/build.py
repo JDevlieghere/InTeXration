@@ -138,10 +138,16 @@ class IntexrationTask:
 
     def run(self):
         logging.info("Compile task started")
+        threads = []
         for name in self.config.names():
             task_input = os.path.join(self.input_dir, self.config.dir(name))
             task = CompileTask(task_input, self.output_dir, name, self.config.idx(name), self.config.bib(name))
-            Thread(target=task.run).start()
+            threads.append(Thread(target=task.run))
+        # Start all threads
+        [t.start() for t in threads]
+        # Join all threads
+        [t.join() for t in threads]
+
 
 
     def run_only(self, name):
