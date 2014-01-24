@@ -2,12 +2,13 @@ import csv
 import logging
 import os
 import shutil
-from intexration import config
+from intexration.config import Config
 
 
 class ApiHelper:
     def __init__(self, path):
         self._path = path
+        self.config = Config.Instance()
 
     def is_valid(self, key_to_check):
         with open(self._path, newline='') as key_file:
@@ -39,14 +40,14 @@ class ApiHelper:
                 key_writer.writerow(row)
 
     def export_file(self, dir):
-        path = os.path.join(dir, config.BASENAME_API)
+        path = os.path.join(dir, self.file_names['api'])
         shutil.copyfile(self._path, path)
         logging.info("API key file exported to %s", path)
 
     def import_file(self, dir):
-        path = os.path.join(dir, config.BASENAME_API)
+        path = os.path.join(dir, self.file_names['api'])
         if not os.path.exists(path):
-            logging.error("Importing API key file failed: %s not found.", config.BASENAME_API)
+            logging.error("Importing API key file failed: %s not found.", self.file_names['api'])
             return
         shutil.copyfile(path, self._path)
         logging.info("API key file imported from %s", path)

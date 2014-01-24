@@ -6,7 +6,7 @@ import shutil
 import subprocess
 import errno
 from threading import Thread
-from singleton import Singleton
+from intexration.singleton import Singleton
 
 
 @contextlib.contextmanager
@@ -96,7 +96,7 @@ class CompileTask:
         self._copy()
 
 
-class IntexrationConfig:
+class IntexrationBuildConfig:
 
     dir_key = 'dir'
     idx_key = 'idx'
@@ -134,7 +134,7 @@ class IntexrationTask:
     def __init__(self, input_dir, output_dir):
         self.input_dir = input_dir
         self.output_dir = output_dir
-        self.config = IntexrationConfig(os.path.join(self.input_dir, self.config_name))
+        self.config = IntexrationBuildConfig(os.path.join(self.input_dir, self.config_name))
 
     def run(self):
         logging.info("Compile task started")
