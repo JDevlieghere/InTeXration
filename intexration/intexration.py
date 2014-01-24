@@ -54,6 +54,7 @@ class IntexrationConfig:
             self.read('SERVER', 'port')
             self.read('COMPILATION', 'branch')
             self.read('COMPILATION', 'lazy')
+            self.read('COMPILATION', 'threaded')
         except configparser.Error:
             raise RuntimeError("Invalid config file")
 
