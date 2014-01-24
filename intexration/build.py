@@ -212,12 +212,12 @@ class BuildManager:
     def __init__(self):
         self.queue = {}
 
-    def run(self, build):
-        thread = Thread(target=build.run)
-        thread.start()
-
-    def run_blocking(self, build):
-        build.run()
+    def run(self, build, blocking=False):
+        if not blocking:
+            thread = Thread(target=build.run)
+            thread.start()
+        else:
+            build.run()
 
     def enqueue(self, build):
         key = build.owner+self.separator+build.repository
@@ -225,5 +225,5 @@ class BuildManager:
 
     def dequeue(self, owner, repository):
         key = owner+self.separator+repository
-        self.run_blocking(self.queue[key])
+        self.run(self.queue[key], blocking=True)
         del self.queue[key]
