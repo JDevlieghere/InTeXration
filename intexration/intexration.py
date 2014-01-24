@@ -71,7 +71,7 @@ class IntexrationConfig:
 
     def file_export(self, directory):
         path = os.path.join(directory, self.file_name('config'))
-        shutil.copyfile(self.file_path('cnfig'), path)
+        shutil.copyfile(self.file_path('config'), path)
         logging.info("Configuration exported to %s", path)
 
     def file_import(self, directory):
