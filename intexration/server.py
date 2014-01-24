@@ -57,6 +57,7 @@ class Server:
             abort(400, 'Bad request: Could not decode request body.')
 
     def _out(self, owner, repository, name):
+        global document
         try:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):
@@ -68,6 +69,7 @@ class Server:
         return static_file(document.pdf_name(), document.root)
 
     def _log(self, owner, repository, name):
+        global document
         try:
             document = Document(name, self.output_dir(owner, repository))
         except (RuntimeError, RuntimeWarning):

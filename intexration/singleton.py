@@ -1,3 +1,4 @@
+# noinspection PyAttributeOutsideInit
 class Singleton:
     """
     A non-thread-safe helper class to ease implementing singletons.
@@ -18,7 +19,7 @@ class Singleton:
     def __init__(self, decorated):
         self._decorated = decorated
 
-    def Instance(self):
+    def instance(self):
         """
         Returns the singleton instance. Upon its first call, it creates a
         new instance of the decorated class and calls its `__init__` method.

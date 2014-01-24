@@ -39,15 +39,15 @@ class ApiHelper:
             for row in rows:
                 key_writer.writerow(row)
 
-    def export_file(self, dir):
-        path = os.path.join(dir, self.file_names['api'])
+    def export_file(self, directory):
+        path = os.path.join(directory, self.config.file_name('api'))
         shutil.copyfile(self._path, path)
         logging.info("API key file exported to %s", path)
 
-    def import_file(self, dir):
-        path = os.path.join(dir, self.file_names['api'])
+    def import_file(self, directory):
+        path = os.path.join(directory, self.config.file_name('api'))
         if not os.path.exists(path):
-            logging.error("Importing API key file failed: %s not found.", self.file_names['api'])
+            logging.error("Importing API key file failed: %s not found.", self.config.file_name('api'))
             return
         shutil.copyfile(path, self._path)
         logging.info("API key file imported from %s", path)

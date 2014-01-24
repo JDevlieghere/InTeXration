@@ -36,6 +36,9 @@ class IntexrationConfig:
     def file_path(self, name):
         return os.path.join(self.root, self.file_names[name])
 
+    def file_name(self, name):
+        return self.file_names[name].split(self.constants['separator'])[-1]
+
     def constant(self, name):
         return self.constants[name]
 
@@ -43,8 +46,8 @@ class IntexrationConfig:
         for file in self.file_names:
             if not os.path.exists(self.file_path(file)):
                 raise RuntimeError("Config files missing")
-        for dir in self.dir_names:
-            if not os.path.exists(self.dir_path(dir)):
+        for directory in self.dir_names:
+            if not os.path.exists(self.dir_path(directory)):
                 raise RuntimeError("Config directories missing")
         try:
             self.read('SERVER', 'host')
@@ -66,16 +69,16 @@ class IntexrationConfig:
         with open(file, 'w+') as configfile:
             self.config.write(configfile)
 
-    def file_export(self, dir):
-        path = os.path.join(dir, self.file_names('config'))
+    def file_export(self, directory):
+        path = os.path.join(directory, self.file_name('config'))
         shutil.copyfile(self.file_path('cnfig'), path)
         logging.info("Configuration exported to %s", path)
 
-    def file_import(self, dir):
-        path = os.path.join(dir, self.file_names('config'))
+    def file_import(self, directory):
+        path = os.path.join(directory, self.file_name('config'))
         if not os.path.exists(path):
             raise RuntimeError("Importing configuration failed: not found in %s", path)
-        shutil.copyfile(path, self.file_path('cnfig'))
+        shutil.copyfile(path, self.file_path('config'))
         self.validate()
         logging.info("Configuration imported from %s", path)
 

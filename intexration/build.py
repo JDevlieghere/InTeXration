@@ -10,10 +10,10 @@ from intexration.singleton import Singleton
 
 
 @contextlib.contextmanager
-def cd(dirname):
+def cd(directory):
     cur_dir = os.curdir
     try:
-        os.chdir(dirname)
+        os.chdir(directory)
         yield
     finally:
         os.chdir(cur_dir)
@@ -219,7 +219,8 @@ class BuildManager:
     def __init__(self):
         self.queue = {}
 
-    def run(self, build, blocking=False):
+    @staticmethod
+    def run(build, blocking=False):
         if not blocking:
             thread = Thread(target=build.run)
             thread.start()
