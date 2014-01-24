@@ -36,7 +36,7 @@ class Document:
         warnings = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == self.config.constant('latex_warning'):
+            if multi_line_error and line == self.config.constant('newline'):
                 multi_line_error = False
             if self.config.constant('latex_warning') in line or multi_line_error:
                 warnings.append(line)
