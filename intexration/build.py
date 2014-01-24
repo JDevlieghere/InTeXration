@@ -139,7 +139,10 @@ class IntexrationTask:
         self.config = IntexrationBuildConfig(os.path.join(self.input_dir, self.config_name))
 
     def run(self):
-        logging.info("Compile task started")
+        if self.threaded:
+            logging.info("Threaded compilation task started")
+        else:
+            logging.info("Compilation task started")
         threads = []
         for name in self.config.names():
             task_input = os.path.join(self.input_dir, self.config.dir(name))
