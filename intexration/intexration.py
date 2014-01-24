@@ -23,6 +23,7 @@ class IntexrationConfig:
 
     constants = {
         'separator': '/',
+        'newline': '\n',
         'latex_error': ' !',
         'latex_warning': 'Warning'
     }

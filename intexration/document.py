@@ -1,6 +1,6 @@
 import logging
 import os
-from intexration import config
+from intexration.intexration import IntexrationConfig
 
 
 class Document:
@@ -8,6 +8,7 @@ class Document:
         self.name = name
         self.root = root
         self._lines = self._read_log()
+        self.config = IntexrationConfig.Instance()
 
     def log_name(self):
         return self.name + '.log'
@@ -35,9 +36,9 @@ class Document:
         warnings = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == config.LOG_NEW_LINE_CHAR:
+            if multi_line_error and line == self.config.constant('warning'):
                 multi_line_error = False
-            if config.LOG_WARNING_STRING in line or multi_line_error:
+            if self.config.constant('warning') in line or multi_line_error:
                 warnings.append(line)
                 multi_line_error = True
         return warnings
@@ -47,10 +48,10 @@ class Document:
         errors = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == config.LOG_NEW_LINE_CHAR:
+            if multi_line_error and line == self.config.constant('newline'):
                 multi_line_error = False
-            if line.startswith(config.LOG_ERROR_STRING) or multi_line_error:
-                errors.append(line.replace(config.LOG_ERROR_STRING, ""))
+            if line.startswith(self.config.constant('error')) or multi_line_error:
+                errors.append(line.replace(self.config.constant('error'), ""))
                 multi_line_error = True
         return errors
 
