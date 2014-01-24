@@ -226,3 +226,4 @@ class BuildManager:
     def dequeue(self, owner, repository):
         key = owner+self.separator+repository
         self.run_blocking(self.queue[key])
+        del self.queue[key]
