@@ -79,7 +79,7 @@ class Server:
                 document = Document(name, self.output_dir(owner, repository))
             except (RuntimeError, RuntimeWarning, KeyError):
                 abort(404, "The requested document does not exist.")
-        return template(os.path.join(self.config.dir_path('templates'), 'log'),
+        return template(os.path.join(self.config.dir_path('templates'), 'log.tpl'),
                         root=self.config.server_root(), repo=repository, name=name, errors=document.get_errors(),
                         warnings=document.get_warnings(), all=document.get_log())
 
@@ -87,7 +87,7 @@ class Server:
         return os.path.join(self.config.root, self.output_name, owner, repo)
 
     def _index(self):
-        return template(os.path.join(self.config.dir_path('templates'), 'index'), root=self.config.server_root())
+        return template(os.path.join(self.config.dir_path('templates'), 'index.tpl'), root=self.config.server_root())
 
     def _static(self, name):
         return static_file(name, self.config.dir_path('static'))
