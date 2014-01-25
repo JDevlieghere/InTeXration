@@ -1,10 +1,10 @@
 import argparse
 import logging.config
-from intexration.helper import ApiHelper
-from intexration.intexration import IntexrationConfig
-from intexration.server import Server
+from intexration.intexration import IntexrationConfig, IntexrationParser
 
 # Config
+from intexration.server import Server
+
 config = IntexrationConfig.instance()
 
 # Logger
@@ -12,53 +12,27 @@ logging.config.fileConfig(config.file_path('logger'))
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-host', help='Change the hostname')
-    parser.add_argument('-port', help='Change the port')
-    parser.add_argument('-aa', metavar='KEY', help='Add API key')
-    parser.add_argument('-ar', metavar='KEY', help='Remove API key')
-    parser.add_argument('-al', help='List API keys', action='store_true')
-    parser.add_argument('-ae', metavar='DIR', help='Export API key file to given directory')
-    parser.add_argument('-ai', metavar='DIR', help='Improt API key file from given directory')
-    parser.add_argument('-ce', metavar='DIR', help='Export configuration file to given directory')
-    parser.add_argument('-ci', metavar='DIR', help='Import configuration file from given directory')
+    parser = argparse.ArgumentParser(prog='intexration')
+    subparsers = parser.add_subparsers(help='subparser')
 
-    config_mode = False
-    args = parser.parse_args()
-    if args.host is not None:
-        config.write('SERVER', 'host', args.host)
-        logging.info("Host changed to %s", args.host)
-        config_mode = True
-    if args.port is not None:
-        config.write('SERVER', 'port', args.port)
-        config_mode = True
-        logging.info("Port changed to %s", args.port)
-    if args.aa is not None:
-        ApiHelper(config.file_path('api')).add(args.aa)
-        logging.info("API key added.")
-        config_mode = True
-    if args.ar is not None:
-        ApiHelper(config.file_path('api')).remove(args.ar)
-        logging.info("API key %s removed.", args.remove)
-        config_mode = True
-    if args.al:
-        for line in ApiHelper(config.file_path('api')).get_all():
-            print(line[0])
-        config_mode = True
-    if args.ae:
-        ApiHelper(config.file_path('api')).export_file(args.ae)
-        config_mode = True
-    if args.ai:
-        ApiHelper(config.file_path('api')).export_file(args.ai)
-        config_mode = True
-    if args.ce:
-        config.file_export(args.ce)
-        config_mode = True
-    if args.ci:
-        config.file_import(args.cs)
-        config_mode = True
-    if config_mode:
-        quit()
+    config_parser = subparsers.add_parser('config', help='configuration')
+    config_parser.add_argument('--host', help='change the hostname', dest='config_host')
+    config_parser.add_argument('--port', help='change the port', dest='config_port')
+    config_parser.add_argument('--export', metavar='DIR', help='export configuration file to given directory',
+                               dest='config_export')
+    config_parser.add_argument('--import', metavar='DIR', help='import configuration file from given directory',
+                               dest='config_import')
+
+    api_parser = subparsers.add_parser('api', help='API management')
+    api_parser.add_argument('--add', metavar='KEY', help='add API key', dest='api_add')
+    api_parser.add_argument('--remove', metavar='KEY', help='remove API key', dest='api_remove')
+    api_parser.add_argument('--list', help='list API keys', action='store_true', dest='api_list')
+    api_parser.add_argument('--export', metavar='DIR', help='export API key file to given directory', dest='api_export')
+    api_parser.add_argument('--import', metavar='DIR', help='import API key file from given directory',
+                            dest='api_import')
+
+    arguments = parser.parse_args()
+    IntexrationParser(arguments, config).parse()
 
     server = Server(host=config.read('SERVER', 'host'),
                     port=config.read('SERVER', 'port'),

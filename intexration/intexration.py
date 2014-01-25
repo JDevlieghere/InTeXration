@@ -2,7 +2,52 @@ import logging
 import os
 import configparser
 import shutil
+from intexration.helper import ApiHelper
 from intexration.singleton import Singleton
+
+
+class IntexrationParser:
+
+    def __init__(self, arguments, config):
+        self.arguments = arguments
+        self.config = config
+
+    def get(self, argument):
+        return getattr(self.arguments, argument)
+
+    def is_set(self, argument):
+        return hasattr(self.arguments, argument) and getattr(self.arguments, argument) is not None
+
+    def is_true(self, argument):
+        return hasattr(self.arguments, argument) and hasattr(self.arguments, argument)
+
+    def parse(self):
+        self.parse_config()
+        self.parse_api()
+
+    def parse_config(self):
+        if self.is_set('config_host'):
+            self.config.write('SERVER', 'host', self.get('config_host'))
+        if self.is_set('config_port'):
+            self.config.write('SERVER', 'port', self.get('config_port'))
+        if self.is_set('config_export'):
+            self.config.file_export(self.get('config_export'))
+        if self.is_set('config_import'):
+            self.config.file_import(self.get('config_import'))
+
+    def parse_api(self):
+        api_helper = ApiHelper(self.config.file_path('api'), self.config)
+        if self.is_set('api_add'):
+            api_helper.add(self.get('api_add'))
+        if self.is_set('api_remove'):
+            api_helper.remove(self.get('api_remove'))
+        if self.is_true('api_list'):
+            for line in api_helper.get_all():
+                print(line[0])
+        if self.is_set('api_export'):
+            api_helper.export_file(self.get('api_export'))
+        if self.is_set('api_import'):
+            api_helper.import_file(self.get('api_import'))
 
 
 @Singleton
@@ -69,6 +114,7 @@ class IntexrationConfig:
         self.config.set(section, key, value)
         with open(file, 'w+') as configfile:
             self.config.write(configfile)
+        logging.info("Updated config %s = %s", [key, value])
 
     def file_export(self, directory):
         path = os.path.join(directory, self.file_name('config'))
