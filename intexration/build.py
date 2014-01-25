@@ -6,13 +6,12 @@ import shutil
 import subprocess
 import errno
 from threading import Thread
-from intexration.intexration import IntexrationConfig
 from intexration.singleton import Singleton
 
 
 @contextlib.contextmanager
 def cd(directory):
-    cur_dir = os.curdir
+    cur_dir = os.getcwd()
     try:
         os.chdir(directory)
         yield
