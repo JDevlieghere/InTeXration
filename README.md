@@ -11,7 +11,7 @@ Documentation
 This project is in a very early development phase. Documentation might be missing or lagging behind. Thank you for your understanding!
 
 - [Installation](https://github.com/JDevlieghere/InTeXration/blob/master/docs/install.md)
-- [User's Manual](https://github.com/JDevlieghere/InTeXration/blob/master/docs/user_manual.md)
+- [User's Manual](https://github.com/JDevlieghere/InTeXration/blob/master/docs/manual.md)
 - [Planned Features](https://github.com/JDevlieghere/InTeXration/blob/master/docs/planned_features.md)
 
 License
