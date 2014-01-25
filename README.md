@@ -16,7 +16,8 @@ This project is in a very early development phase. Documentation might be missin
 
 Adding InTeXration to your Project
 ----------------------------------
-You would like to try out InTeXration but don't have access to a VPS or decicated server? We're currently running both a stable and experiment release on our own servers. Contact me at ![mail](http://cdn.jonasdevlieghere.com/mail.png) if you would like to obtain an API key!
+You would like to try out InTeXration but don't have access to a VPS or decicated server? We're currently running both a stable and experiment release on our own servers. Contact me if you would like to obtain an API key!
+![mail](http://cdn.jonasdevlieghere.com/mail.png)
 
 License
 -------
