@@ -157,7 +157,6 @@ class IntexrationTask:
         [t.join() for t in threads]
 
 
-
     def run_only(self, name):
         if not name in self.config.names():
             raise RuntimeError("Build not in intexration config")
@@ -184,8 +183,7 @@ class CloneTask:
     def _clone(self):
         """Clone repository to build dir."""
         logging.info("Cloning from %s", self.url())
-        if subprocess.call(['git', 'clone',  self.url(), self.clone_dir()], stdout=subprocess.DEVNULL,
-                           stderr=subprocess.DEVNULL) != 0:
+        if subprocess.call(['git', 'clone',  self.url(), self.clone_dir()]) != 0:
             raise RuntimeError("Clone failed")
 
     def run(self):
