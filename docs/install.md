@@ -1,5 +1,9 @@
 # Installation
 
+ - [Prerequisites](#prerequisites)
+ - [Installing](#installing)
+ - [Starting the Server](#starting-the-server)
+
 ## Prerequisites
 
 InTeXration requires:
@@ -38,13 +42,13 @@ python -m intexration -host localhost -port 8000
 ```
 
 
-## Installation
+## Installing
 Run the `setup.py` file as illustrated below:
 ```bash
 python setup.py install
 ```
 
-## Starting the server
+## Starting the Server
 Starting the server is as easy as running the InTeXration module. However, if you
 want to run InTeXration in the background, you can use the `nohup` command.
 
