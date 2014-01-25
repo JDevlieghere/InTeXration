@@ -27,9 +27,9 @@ python -m intexration config --host 8000
 
 ## Compilation
 
-Currently, compilation settings are not configurable using command line arguments.
+Currently, compilation settings are not configurable using command line arguments. Please refer to the next section for an example.
 
-You can specify the branch that will trigger compilation (lazy or not). The default `branch` is set to the `master` branch. See below for an example.
+You can specify the branch that will trigger compilation (lazy or not). The default `branch` is set to the `master` branch.
 
 InTeXration supports lazy compilation: this means that the document will only be compiled when necessary. The first view will experience a delay proportional to the compilation time. When lazy compilation is disabled, the document will be compiled as soon as the server receives the request. The advantage of using lazy compilation is reducing server load, especially when users are pushing frequently to the selected branch. The `lazy` option is disabled by default.
 
