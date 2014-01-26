@@ -166,14 +166,18 @@ class IntexrationTask:
 
 class CloneTask:
 
-    def __init__(self, root, owner, repository, commit):
+    def __init__(self, root, url, owner, repository, commit):
         self.root = root
+        self.url = self.convert(url)
         self.owner = owner
         self.repository = repository
         self.commit = commit
 
-    def url(self):
-        return 'https://github.com/' + self.owner + '/' + self.repository + '.git'
+    @staticmethod
+    def url(url):
+        if 'https://' in url:
+            return url + '.git'
+        return url
 
     def clone_dir(self):
         path = os.path.join(self.root, self.owner, self.repository, self.commit)
@@ -195,7 +199,8 @@ class Build:
     input_name = 'build'
     output_name = 'out'
 
-    def __init__(self, root, owner, repository, commit, threaded=True):
+    def __init__(self, root, url, owner, repository, commit, threaded=True):
+        self.url = url
         self.owner = owner
         self.repository = repository
         self.commit = commit
@@ -208,7 +213,7 @@ class Build:
 
     def run(self):
         logging.info("Build started for %s", self.name())
-        clone_task = CloneTask(self.input_dir, self.owner, self.repository, self.commit)
+        clone_task = CloneTask(self.input_dir, self.url, self.owner, self.repository, self.commit)
         try:
             clone_task.run()
             IntexrationTask(clone_task.clone_dir(), self.output_dir, self.threaded).run()

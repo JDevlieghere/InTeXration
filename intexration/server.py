@@ -42,10 +42,11 @@ class Server:
         try:
             data = json.loads(payload)
             if self._branch in data['ref']:
+                url = data['repository']['url']
                 owner = data['repository']['owner']['name']
                 repository = data['repository']['name']
                 commit = data['after']
-                build = Build(self.config.root, owner, repository, commit, self._threaded)
+                build = Build(self.config.root, url, owner, repository, commit, self._threaded)
                 manager = BuildManager.instance()
                 if not self._lazy:
                     manager.run(build)
