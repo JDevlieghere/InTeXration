@@ -1,3 +1,4 @@
+import html
 import logging
 import os
 import json
@@ -80,8 +81,8 @@ class Server:
             except (RuntimeError, RuntimeWarning, KeyError):
                 abort(404, "The requested document does not exist.")
         return template(os.path.join(self.config.dir_path('templates'), 'log.tpl'),
-                        root=self.config.server_root(), repo=repository, name=name, errors=document.get_errors(),
-                        warnings=document.get_warnings(), all=document.get_log())
+                        root=self.config.server_root(), repo=repository, name=name, errors=html.escape(document.get_errors()),
+                        warnings=html.escape(document.get_warnings()), html.escape(all=document.get_log()))
 
     def output_dir(self, owner, repo):
         return os.path.join(self.config.root, self.output_name, owner, repo)
