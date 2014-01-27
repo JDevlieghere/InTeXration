@@ -4,10 +4,10 @@ import os
 
 class Document:
 
-    pattern_separator = '/'
-    pattern_newline = '\n'
-    pattern_error = ' !'
-    pattern_warning = 'Warning'
+    SEPARATOR = '/'
+    NEWLINE = '\n'
+    ERROR = ' !'
+    WARMING = 'Warning'
 
     def __init__(self, name, root):
         self.name = name
@@ -40,9 +40,9 @@ class Document:
         warnings = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == self.pattern_newline:
+            if multi_line_error and line == self.NEWLINE:
                 multi_line_error = False
-            if self.pattern_warning in line or multi_line_error:
+            if self.WARMING in line or multi_line_error:
                 warnings.append(line)
                 multi_line_error = True
         return warnings
@@ -52,10 +52,10 @@ class Document:
         errors = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == self.pattern_newline:
+            if multi_line_error and line == self.NEWLINE:
                 multi_line_error = False
-            if line.startswith(self.pattern_error) or multi_line_error:
-                errors.append(line.replace(self.pattern_error, ""))
+            if line.startswith(self.ERROR) or multi_line_error:
+                errors.append(line.replace(self.ERROR, ""))
                 multi_line_error = True
         return errors
 

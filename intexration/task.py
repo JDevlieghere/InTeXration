@@ -99,9 +99,9 @@ class CompileTask:
 
 class IntexrationBuildConfig:
 
-    dir_key = 'dir'
-    idx_key = 'idx'
-    bib_key = 'bib'
+    DIR = 'dir'
+    IDX = 'idx'
+    BIB = 'bib'
 
     def __init__(self, path):
         if not os.path.exists(path):
@@ -113,18 +113,18 @@ class IntexrationBuildConfig:
         return self.parser.sections()
 
     def dir(self, name):
-        if self.parser.has_option(name, self.dir_key):
-            return self.parser[name][self.dir_key]
+        if self.parser.has_option(name, self.DIR):
+            return self.parser[name][self.DIR]
         return ''
 
     def idx(self, name):
-        if self.parser.has_option(name, self.idx_key):
-            return self.parser[name][self.idx_key]
+        if self.parser.has_option(name, self.IDX):
+            return self.parser[name][self.IDX]
         return name + '.idx'
 
     def bib(self, name):
-        if self.parser.has_option(name, self.bib_key):
-            return self.parser[name][self.bib_key]
+        if self.parser.has_option(name, self.BIB):
+            return self.parser[name][self.BIB]
         return name
 
 
@@ -222,27 +222,5 @@ class BuildTask:
             remove(clone_task.clone_dir())
         logging.info("Build finished for %s", self.name())
 
-@Singleton
-class BuildManager:
 
-    separator = '/'
 
-    def __init__(self):
-        self.queue = {}
-
-    @staticmethod
-    def run(build, blocking=False):
-        if not blocking:
-            thread = Thread(target=build.run)
-            thread.start()
-        else:
-            build.run()
-
-    def enqueue(self, build):
-        key = build.owner+self.separator+build.repository
-        self.queue[key] = build
-
-    def dequeue(self, owner, repository):
-        key = owner+self.separator+repository
-        self.run(self.queue[key], blocking=True)
-        del self.queue[key]

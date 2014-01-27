@@ -1,9 +1,10 @@
 import argparse
 import logging.config
+from intexration.manager import BuildManager, ApiManager
 from intexration.intexration import IntexrationConfig, IntexrationParser
 
 # Config
-from intexration.server import Server
+from intexration.server import Server, RequestHandler
 
 config = IntexrationConfig.instance()
 
@@ -34,12 +35,19 @@ def main():
     arguments = parser.parse_args()
     IntexrationParser(arguments, config).parse()
 
+    request_handler = RequestHandler(root=config.root,
+                                     base_url=config.base_url(),
+                                     branch=config.read('COMPILE', 'branch'),
+                                     threaded=config.read_bool('COMPILE', 'threaded'),
+                                     lazy=config.read_bool('COMPILE', 'lazy'),
+                                     build_manager=BuildManager(),
+                                     api_manager=ApiManager(config.file_path('api')))
+
     server = Server(host=config.read('SERVER', 'host'),
                     port=config.read('SERVER', 'port'),
-                    branch=config.read('COMPILATION', 'branch'),
-                    lazy=config.str2bool(config.read('COMPILATION', 'lazy')),
-                    threaded=config.str2bool(config.read('COMPILATION', 'threaded')))
+                    handler=request_handler)
     server.start()
+
 
 if __name__ == '__main__':
     main()

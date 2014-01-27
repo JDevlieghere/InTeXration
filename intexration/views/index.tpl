@@ -10,12 +10,12 @@
 	<title>InTeXration</title>
 
 	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{root}}css/style.css">
+    <link rel="stylesheet" href="{{base_url}}css/style.css">
 	</head>
 <body>
 <div class="container">
 	<div class="status">
-	    <img src="{{root}}img/intexration.png" alt="InTeXration" />
+	    <img src="{{base_url}}img/intexration.png" alt="InTeXration" />
 	</div>
 </div>
 

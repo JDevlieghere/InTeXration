@@ -10,7 +10,7 @@
 	<title>{{repo}} - {{name}}</title>
 
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{root}}css/style.css">
+    <link rel="stylesheet" href="{{base_url}}css/style.css">
 </head>
 
 <body>

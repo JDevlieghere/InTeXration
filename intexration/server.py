@@ -1,98 +1,106 @@
-import html
 import logging
 import os
 import json
 from bottle import Bottle, request, abort, static_file, template
-from intexration.task import BuildTask, BuildManager
-from intexration.intexration import IntexrationConfig
+from intexration.task import BuildTask
 from intexration.document import Document
-from intexration.api import ApiManager
 
 
 class Server:
 
-    def __init__(self, host, port, branch, lazy, threaded):
+    SERVER = 'cherrypy'
+
+    def __init__(self, host, port, handler):
         self._host = host
         self._port = port
-        self._branch = branch
-        self._lazy = lazy
-        self._threaded = threaded
+        self._handler = handler
         self._app = Bottle()
         self._route()
-        self.config = IntexrationConfig.instance()
 
     def _route(self):
-        self._app.route('/', method="GET", callback=self._index)
-        self._app.route('/hook/<api_key>', method="POST", callback=self._hook)
-        self._app.route('/pdf/<owner>/<repository>/<name>', method=["GET", "GET"], callback=self._out)
-        self._app.route('/log/<owner>/<repository>/<name>', method=["GET", "GET"], callback=self._log)
-        self._app.route('/<name:path>', method="GET", callback=self._static)
+        self._app.route('/', method="GET", callback=self._handler.index_request)
+        self._app.route('/hook/<api_key>', method="POST", callback=self._handler.hook_request)
+        self._app.route('/pdf/<owner>/<repository>/<name>', method=["GET", "GET"], callback=self._handler.pdf_requestt)
+        self._app.route('/log/<owner>/<repository>/<name>', method=["GET", "GET"], callback=self._handler.log_request)
+        self._app.route('/<name:path>', method="GET", callback=self._handler.file_request)
 
     def start(self):
-        self._app.run(host=self._host, port=self._port, server='cherrypy')
+        self._app.run(host=self._host,
+                      port=self._port,
+                      server=self.SERVER)
 
-    def _hook(self, api_key):
-        api_helper = ApiManager(self.config.file_path('api'))
-        if not api_helper.is_valid(api_key):
-            logging.warning("Request Denied: API key invalid")
-            abort(401, 'Unauthorized: API key invalid.')
-        payload = request.forms.get('payload')
+
+class RequestHandler:
+
+    DIRECTORY_STATIC = 'static'
+    DIRECTORY_OUTPUT = 'out'
+    TEMPLATE_INDEX = 'index'
+    TEMPLATE_LOG = 'log'
+
+    def __init__(self, root, base_url, branch, threaded, lazy, build_manager, api_manager):
+        self._root = root
+        self._base_url = base_url
+        self._branch = branch
+        self._threaded = threaded
+        self._lazy = lazy
+        self.build_manager = build_manager
+        self.api_manager = api_manager
+
+    def to_dir(self, owner, repo):
+        return os.path.join(self._root, self.DIRECTORY_OUTPUT, owner, repo)
+
+    def index_request(self):
+        return template(self.TEMPLATE_INDEX,
+                        base_url=self._base_url)
+
+    def hook_request(self, api_key):
+        if not self.api_manager.is_valid(api_key):
+            self.abort_request(401, 'Unauthorized: API key invalid.')
         try:
-            data = json.loads(payload)
-            if self._branch in data['ref']:
-                url = data['repository']['url']
-                owner = data['repository']['owner']['name']
-                repository = data['repository']['name']
-                commit = data['after']
-                build = BuildTask(self.config.root, url, owner, repository, commit, self._threaded)
-                manager = BuildManager.instance()
+            data = json.loads(request.forms.get('payload'))
+            refs = data['ref']
+            url = data['repository']['url']
+            owner = data['repository']['owner']['name']
+            repository = data['repository']['name']
+            commit = data['after']
+            if self._branch in refs:
+                build = BuildTask(self._root, url, owner, repository, commit, self._threaded)
                 if not self._lazy:
-                    manager.run(build)
+                    self.build_manager.run(build)
                 else:
-                    manager.enqueue(build)
-                return "InTeXration task started."
+                    self.build_manager.enqueue(build)
             else:
-                return ""
-        except ValueError:
-            logging.warning("Request Denied: Could not decode request body")
-            abort(400, 'Bad request: Could not decode request body.')
+                self.abort_request(406, "Wrong branch")
+        except (RuntimeError, RuntimeWarning) as e:
+            self.abort_request(500, e)
 
-    def _out(self, owner, repository, name):
-        global document
+    def pdf_request(self, owner, repository, name):
+        self.build_manager.run_lazy(owner, repository)
         try:
-            document = Document(name, self.output_dir(owner, repository))
+            document = Document(name, self.to_dir(owner, repository))
+            return static_file(document.pdf_name(), document.root)
         except (RuntimeError, RuntimeWarning):
-            try:
-                BuildManager.instance().dequeue(owner, repository)
-                document = Document(name, self.output_dir(owner, repository))
-            except (RuntimeError, RuntimeWarning, KeyError):
-                abort(404, "The requested document does not exist.")
-        return static_file(document.pdf_name(), document.root)
+            self.abort_request(404, "The requested document does not exist.")
 
-    def _log(self, owner, repository, name):
-        global document
+    def log_request(self, owner, repository, name):
+        self.build_manager.run_lazy(owner, repository)
         try:
-            document = Document(name, self.output_dir(owner, repository))
+            document = Document(name, self.to_dir(owner, repository))
+            return template(self.TEMPLATE_LOG,
+                            base_url=self._base_url,
+                            repo=repository,
+                            name=name,
+                            errors=document.get_errors(),
+                            warnings=document.get_warnings(),
+                            all=document.get_log())
         except (RuntimeError, RuntimeWarning):
-            try:
-                BuildManager.instance().dequeue(owner, repository)
-                document = Document(name, self.output_dir(owner, repository))
-            except (RuntimeError, RuntimeWarning, KeyError):
-                abort(404, "The requested document does not exist.")
-        return template(os.path.join(self.config.dir_path('templates'), 'log.tpl'),
-                        root=self.config.server_root(),
-                        repo=repository,
-                        name=name,
-                        errors=document.get_errors(),
-                        warnings=document.get_warnings(),
-                        all=document.get_log())
+            self.abort_request(404, "The requested document does not exist.")
 
-    def output_dir(self, owner, repo):
-        return os.path.join(self.config.root, self.config.dir_name('output'), owner, repo)
+    def file_request(self, name):
+        static_dir = os.path.join(self._root, self.DIRECTORY_STATIC)
+        return static_file(name, static_dir)
 
-    def _index(self):
-        return template(os.path.join(self.config.dir_path('templates'), 'index.tpl'),
-                        root=self.config.server_root())
-
-    def _static(self, name):
-        return static_file(name, self.config.dir_path('static'))
+    @staticmethod
+    def abort_request(code, text):
+        logging.warning(text)
+        abort(code, text)

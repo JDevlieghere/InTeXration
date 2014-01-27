@@ -2,7 +2,7 @@ import logging
 import os
 import configparser
 import shutil
-from intexration.api import ApiManager
+from intexration.manager import ApiManager
 from intexration.singleton import Singleton
 
 
@@ -60,7 +60,7 @@ class IntexrationConfig:
     }
 
     dir_names = {
-        'templates': 'templates',
+        'views': 'views',
         'static': 'static',
         'temp': 'temp',
         'output': 'out'
@@ -113,6 +113,9 @@ class IntexrationConfig:
         self.config.read(file)
         return self.config[section][key]
 
+    def read_bool(self, section, key):
+        return self.str2bool(self.read(section, key))
+
     def write(self, section, key, value):
         file = self.file_path('config')
         self.config.read(file)
@@ -134,7 +137,7 @@ class IntexrationConfig:
         self.validate()
         logging.info("Configuration imported from %s", path)
 
-    def server_root(self):
+    def base_url(self):
         return 'http://'+self.read('SERVER', 'host')+':'+self.read('SERVER', 'port')+'/'
 
     @staticmethod
