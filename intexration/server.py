@@ -9,13 +9,6 @@ from intexration.document import Document
 from intexration.api import ApiManager
 
 
-def escape(lines):
-    escaped_list = []
-    for line in lines:
-        escaped_list.append(html.escape(line))
-    return escaped_list
-
-
 class Server:
 
     def __init__(self, host, port, branch, lazy, threaded):
@@ -90,9 +83,9 @@ class Server:
                         root=self.config.server_root(),
                         repo=repository,
                         name=name,
-                        errors=escape(document.get_errors()),
-                        warnings=escape(document.get_warnings()),
-                        all=escape(document.get_log()))
+                        errors=document.get_errors(),
+                        warnings=document.get_warnings(),
+                        all=document.get_log())
 
     def output_dir(self, owner, repo):
         return os.path.join(self.config.root, self.config.dir_name('output'), owner, repo)
