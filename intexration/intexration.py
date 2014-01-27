@@ -74,18 +74,16 @@ class IntexrationConfig:
             raise RuntimeError("Invalid config file")
 
     def read(self, section, key):
-        file = self.file_path('config')
-        self.parser.read(file)
+        self.parser.read(self.settings_file)
         return self.parser[section][key]
 
     def read_bool(self, section, key):
         return self.str2bool(self.read(section, key))
 
     def write(self, section, key, value):
-        file = self.file_path('config')
-        self.parser.read(file)
+        self.parser.read(self.settings_file)
         self.parser.set(section, key, value)
-        with open(file, 'w+') as configfile:
+        with open(self.settings_file, 'w+') as configfile:
             self.parser.write(configfile)
         logging.info("Updated config %s = %s", [key, value])
 
