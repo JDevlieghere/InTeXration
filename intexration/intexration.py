@@ -56,7 +56,7 @@ class IntexrationConfig:
 
     def __init__(self):
         self.parser = configparser.ConfigParser()
-        self.settings_file = os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_SETTINGS)
+        self.settings_file = os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG)
         self.logger_file = os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_LOGGER)
 
     def validate(self):

@@ -8,5 +8,5 @@ DIRECTORY_DATA = 'data'
 DIRECTORY_CONFIG = 'config'
 
 FILE_API = 'api_keys.csv'
-FILE_SETTINGS = 'settings.cfg'
+FILE_CONFIG = 'config.cfg'
 FILE_LOGGER = 'logger.cfg'
