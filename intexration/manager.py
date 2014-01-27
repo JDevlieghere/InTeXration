@@ -13,7 +13,7 @@ class ApiManager:
 
     def __init__(self):
         self._path = os.path.join(constants.DIRECTORY_ROOT,
-                                  constants.DIRECTORY_CONFIG,
+                                  constants.DIRECTORY_DATA,
                                   constants.FILE_API)
 
     def is_valid(self, key_to_check):
