@@ -2,6 +2,7 @@ import logging
 import os
 import json
 from bottle import Bottle, request, abort, static_file, template
+import bottle
 from intexration import constants
 from intexration.task import BuildTask
 from intexration.document import Document
@@ -12,6 +13,7 @@ class Server:
     SERVER = 'cherrypy'
 
     def __init__(self, host, port, handler):
+        bottle.TEMPLATE_PATH.insert(0, os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_TEMPLATES))
         self._host = host
         self._port = port
         self._handler = handler

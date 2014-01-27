@@ -6,6 +6,7 @@ DIRECTORY_OUTPUT = 'out'
 DIRECTORY_TEMP = 'temp'
 DIRECTORY_DATA = 'data'
 DIRECTORY_CONFIG = 'config'
+DIRECTORY_TEMPLATES = 'views'
 
 FILE_API = 'api_keys.csv'
 FILE_CONFIG = 'config.cfg'
