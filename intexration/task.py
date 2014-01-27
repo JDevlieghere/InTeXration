@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import errno
 from threading import Thread
+from intexration.intexration import IntexrationConfig
 from intexration.singleton import Singleton
 
 
@@ -174,7 +175,7 @@ class CloneTask:
         self.commit = commit
 
     @staticmethod
-    def url(url):
+    def convert(url):
         if 'https://' in url:
             return url + '.git'
         return url
@@ -194,19 +195,17 @@ class CloneTask:
         self._clone()
 
 
-class Build:
-
-    input_name = 'build'
-    output_name = 'out'
+class BuildTask:
 
     def __init__(self, root, url, owner, repository, commit, threaded=True):
+        self.config = IntexrationConfig.instance()
         self.url = url
         self.owner = owner
         self.repository = repository
         self.commit = commit
         self.threaded = threaded
-        self.input_dir = create_dir(os.path.join(root, self.input_name))
-        self.output_dir = create_dir(os.path.join(root, self.output_name, self.owner, self.repository))
+        self.input_dir = create_dir(os.path.join(root, self.config.dir_name('temp')))
+        self.output_dir = create_dir(os.path.join(root, self.config.dir_name('output'), self.owner, self.repository))
 
     def name(self):
         return self.owner+'/'+self.repository

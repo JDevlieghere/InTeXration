@@ -2,7 +2,7 @@ import logging
 import os
 import configparser
 import shutil
-from intexration.helper import ApiHelper
+from intexration.api import ApiManager
 from intexration.singleton import Singleton
 
 
@@ -36,18 +36,18 @@ class IntexrationParser:
             self.config.file_import(self.get('config_import'))
 
     def parse_api(self):
-        api_helper = ApiHelper(self.config.file_path('api'), self.config)
+        api_manager = ApiManager(self.config.file_path('api'))
         if self.is_set('api_add'):
-            api_helper.add(self.get('api_add'))
+            api_manager.add_key(self.get('api_add'))
         if self.is_set('api_remove'):
-            api_helper.remove(self.get('api_remove'))
+            api_manager.remove_key(self.get('api_remove'))
         if self.is_true('api_list'):
-            for line in api_helper.get_all():
+            for line in api_manager.all_keys():
                 print(line[0])
         if self.is_set('api_export'):
-            api_helper.export_file(self.get('api_export'))
+            api_manager.export_file(self.get('api_export'))
         if self.is_set('api_import'):
-            api_helper.import_file(self.get('api_import'))
+            api_manager.import_file(self.get('api_import'))
 
 
 @Singleton
@@ -61,7 +61,9 @@ class IntexrationConfig:
 
     dir_names = {
         'templates': 'templates',
-        'static': 'static'
+        'static': 'static',
+        'temp': 'temp',
+        'output': 'out'
     }
 
     constants = {
@@ -77,6 +79,9 @@ class IntexrationConfig:
 
     def dir_path(self, name):
         return os.path.join(self.root, self.dir_names[name])
+
+    def dir_name(self, name):
+        return self.dir_names[name]
 
     def file_path(self, name):
         return os.path.join(self.root, self.file_names[name])

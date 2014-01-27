@@ -3,15 +3,13 @@ import logging
 import os
 import json
 from bottle import Bottle, request, abort, static_file, template
-from intexration.build import Build, BuildManager
+from intexration.task import BuildTask, BuildManager
 from intexration.intexration import IntexrationConfig
 from intexration.document import Document
-from intexration.helper import ApiHelper
+from intexration.api import ApiManager
 
 
 class Server:
-
-    output_name = 'out'
 
     def __init__(self, host, port, branch, lazy, threaded):
         self._host = host
@@ -34,7 +32,7 @@ class Server:
         self._app.run(host=self._host, port=self._port, server='cherrypy')
 
     def _hook(self, api_key):
-        api_helper = ApiHelper(self.config.file_path('api'))
+        api_helper = ApiManager(self.config.file_path('api'))
         if not api_helper.is_valid(api_key):
             logging.warning("Request Denied: API key invalid")
             abort(401, 'Unauthorized: API key invalid.')
@@ -46,7 +44,7 @@ class Server:
                 owner = data['repository']['owner']['name']
                 repository = data['repository']['name']
                 commit = data['after']
-                build = Build(self.config.root, url, owner, repository, commit, self._threaded)
+                build = BuildTask(self.config.root, url, owner, repository, commit, self._threaded)
                 manager = BuildManager.instance()
                 if not self._lazy:
                     manager.run(build)
@@ -83,10 +81,10 @@ class Server:
                 abort(404, "The requested document does not exist.")
         return template(os.path.join(self.config.dir_path('templates'), 'log.tpl'),
                         root=self.config.server_root(), repo=repository, name=name, errors=html.escape(document.get_errors()),
-                        warnings=html.escape(document.get_warnings()), html.escape(all=document.get_log()))
+                        warnings=html.escape(document.get_warnings()), all=html.escape(document.get_log()))
 
     def output_dir(self, owner, repo):
-        return os.path.join(self.config.root, self.output_name, owner, repo)
+        return os.path.join(self.config.root, self.config.dir_name('out'), owner, repo)
 
     def _index(self):
         return template(os.path.join(self.config.dir_path('templates'), 'index.tpl'), root=self.config.server_root())
