@@ -88,7 +88,7 @@ class Server:
                         all=html.escape(document.get_log()))
 
     def output_dir(self, owner, repo):
-        return os.path.join(self.config.root, self.config.dir_name('out'), owner, repo)
+        return os.path.join(self.config.root, self.config.dir_name('output'), owner, repo)
 
     def _index(self):
         return template(os.path.join(self.config.dir_path('templates'), 'index.tpl'),
