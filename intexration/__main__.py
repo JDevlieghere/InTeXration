@@ -37,9 +37,9 @@ def main():
 
     request_handler = RequestHandler(root=config.root,
                                      base_url=config.base_url(),
-                                     branch=config.read('COMPILE', 'branch'),
-                                     threaded=config.read_bool('COMPILE', 'threaded'),
-                                     lazy=config.read_bool('COMPILE', 'lazy'),
+                                     branch=config.read('COMPILATION', 'branch'),
+                                     threaded=config.read_bool('COMPILATION', 'threaded'),
+                                     lazy=config.read_bool('COMPILATION', 'lazy'),
                                      build_manager=BuildManager(),
                                      api_manager=ApiManager(config.file_path('api')))
 
