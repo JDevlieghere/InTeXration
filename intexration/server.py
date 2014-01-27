@@ -2,6 +2,7 @@ import logging
 import os
 import json
 from bottle import Bottle, request, abort, static_file, template
+from intexration import constants
 from intexration.task import BuildTask
 from intexration.document import Document
 
@@ -32,13 +33,10 @@ class Server:
 
 class RequestHandler:
 
-    DIRECTORY_STATIC = 'static'
-    DIRECTORY_OUTPUT = 'out'
     TEMPLATE_INDEX = 'index'
     TEMPLATE_LOG = 'log'
 
-    def __init__(self, root, base_url, branch, threaded, lazy, build_manager, api_manager):
-        self._root = root
+    def __init__(self, base_url, branch, threaded, lazy, build_manager, api_manager):
         self._base_url = base_url
         self._branch = branch
         self._threaded = threaded
@@ -47,7 +45,7 @@ class RequestHandler:
         self.api_manager = api_manager
 
     def to_dir(self, owner, repo):
-        return os.path.join(self._root, self.DIRECTORY_OUTPUT, owner, repo)
+        return os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_OUTPUT, owner, repo)
 
     def index_request(self):
         return template(self.TEMPLATE_INDEX,
@@ -64,7 +62,7 @@ class RequestHandler:
             repository = data['repository']['name']
             commit = data['after']
             if self._branch in refs:
-                build = BuildTask(self._root, url, owner, repository, commit, self._threaded)
+                build = BuildTask(url, owner, repository, commit, self._threaded)
                 if not self._lazy:
                     self.build_manager.run(build)
                 else:
@@ -97,7 +95,7 @@ class RequestHandler:
             self.abort_request(404, "The requested document does not exist.")
 
     def file_request(self, name):
-        static_dir = os.path.join(self._root, self.DIRECTORY_STATIC)
+        static_dir = os.path.join(self._root, constants.DIRECTORY_STATIC)
         return static_file(name, static_dir)
 
     @staticmethod

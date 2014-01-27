@@ -2,7 +2,8 @@ import csv
 import logging
 import os
 import shutil
-from intexration.singleton import Singleton
+from threading import Thread
+from intexration import constants
 
 
 class ApiManager:
@@ -10,8 +11,10 @@ class ApiManager:
     NEWLINE = ''
     DELIMITER = ','
 
-    def __init__(self, path):
-        self._path = path
+    def __init__(self):
+        self._path = os.path.join(constants.DIRECTORY_ROOT,
+                                  constants.DIRECTORY_CONFIG,
+                                  constants.FILE_API)
 
     def is_valid(self, key_to_check):
         with open(self._path, newline=self.NEWLINE) as key_file:
@@ -22,7 +25,7 @@ class ApiManager:
         return False
 
     def add_key(self, api_key):
-        with open(self._path, 'a', self.NEWLINE) as key_file:
+        with open(self._path, 'a', newline=self.NEWLINE) as key_file:
             key_writer = csv.writer(key_file, delimiter=self.DELIMITER, quoting=csv.QUOTE_NONE)
             key_writer.writerow([api_key])
 
@@ -76,8 +79,9 @@ class BuildManager:
         self.queue[key] = build
 
     def dequeue(self, key):
-        return self.queue[key]
+        build = self.queue[key]
         del self.queue[key]
+        return build
 
     def run_lazy(self, owner, repository):
         key = owner+self.SEPARATOR+repository

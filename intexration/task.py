@@ -6,8 +6,8 @@ import shutil
 import subprocess
 import errno
 from threading import Thread
+from intexration import constants
 from intexration.intexration import IntexrationConfig
-from intexration.singleton import Singleton
 
 
 @contextlib.contextmanager
@@ -156,7 +156,6 @@ class IntexrationTask:
         # Join all threads
         [t.join() for t in threads]
 
-
     def run_only(self, name):
         if not name in self.config.names():
             raise RuntimeError("Build not in intexration config")
@@ -197,15 +196,14 @@ class CloneTask:
 
 class BuildTask:
 
-    def __init__(self, root, url, owner, repository, commit, threaded=True):
-        self.config = IntexrationConfig.instance()
+    def __init__(self, url, owner, repository, commit, threaded=True):
         self.url = url
         self.owner = owner
         self.repository = repository
         self.commit = commit
         self.threaded = threaded
-        self.input_dir = create_dir(os.path.join(root, self.config.dir_name('temp')))
-        self.output_dir = create_dir(os.path.join(root, self.config.dir_name('output'), self.owner, self.repository))
+        self.input_dir = create_dir(os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_TEMP))
+        self.output_dir = create_dir(os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_OUTPUT, self.owner, self.repository))
 
     def name(self):
         return self.owner+'/'+self.repository
@@ -221,6 +219,3 @@ class BuildTask:
         finally:
             remove(clone_task.clone_dir())
         logging.info("Build finished for %s", self.name())
-
-
-
