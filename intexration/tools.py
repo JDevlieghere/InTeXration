@@ -21,6 +21,7 @@ def create_dir(path):
     try:
         os.makedirs(path)
     except OSError as e:
+        logging.warning(e)
         if e.errno != errno.EEXIST:
             raise
     return path
