@@ -201,7 +201,7 @@ class BuildTask:
         self.threaded = threaded
 
     def run(self):
-        logging.info("Build started for %s", self.name())
+        logging.info("Build started for %s", self.name)
         clone_task = CloneTask(self.build)
         try:
             clone_task.run()
