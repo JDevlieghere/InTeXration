@@ -166,9 +166,13 @@ class Document:
     def add_extension(name, extension):
         return name + '.' + extension
 
+    def __str__(self):
+        return self.name
+
 
 class Build:
 
+    SEPARATOR = '/'
     CONFIG_NAME = '.intexration'
 
     def __init__(self, url, owner, repository, commit):
@@ -197,6 +201,9 @@ class Build:
             return url + '.git'
         return url
 
+    def __str__(self):
+        return self.owner + self.SEPARATOR + self.repository
+
 
 class BuildTask:
 
@@ -205,7 +212,7 @@ class BuildTask:
         self.threaded = threaded
 
     def run(self):
-        logging.info("Build started for %s", self.build.name)
+        logging.info("Build started for %s", self.build)
         clone_task = CloneTask(self.build)
         try:
             clone_task.run()
@@ -214,4 +221,4 @@ class BuildTask:
             logging.error(e)
         finally:
             remove(self.build.clone_dir)
-        logging.info("Build finished for %s", self.build.name)
+        logging.info("Build finished for %s", self.build)
