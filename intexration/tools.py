@@ -23,8 +23,7 @@ def create_dir(path):
             pass
         else:
             logging.error(exc)
-    else:
-        return path
+    return path
 
 # def empty(path, files_only=True):
 #     if not os.path.exists(path):
