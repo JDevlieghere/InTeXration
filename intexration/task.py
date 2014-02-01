@@ -74,7 +74,7 @@ class BuildConfigParser:
     BIB = 'bib'
 
     def __init__(self, build):
-        path = os.path.join(build.input_dir, build.CONFIG_NAME)
+        path = os.path.join(build.clone_dir, build.CONFIG_NAME)
         if not os.path.exists(path):
             raise RuntimeError("InTeXration config file not found")
         self.build = build
@@ -143,7 +143,9 @@ class CloneTask(Task):
     def _clone(self):
         """Clone repository to build dir."""
         logging.info("Cloning from %s", self.build.url)
-        if subprocess.call(['git', 'clone',  self.build.url, self.build.clone_dir]) != 0:
+        if subprocess.call(['git', 'clone',  self.build.url, self.build.clone_dir],
+                           stdout=subprocess.DEVNULL,
+                           stderr=subprocess.DEVNULL) != 0:
             raise RuntimeError("Clone failed")
 
     def run(self):
