@@ -137,10 +137,6 @@ class CloneTask(Task):
     def __init__(self, build):
         self.build = build
 
-    def _clean(self):
-        #remove(self.build.clone_dir)
-        create_dir(self.build.clone_dir)
-
     def _clone(self):
         """Clone repository to build dir."""
         logging.info("Cloning from %s", self.build.url)
@@ -148,7 +144,6 @@ class CloneTask(Task):
             raise RuntimeError("Clone failed")
 
     def run(self):
-        self._clean()
         self._clone()
 
 
@@ -188,10 +183,11 @@ class Build:
         self.documents = []
         self.input_dir = create_dir(os.path.join(constants.DIRECTORY_ROOT,
                                                  constants.DIRECTORY_TEMP))
-        self.clone_dir = os.path.join(self.input_dir,
-                                      self.owner,
-                                      self.repository,
-                                      self.commit)
+        self.clone_dir = create_dir(os.path.join(constants.DIRECTORY_ROOT,
+                                                 constants.DIRECTORY_TEMP,
+                                                 self.owner,
+                                                 self.repository,
+                                                 self.commit))
         self.output_dir = create_dir(os.path.join(constants.DIRECTORY_ROOT,
                                                   constants.DIRECTORY_OUTPUT,
                                                   self.owner,
@@ -218,12 +214,9 @@ class BuildTask:
 
     def run(self):
         logging.info("Build started for %s", self.build)
-        clone_task = CloneTask(self.build)
         try:
-            clone_task.run()
+            CloneTask(self.build).run()
             IntexrationTask(self.build, self.threaded).run()
         except RuntimeError as e:
             logging.error(e)
-        # finally:
-        #     remove(self.build.clone_dir)
         logging.info("Build finished for %s", self.build)
