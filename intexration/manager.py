@@ -12,7 +12,7 @@ class ApiManager:
     DELIMITER = ','
 
     def __init__(self):
-        self._path = os.path.join(constants.DIRECTORY_ROOT,
+        self._path = os.path.join(constants.PATH_ROOT,
                                   constants.DIRECTORY_DATA,
                                   constants.FILE_API)
 

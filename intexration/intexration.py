@@ -25,7 +25,7 @@ class Intexration:
                              handler=self.request_handler)
 
     def run(self):
-        logging.config.fileConfig(os.path.join(constants.DIRECTORY_ROOT,
+        logging.config.fileConfig(os.path.join(constants.PATH_ROOT,
                                                constants.DIRECTORY_CONFIG,
                                                constants.FILE_LOGGER))
         self.server.start()
@@ -79,8 +79,8 @@ class IntexrationConfig:
 
     def __init__(self):
         self.parser = configparser.ConfigParser()
-        self.settings_file = os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG)
-        self.logger_file = os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_LOGGER)
+        self.settings_file = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG)
+        self.logger_file = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_LOGGER)
 
     def validate(self):
         if not os.path.exists(self.settings_file):
@@ -113,14 +113,14 @@ class IntexrationConfig:
     @staticmethod
     def file_export(directory):
         path = os.path.join(directory, constants.FILE_CONFIG)
-        shutil.copyfile(os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG), path)
+        shutil.copyfile(os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG), path)
         logging.info("Configuration exported to %s", path)
 
     def file_import(self, directory):
         path = os.path.join(directory, constants.FILE_CONFIG)
         if not os.path.exists(path):
             raise RuntimeError("Importing configuration failed: not found in %s", path)
-        shutil.copyfile(path, os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG))
+        shutil.copyfile(path, os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG))
         self.validate()
         logging.info("Configuration imported from %s", path)
 

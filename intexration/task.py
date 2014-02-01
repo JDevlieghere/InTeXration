@@ -93,7 +93,7 @@ class BuildConfigParser:
     def _dir(self, name):
         if self.parser.has_option(name, self.DIR):
             return self.parser[name][self.DIR]
-        return ''
+        return '/'
 
     def _idx(self, name):
         if self.parser.has_option(name, self.IDX):
@@ -187,8 +187,7 @@ class Build:
                                                  self.owner,
                                                  self.repository,
                                                  self.commit))
-        self.output_dir = create_dir(os.path.join(constants.DIRECTORY_ROOT,
-                                                  constants.DIRECTORY_OUTPUT,
+        self.output_dir = create_dir(os.path.join(constants.PATH_OUTPUT,
                                                   self.owner,
                                                   self.repository))
 

@@ -13,7 +13,7 @@ class Server:
     SERVER = 'cherrypy'
 
     def __init__(self, host, port, handler):
-        bottle.TEMPLATE_PATH.insert(0, os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_TEMPLATES))
+        bottle.TEMPLATE_PATH.insert(0, os.path.join(constants.PATH_ROOT, constants.DIRECTORY_TEMPLATES))
         self._host = host
         self._port = port
         self._handler = handler
@@ -47,7 +47,7 @@ class RequestHandler:
         self.api_manager = api_manager
 
     def to_dir(self, owner, repo):
-        return os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_OUTPUT, owner, repo)
+        return os.path.join(constants.PATH_ROOT, constants.PATH_OUTPUT, owner, repo)
 
     def index_request(self):
         return template(self.TEMPLATE_INDEX,
@@ -99,7 +99,7 @@ class RequestHandler:
 
     @staticmethod
     def file_request(name):
-        static_dir = os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_STATIC)
+        static_dir = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_STATIC)
         return static_file(name, static_dir)
 
     @staticmethod
