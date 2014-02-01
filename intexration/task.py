@@ -181,8 +181,6 @@ class Build:
         self.repository = repository
         self.commit = commit
         self.documents = []
-        self.input_dir = create_dir(os.path.join(constants.DIRECTORY_ROOT,
-                                                 constants.DIRECTORY_TEMP))
         self.clone_dir = create_dir(os.path.join(constants.DIRECTORY_ROOT,
                                                  constants.DIRECTORY_TEMP,
                                                  self.owner,
