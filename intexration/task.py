@@ -3,6 +3,7 @@ import logging
 import os
 import shutil
 import subprocess
+import tempfile
 from threading import Thread
 from intexration import constants
 from intexration.tools import cd, create_dir
@@ -181,8 +182,8 @@ class Build:
         self.repository = repository
         self.commit = commit
         self.documents = []
-        self.clone_dir = create_dir(os.path.join(constants.DIRECTORY_ROOT,
-                                                 constants.DIRECTORY_TEMP,
+        self.temp_dir = tempfile.gettempdir()
+        self.clone_dir = create_dir(os.path.join(self.temp_dir,
                                                  self.owner,
                                                  self.repository,
                                                  self.commit))
