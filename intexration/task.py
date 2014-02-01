@@ -138,7 +138,8 @@ class CloneTask(Task):
         self.build = build
 
     def _clean(self):
-        empty(self.build.clone_dir, False)
+        shutil.rmtree(self.build.clone_dir)
+        create_dir(self.build.clone_dir)
 
     def _clone(self):
         """Clone repository to build dir."""
