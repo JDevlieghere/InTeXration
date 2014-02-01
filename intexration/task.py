@@ -25,6 +25,8 @@ class CompileTask(Task):
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.document = document
+        logging.info("input: %s", input_dir)
+        logging.info("output: %s", output_dir)
 
     def _makeindex(self):
         """Make index."""
