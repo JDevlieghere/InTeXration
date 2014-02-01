@@ -137,7 +137,7 @@ class CloneTask(Task):
     def __init__(self, build):
         self.build = build
 
-    def __clean(self):
+    def _clean(self):
         empty(self.build.clone_dir, False)
 
     def _clone(self):
