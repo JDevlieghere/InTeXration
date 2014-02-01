@@ -28,20 +28,24 @@ class CompileTask(Task):
     def _makeindex(self):
         """Make index."""
         with cd(self.input_dir):
-            if subprocess.call([self.MAKEINDEX, self.document.idx], stdout=subprocess.DEVNULL,
+            if subprocess.call([self.MAKEINDEX, self.document.idx],
+                               stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
                 logging.warning("Makeindex failed for %s", self.document.name)
 
     def _bibtex(self):
         """Compile bibtex."""
         with cd(self.input_dir):
-            if subprocess.call([self.BIBTEX, self.document.bib], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
+            if subprocess.call([self.BIBTEX, self.document.bib],
+                               stdout=subprocess.DEVNULL,
+                               stderr=subprocess.DEVNULL) != 0:
                 logging.warning("Bibtex failed for %s", self.document.name)
 
     def _compile(self):
         """Compile with pdflatex."""
         with cd(self.input_dir):
-            if subprocess.call([self.PDFLATEX, '-interaction=nonstopmode', self.document.tex], stdout=subprocess.DEVNULL,
+            if subprocess.call([self.PDFLATEX, '-interaction=nonstopmode', self.document.tex],
+                               stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
                 logging.warning("Compilation finished with errors for %s", self.document.name)
 
@@ -201,7 +205,7 @@ class BuildTask:
         self.threaded = threaded
 
     def run(self):
-        logging.info("Build started for %s", self.name)
+        logging.info("Build started for %s", self.build.name)
         clone_task = CloneTask(self.build)
         try:
             clone_task.run()
@@ -210,4 +214,4 @@ class BuildTask:
             logging.error(e)
         finally:
             remove(self.build.clone_dir)
-        logging.info("Build finished for %s", self.build.name())
+        logging.info("Build finished for %s", self.build.name)
