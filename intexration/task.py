@@ -219,6 +219,6 @@ class BuildTask:
             IntexrationTask(self.build, self.threaded).run()
         except RuntimeError as e:
             logging.error(e)
-        finally:
-            remove(self.build.clone_dir)
+        # finally:
+        #     remove(self.build.clone_dir)
         logging.info("Build finished for %s", self.build)
