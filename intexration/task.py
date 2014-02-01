@@ -153,6 +153,7 @@ class CloneTask(Task):
 
 class Document:
 
+    TEX_EXTENSION = 'tex'
     PDF_EXTENSION = 'pdf'
     LOG_EXTENSION = 'log'
 
@@ -161,6 +162,7 @@ class Document:
         self.directory = directory
         self.idx = idx
         self.bib = bib
+        self.tex = self.add_extension(name, self.TEX_EXTENSION)
         self.pdf = self.add_extension(name, self.PDF_EXTENSION)
         self.log = self.add_extension(name, self.LOG_EXTENSION)
 
