@@ -67,16 +67,16 @@ class BuildManager:
         self.queue = {}
 
     @staticmethod
-    def run(build, blocking=False):
+    def run(task, blocking=False):
         if not blocking:
-            thread = Thread(target=build.run)
+            thread = Thread(target=task.run)
             thread.start()
         else:
-            build.run()
+            task.run()
 
-    def enqueue(self, build):
-        key = build.owner+self.SEPARATOR+build.repository
-        self.queue[key] = build
+    def enqueue(self, task):
+        key = task.owner+self.SEPARATOR+task.repository
+        self.queue[key] = task
 
     def dequeue(self, key):
         build = self.queue[key]
@@ -86,5 +86,5 @@ class BuildManager:
     def run_lazy(self, owner, repository):
         key = owner+self.SEPARATOR+repository
         if key in self.queue:
-            build = self.dequeue(key)
-            self.run(build, blocking=True)
+            task = self.dequeue(key)
+            self.run(task, blocking=True)

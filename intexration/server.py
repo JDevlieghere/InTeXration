@@ -4,7 +4,7 @@ import json
 from bottle import Bottle, request, abort, static_file, template
 import bottle
 from intexration import constants
-from intexration.task import BuildTask
+from intexration.task import BuildTask, Build
 from intexration.document import Document
 
 
@@ -64,11 +64,12 @@ class RequestHandler:
             repository = data['repository']['name']
             commit = data['after']
             if self._branch in refs:
-                build = BuildTask(url, owner, repository, commit, self._threaded)
+                build = Build(url, owner, repository, commit)
+                task = BuildTask(build, self._threaded)
                 if not self._lazy:
-                    self.build_manager.run(build)
+                    self.build_manager.run(task)
                 else:
-                    self.build_manager.enqueue(build)
+                    self.build_manager.enqueue(task)
             else:
                 self.abort_request(406, "Wrong branch")
         except (RuntimeError, RuntimeWarning) as e:
