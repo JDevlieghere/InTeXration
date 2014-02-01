@@ -40,4 +40,5 @@ def empty(path, files_only=True):
 
 
 def remove(path):
-    shutil.rmtree(path)
+    if(os.path.exists(path)):
+        shutil.rmtree(path)
