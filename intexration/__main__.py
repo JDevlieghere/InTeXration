@@ -1,17 +1,5 @@
 import argparse
-import logging.config
-import os
-from intexration import constants
-from intexration.manager import BuildManager, ApiManager
-from intexration.intexration import IntexrationConfig, IntexrationParser
-
-# Config
-from intexration.server import Server, RequestHandler
-
-config = IntexrationConfig.instance()
-
-# Logger
-logging.config.fileConfig(os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_LOGGER))
+from intexration.intexration import IntexrationParser, Intexration
 
 
 def main():
@@ -34,21 +22,12 @@ def main():
     api_parser.add_argument('--import', metavar='DIR', help='import API key file from given directory',
                             dest='api_import')
 
+    intexration = Intexration()
+
     arguments = parser.parse_args()
-    IntexrationParser(arguments, config).parse()
+    IntexrationParser(arguments, intexration.config).parse()
 
-    request_handler = RequestHandler(base_url=config.base_url(),
-                                     branch=config.read('COMPILATION', 'branch'),
-                                     threaded=config.read_bool('COMPILATION', 'threaded'),
-                                     lazy=config.read_bool('COMPILATION', 'lazy'),
-                                     build_manager=BuildManager(),
-                                     api_manager=ApiManager())
-
-    server = Server(host=config.read('SERVER', 'host'),
-                    port=config.read('SERVER', 'port'),
-                    handler=request_handler)
-    server.start()
-
+    Intexration().run()
 
 if __name__ == '__main__':
     main()

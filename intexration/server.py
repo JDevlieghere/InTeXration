@@ -96,7 +96,8 @@ class RequestHandler:
         except (RuntimeError, RuntimeWarning):
             self.abort_request(404, "The requested document does not exist.")
 
-    def file_request(self, name):
+    @staticmethod
+    def file_request(name):
         static_dir = os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_STATIC)
         return static_file(name, static_dir)
 

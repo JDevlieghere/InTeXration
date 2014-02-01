@@ -2,9 +2,33 @@ import logging
 import os
 import configparser
 import shutil
+import logging.config
+from intexration.server import Server, RequestHandler
 from intexration import constants
-from intexration.manager import ApiManager
-from intexration.singleton import Singleton
+from intexration.manager import ApiManager, BuildManager
+
+
+class Intexration:
+
+    def __init__(self):
+        self.config = IntexrationConfig()
+        self.build_manager = BuildManager()
+        self.api_manager = ApiManager()
+        self.request_handler = RequestHandler(base_url=self.config.base_url(),
+                                              branch=self.config.read('COMPILATION', 'branch'),
+                                              threaded=self.config.read_bool('COMPILATION', 'threaded'),
+                                              lazy=self.config.read_bool('COMPILATION', 'lazy'),
+                                              build_manager=self.build_manager,
+                                              api_manager=self.api_manager)
+        self.server = Server(host=self.config.read('SERVER', 'host'),
+                             port=self.config.read('SERVER', 'port'),
+                             handler=self.request_handler)
+
+    def run(self):
+        logging.config.fileConfig(os.path.join(constants.DIRECTORY_ROOT,
+                                               constants.DIRECTORY_CONFIG,
+                                               constants.FILE_LOGGER))
+        self.server.start()
 
 
 class IntexrationParser:
@@ -51,7 +75,6 @@ class IntexrationParser:
             api_manager.import_file(self.get('api_import'))
 
 
-@Singleton
 class IntexrationConfig:
 
     def __init__(self):
