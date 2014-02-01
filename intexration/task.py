@@ -93,7 +93,7 @@ class BuildConfigParser:
     def _dir(self, name):
         if self.parser.has_option(name, self.DIR):
             return self.parser[name][self.DIR]
-        return '/'
+        return None
 
     def _idx(self, name):
         if self.parser.has_option(name, self.IDX):
@@ -121,8 +121,11 @@ class IntexrationTask(Task):
         threads = []
         self.config.parse()
         for document in self.build.documents:
-            task_input = os.path.join(self.build.clone_dir, document.directory)
-            task = CompileTask(self.build.clone_dir, self.build.output_dir, document)
+            if document.directory is not None:
+                input_dir = os.path.join(self.build.clone_dir, document.directory)
+            else:
+                input_dir = self.build.clone_dir
+            task = CompileTask(input_dir, self.build.output_dir, document)
             if self.threaded:
                 threads.append(Thread(target=task.run))
             else:
