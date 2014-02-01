@@ -5,7 +5,7 @@ import shutil
 import subprocess
 from threading import Thread
 from intexration import constants
-from intexration.tools import cd, create_dir, remove, empty
+from intexration.tools import cd, create_dir
 
 
 class Task:
@@ -138,7 +138,7 @@ class CloneTask(Task):
         self.build = build
 
     def _clean(self):
-        remove(self.build.clone_dir)
+        #remove(self.build.clone_dir)
         create_dir(self.build.clone_dir)
 
     def _clone(self):

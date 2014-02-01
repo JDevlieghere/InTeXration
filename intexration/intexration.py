@@ -110,16 +110,17 @@ class IntexrationConfig:
             self.parser.write(configfile)
         logging.info("Updated config %s = %s", [key, value])
 
-    def file_export(self, directory):
-        path = os.path.join(directory, self.file_name('config'))
-        shutil.copyfile(self.file_path('config'), path)
+    @staticmethod
+    def file_export(directory):
+        path = os.path.join(directory, constants.FILE_CONFIG)
+        shutil.copyfile(os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG), path)
         logging.info("Configuration exported to %s", path)
 
     def file_import(self, directory):
-        path = os.path.join(directory, self.file_name('config'))
+        path = os.path.join(directory, constants.FILE_CONFIG)
         if not os.path.exists(path):
             raise RuntimeError("Importing configuration failed: not found in %s", path)
-        shutil.copyfile(path, self.file_path('config'))
+        shutil.copyfile(path, os.path.join(constants.DIRECTORY_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG))
         self.validate()
         logging.info("Configuration imported from %s", path)
 
