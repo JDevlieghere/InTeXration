@@ -140,8 +140,6 @@ class CloneTask(Task):
     def _clean(self):
         #remove(self.build.clone_dir)
         create_dir(self.build.clone_dir)
-        print(self.build.clone_dir + "Created")
-        exit()
 
     def _clone(self):
         """Clone repository to build dir."""
