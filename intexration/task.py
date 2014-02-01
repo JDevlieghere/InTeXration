@@ -25,8 +25,6 @@ class CompileTask(Task):
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.document = document
-        logging.info("input: %s", input_dir)
-        logging.info("output: %s", output_dir)
 
     def _makeindex(self):
         """Make index."""
@@ -124,7 +122,7 @@ class IntexrationTask(Task):
         self.config.parse()
         for document in self.build.documents:
             task_input = os.path.join(self.build.clone_dir, document.directory)
-            task = CompileTask(task_input, self.build.output_dir, document)
+            task = CompileTask(self.build.clone_dir, self.build.output_dir, document)
             if self.threaded:
                 threads.append(Thread(target=task.run))
             else:
