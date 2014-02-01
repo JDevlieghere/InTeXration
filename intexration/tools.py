@@ -22,7 +22,7 @@ def create_dir(path):
         if exc.errno == errno.EEXIST and os.path.isdir(path):
             pass
         else:
-            raise
+            logging.error(exc)
     else:
         return path
 
