@@ -16,16 +16,13 @@ def cd(directory):
 
 
 def create_dir(path):
-    """Safely create a directory."""
-    logging.warning("Create directory %s", path)
     try:
         os.makedirs(path)
-    except OSError as e:
-        logging.warning(e)
-        if e.errno != errno.EEXIST:
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
             raise
-    return path
-
 
 # def empty(path, files_only=True):
 #     if not os.path.exists(path):
