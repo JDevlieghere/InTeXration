@@ -138,6 +138,10 @@ class CloneTask(Task):
     def __init__(self, build):
         self.build = build
 
+    def _clean(self):
+        shutil.rmtree(self.build.clone_dir)
+        create_dir(self.build.clone_dir)
+
     def _clone(self):
         """Clone repository to build dir."""
         logging.info("Cloning from %s", self.build.url)
@@ -145,6 +149,7 @@ class CloneTask(Task):
             raise RuntimeError("Clone failed")
 
     def run(self):
+        self._clean()
         self._clone()
 
 
