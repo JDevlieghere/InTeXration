@@ -70,10 +70,13 @@ class CloneTask(Task):
 
     def _clone(self):
         logging.info("Cloning from %s", self.build_request.url)
-        if subprocess.call(['git', 'clone',  self.build_request.url, self.build_directory]) != 0:
+        if subprocess.call(['git', 'clone',  self.build_request.url, self.build_directory],
+                           stdout=subprocess.DEVNULL,
+                           stderr=subprocess.DEVNULL) != 0:
             raise RuntimeError("Clone failed")
 
     def _submit_builds(self):
+        builds = []
         build_parser = BuildParser(self.build_directory)
         for name in build_parser.names():
             identifier = Identifier(self.build_request.owner,
@@ -84,7 +87,8 @@ class CloneTask(Task):
                           build_parser.tex(name),
                           build_parser.idx(name),
                           build_parser.bib(name))
-            self.build_manager.submit_build(identifier, build)
+            builds[identifier] = build
+        self.build_manager.submit_builds(builds)
 
     def run(self):
         self._clone()
