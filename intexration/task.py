@@ -88,6 +88,7 @@ class CloneTask(Task):
                           build_parser.idx(name),
                           build_parser.bib(name))
             builds[identifier] = build
+            logging.info("Build created for %s", identifier)
         self.build_manager.submit_builds(builds)
 
     def run(self):
