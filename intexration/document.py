@@ -12,11 +12,10 @@ class Document:
     ERROR = ' !'
     WARMING = 'Warning'
 
-    def __init__(self, identifier, path):
+    def __init__(self, name, path):
         self.path = path
-        self.identifier = identifier
-        self.pdf = self.identifier.name + self.PDF_EXTENSION
-        self.log = self.identifier.name + self.LOG_EXTENSION
+        self.pdf = name + self.PDF_EXTENSION
+        self.log = name + self.LOG_EXTENSION
         if not self.exist():
             raise RuntimeError("The document files do not exist")
         self._lines = self._read_log()

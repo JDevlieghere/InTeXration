@@ -1,8 +1,6 @@
-import logging
 import os
 import shutil
 import tempfile
-from build.lib.intexration.tools import create_dir
 
 
 class Identifier:
@@ -36,14 +34,11 @@ class BuildRequest:
 
 class Build:
 
-    TEX_EXTENSION = '.tex'
-
-    def __init__(self, identifier, path, idx, bib):
-        self.identifier = identifier
+    def __init__(self, path, tex, idx, bib):
         self.path = path
+        self.tex = tex
         self.idx = idx
         self.bib = bib
-        self.tex = self.identifier.name + self.TEX_EXTENSION
         self._finished = False
         if not self.exist():
             raise RuntimeError("The necessary build files do not exist")
@@ -54,6 +49,9 @@ class Build:
             raise RuntimeError('The given build path does not exist')
         else:
             self.path = path
+
+    def __str__(self):
+        return '[' + self.tex + ', ' + self.idx + ', ' + self.bib + ']'
 
     def exist(self):
         self._check_finished()

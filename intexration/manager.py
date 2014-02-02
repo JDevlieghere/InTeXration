@@ -4,6 +4,7 @@ import os
 import shutil
 from threading import Thread
 from intexration import constants
+from intexration.task import CompileTask, CloneTask
 
 
 class ApiManager:
@@ -64,28 +65,44 @@ class BuildManager:
     def __init__(self, threaded, lazy):
         self.threaded = threaded
         self.lazy = lazy
-        self.builds = {}
+        self.build_queue = {}
         self.documents = {}
 
     def submit_request(self, request):
-        return
+        CloneTask(self, request).run()
 
-    def submit_build(self, identifier, build):
-        self.builds[identifier] = build
+    def submit_builds(self, builds):
         if not self.lazy:
-            self._build_from_queue(identifier)
+            self._build_all(builds)
+        else:
+            for identifier in builds:
+                self.build_queue[identifier] = builds[identifier]
 
     def submit_document(self, identifier, document):
         self.documents[identifier] = document
 
     def is_queued(self, identifier):
-        return identifier in self.builds
+        return identifier in self.build_queue
 
     def is_ready(self, identifier):
-        return identifier not in self.builds and identifier in self.documents
+        return identifier not in self.build_queue and identifier in self.documents
 
     def _build_from_queue(self, identifier):
-        return
+        build = self.build_queue[identifier]
+        task = CompileTask(self, identifier, build)
+        task.run()
+
+    def _build_all(self, builds):
+        threads = []
+        for identifier in builds:
+            build = builds[identifier]
+            task = CompileTask(self, identifier, build)
+            if self.threaded:
+                threads.append(Thread(target=task.run))
+            else:
+                task.run()
+        [t.start() for t in threads]
+        [t.join() for t in threads]
 
     def get_document(self, identifier):
         if self.is_ready(identifier):
@@ -93,35 +110,4 @@ class BuildManager:
         if self.is_queued(identifier):
             self._build_from_queue(identifier)
             return self.documents.get(identifier)
-        raise RuntimeWarning("No document found with identifier %s", identifier)
-
-
-# class BuildManager:
-#
-#     SEPARATOR = '/'
-#
-#     def __init__(self):
-#         self.queue = {}
-#
-#     @staticmethod
-#     def run(task, blocking=False):
-#         if not blocking:
-#             thread = Thread(target=task.run)
-#             thread.start()
-#         else:
-#             task.run()
-#
-#     def enqueue(self, task):
-#         key = task.owner+self.SEPARATOR+task.repository
-#         self.queue[key] = task
-#
-#     def dequeue(self, key):
-#         build = self.queue[key]
-#         del self.queue[key]
-#         return build
-#
-#     def run_lazy(self, owner, repository):
-#         key = owner+self.SEPARATOR+repository
-#         if key in self.queue:
-#             task = self.dequeue(key)
-#             self.run(task, blocking=True)
+        raise RuntimeWarning("No document found for %s", identifier)
