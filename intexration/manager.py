@@ -77,6 +77,7 @@ class BuildManager:
         else:
             for identifier in builds:
                 self.build_queue[identifier] = builds[identifier]
+                logging.info("Build %s queued", identifier)
 
     def submit_document(self, identifier, document):
         self.documents[identifier] = document
