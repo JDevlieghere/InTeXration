@@ -92,9 +92,13 @@ class CloneTask(Task):
         self.build_manager.submit_builds(builds)
 
     def run(self):
-        self._clone()
-        self._submit_builds()
-
+        try:
+            self._clone()
+            self._submit_builds()
+        except RuntimeError as e:
+            logging.error(e)
+        except RuntimeWarning as e:
+            logging.warning(e)
 
 class CompileTask(Task):
 
@@ -146,8 +150,13 @@ class CompileTask(Task):
 
     def run(self):
         logging.info("Compiling %s", self.identifier)
-        self._compile()
-        self._makeindex()
-        self._bibtex()
-        self._compile()
-        self._submit_documents()
+        try:
+            self._compile()
+            self._makeindex()
+            self._bibtex()
+            self._compile()
+            self._submit_documents()
+        except RuntimeError as e:
+            logging.error(e)
+        except RuntimeWarning as e:
+            logging.warning(e)
