@@ -41,7 +41,7 @@ class BuildParser:
     def dir(self, name):
         if self.parser.has_option(name, self.DIR):
             return self.parser[name][self.DIR]
-        return None
+        return ''
 
     def idx(self, name):
         if self.parser.has_option(name, self.IDX):
