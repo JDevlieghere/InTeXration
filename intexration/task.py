@@ -28,7 +28,7 @@ class BuildParser:
         if not os.path.exists(path):
             raise RuntimeError("InTeXration config file not found")
         self.parser = configparser.ConfigParser()
-        self.parser.read(path)
+        self.parser.read(self.path)
 
     def names(self):
         return self.parser.sections()
