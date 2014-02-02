@@ -65,8 +65,8 @@ class BuildManager:
     def __init__(self, threaded, lazy):
         self.threaded = threaded
         self.lazy = lazy
-        self.build_queue = {}
-        self.documents = {}
+        self.build_queue = dict()
+        self.documents = dict()
 
     def submit_request(self, request):
         CloneTask(self, request).run()

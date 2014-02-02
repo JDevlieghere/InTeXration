@@ -76,7 +76,7 @@ class CloneTask(Task):
             raise RuntimeError("Clone failed")
 
     def _submit_builds(self):
-        builds = []
+        builds = dict()
         build_parser = BuildParser(self.build_directory)
         for name in build_parser.names():
             identifier = Identifier(self.build_request.owner,
