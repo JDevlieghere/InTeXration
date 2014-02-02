@@ -72,6 +72,7 @@ class BuildManager:
         CloneTask(self, request).run()
 
     def submit_builds(self, builds):
+        logging.debug("Builds submitted.")
         if not self.lazy:
             self._build_all(builds)
         else:
@@ -96,7 +97,6 @@ class BuildManager:
     def _build_all(self, builds):
         threads = []
         for identifier in builds:
-            logging.debug("Building all")
             build = builds[identifier]
             task = CompileTask(self, identifier, build)
             if self.threaded:
