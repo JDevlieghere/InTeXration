@@ -96,6 +96,7 @@ class BuildManager:
     def _build_all(self, builds):
         threads = []
         for identifier in builds:
+            logging.debug("Building all")
             build = builds[identifier]
             task = CompileTask(self, identifier, build)
             if self.threaded:
