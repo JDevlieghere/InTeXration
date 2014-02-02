@@ -37,11 +37,9 @@ class RequestHandler:
     TEMPLATE_INDEX = 'index'
     TEMPLATE_LOG = 'log'
 
-    def __init__(self, base_url, branch, threaded, lazy, build_manager, api_manager):
+    def __init__(self, base_url, branch, build_manager, api_manager):
         self._base_url = base_url
         self._branch = branch
-        self._threaded = threaded
-        self._lazy = lazy
         self.build_manager = build_manager
         self.api_manager = api_manager
 

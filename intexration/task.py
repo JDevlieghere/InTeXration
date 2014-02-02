@@ -3,8 +3,8 @@ import logging
 import os
 import subprocess
 import tempfile
+from intexration.tools import create_dir, cd
 from intexration import constants
-from build.lib.intexration.tools import create_dir, cd
 from intexration.build import Identifier, Build
 from intexration.document import Document
 
