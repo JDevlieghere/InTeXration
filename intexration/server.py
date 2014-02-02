@@ -4,8 +4,7 @@ import json
 from bottle import Bottle, request, abort, static_file, template
 import bottle
 from intexration import constants
-from intexration.task import BuildTask, Build
-from intexration.document import Document
+from intexration.build import BuildRequest, Identifier
 
 
 class Server:
@@ -46,9 +45,6 @@ class RequestHandler:
         self.build_manager = build_manager
         self.api_manager = api_manager
 
-    def to_dir(self, owner, repo):
-        return os.path.join(constants.PATH_ROOT, constants.PATH_OUTPUT, owner, repo)
-
     def index_request(self):
         return template(self.TEMPLATE_INDEX,
                         base_url=self._base_url)
@@ -64,36 +60,32 @@ class RequestHandler:
             repository = data['repository']['name']
             commit = data['after']
             if self._branch in refs:
-                build = Build(url, owner, repository, commit)
-                task = BuildTask(build, self._threaded)
-                if not self._lazy:
-                    self.build_manager.run(task)
-                else:
-                    self.build_manager.enqueue(task)
+                build_request = BuildRequest(owner, repository, commit, url)
+                self.build_manager.submit_request(build_request)
             else:
                 self.abort_request(406, "Wrong branch")
         except (RuntimeError, RuntimeWarning) as e:
             self.abort_request(500, e)
 
     def pdf_request(self, owner, repository, name):
-        self.build_manager.run_lazy(owner, repository)
         try:
-            document = Document(name, self.to_dir(owner, repository))
-            return static_file(document.pdf_name(), document.root)
+            identifier = Identifier(owner, repository, name)
+            document = self.build_manager.get_document(identifier)
+            return static_file(document.pdf, document.path)
         except (RuntimeError, RuntimeWarning):
             self.abort_request(404, "The requested document does not exist.")
 
     def log_request(self, owner, repository, name):
-        self.build_manager.run_lazy(owner, repository)
         try:
-            document = Document(name, self.to_dir(owner, repository))
+            identifier = Identifier(owner, repository, name)
+            document = self.build_manager.get_document(identifier)
             return template(self.TEMPLATE_LOG,
                             base_url=self._base_url,
                             repo=repository,
                             name=name,
-                            errors=document.get_errors(),
-                            warnings=document.get_warnings(),
-                            all=document.get_log())
+                            errors=document.errors(),
+                            warnings=document.warnings(),
+                            all=document.log())
         except (RuntimeError, RuntimeWarning):
             self.abort_request(404, "The requested document does not exist.")
 
