@@ -72,7 +72,6 @@ class BuildManager:
         CloneTask(self, request).run()
 
     def submit_builds(self, builds):
-        logging.debug("Builds (%s) submitted.", len(builds))
         if not self.lazy:
             self._build_all(builds)
         else:

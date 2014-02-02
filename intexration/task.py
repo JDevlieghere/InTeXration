@@ -88,7 +88,6 @@ class CloneTask(Task):
                           build_parser.idx(name),
                           build_parser.bib(name))
             builds[identifier] = build
-            logging.info("Build created for %s", identifier)
         self.build_manager.submit_builds(builds)
 
     def run(self):
@@ -145,7 +144,7 @@ class CompileTask(Task):
     def _submit_documents(self):
         document = Document(self.identifier.name, self.build.path)
         document.move_to(self.document_directory)
-        self.build_manager.submit_document(document)
+        self.build_manager.submit_document(self.identifier, document)
         self.build.finish()
 
     def run(self):
