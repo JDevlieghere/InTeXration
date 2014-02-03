@@ -143,6 +143,7 @@ class DocumentManager:
                         document = Document(name, path)
                         self.submit_document(identifier, document)
                     except RuntimeError:
+                        logging.debug("Document discarded for %s", identifier)
                         pass
 
     def submit_request(self, request):
