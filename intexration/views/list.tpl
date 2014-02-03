@@ -17,9 +17,15 @@
 <div class="container">
 	<ul>
 	% for identifier in documents:
-        <li><a href="{{base_url}}/pdf/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">{{identifier.name}}</a></li>
+	    <div class="document">
+	    <h2>{{identifier.name}}</h2>
+		<ul>
+            <li><a href="{{base_url}}pdf/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">PDF</a></li>
+            <li><a href="{{base_url}}log/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">LOG</a></li>
+        </ul>
+        </div>
 	% end
-	</ul>
+
 </div>
 </body>
 </html>
