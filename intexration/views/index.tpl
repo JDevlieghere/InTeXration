@@ -53,7 +53,7 @@
 			<div class="col-md-3">
 
 				<div class="panel panel-default">
-					<div class="panel-heading">Statistics</div>
+					<div class="panel-heading"><span class="glyphicon glyphicon-stats"></span>Statistics</div>
 					<table class="table">
 					<tr>
 						<th>Documents</th>
@@ -67,7 +67,7 @@
 				</div>
 
 				<div class="panel panel-default">
-					<div class="panel-heading">Configuration</div>
+					<div class="panel-heading"><span class="glyphicon glyphicon-wrench"></span> Configuration</div>
 					<table class="table">
 					<tr>
 						<th>Branch</th>
