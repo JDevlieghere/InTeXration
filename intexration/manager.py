@@ -81,8 +81,8 @@ class DocumentManager:
                     try:
                         document = Document(name, path)
                         self.submit_document(identifier, document)
-                    except RuntimeError:
-                        pass
+                    except RuntimeError as e:
+                        logging.debug(e)
 
     def submit_request(self, request):
         CloneTask(self, request).run()
