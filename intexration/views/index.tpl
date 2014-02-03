@@ -53,7 +53,7 @@
 			<div class="col-md-3">
 
 				<div class="panel panel-default">
-					<div class="panel-heading"><span class="glyphicon glyphicon-stats"></span>Statistics</div>
+					<div class="panel-heading"><span class="glyphicon glyphicon-stats"></span> Statistics</div>
 					<table class="table">
 					<tr>
 						<th>Documents</th>
