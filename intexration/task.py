@@ -123,7 +123,7 @@ class CompileTask(Task):
             if subprocess.call([self.MAKEINDEX, self.build.idx],
                                stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logging.warning("Makeindex failed for %s", self.build)
+                logging.warning("Makeindex failed for %s", self.build.idx)
 
     def _bibtex(self):
         """Compile bibtex."""
@@ -131,7 +131,7 @@ class CompileTask(Task):
             if subprocess.call([self.BIBTEX, self.build.bib],
                                stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logging.warning("Bibtex failed for %s", self.build)
+                logging.warning("Bibtex failed for %s", self.build.bib)
 
     def _compile(self):
         """Compile with pdflatex."""
@@ -139,7 +139,7 @@ class CompileTask(Task):
             if subprocess.call([self.PDFLATEX, '-interaction=nonstopmode', self.build.tex],
                                stdout=subprocess.DEVNULL,
                                stderr=subprocess.DEVNULL) != 0:
-                logging.warning("Compilation finished with errors for %s", self.build)
+                logging.warning("Compilation finished with errors for %s", self.build.tex)
 
     def _submit_documents(self):
         document = Document(self.identifier.name, self.build.path)
