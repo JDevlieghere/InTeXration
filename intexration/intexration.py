@@ -13,7 +13,8 @@ class Intexration:
     def __init__(self):
         self.config = IntexrationConfig()
         self.build_manager = DocumentManager(threaded=self.config.read_bool('COMPILATION', 'threaded'),
-                                          lazy=self.config.read_bool('COMPILATION', 'lazy'))
+                                             lazy=self.config.read_bool('COMPILATION', 'lazy'),
+                                             explore=self.config.read_bool('COMPILATION', 'explore'))
         self.api_manager = ApiManager()
         self.request_handler = RequestHandler(base_url=self.config.base_url(),
                                               branch=self.config.read('COMPILATION', 'branch'),

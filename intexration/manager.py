@@ -64,12 +64,13 @@ class ApiManager:
 
 class DocumentManager:
 
-    def __init__(self, threaded, lazy):
+    def __init__(self, threaded, lazy, explore):
         self.threaded = threaded
         self.lazy = lazy
         self.build_queue = dict()
         self.documents = dict()
-        self.explore_documents()
+        if explore:
+            self.explore_documents()
 
     def explore_documents(self):
         root = constants.PATH_OUTPUT
