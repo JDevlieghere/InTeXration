@@ -18,7 +18,7 @@
 	<ul>
 	% for identifier in documents:
 	    <div class="document">
-	    <h2>{{identifier.name}}</h2>
+	    <h2>{{identifier}}</h2>
 		<ul>
             <li><a href="{{base_url}}pdf/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">PDF</a></li>
             <li><a href="{{base_url}}log/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">LOG</a></li>
