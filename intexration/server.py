@@ -82,8 +82,8 @@ class RequestHandler:
         try:
             identifier = Identifier(owner, repository, name)
             document = self.build_manager.get_document(identifier)
-            has_errors = len(self.build_manager.errors()) > 0
-            has_warnings = len(self.build_manager.warnings()) > 0
+            has_errors = len(self.document.errors()) > 0
+            has_warnings = len(self.document.warnings()) > 0
             return template(self.TEMPLATE_LOG,
                             base_url=self._base_url,
                             repo=repository,
