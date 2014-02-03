@@ -125,11 +125,11 @@ class DocumentManager:
     def __init__(self, threaded, lazy, explore, output):
         self.threaded = threaded
         self.lazy = lazy
-        if explore:
-            self.explore_documents()
         self.output = output
         self.build_queue = dict()
         self.documents = dict()
+        if explore:
+            self.explore_documents()
 
     def explore_documents(self):
         root = constants.PATH_OUTPUT
