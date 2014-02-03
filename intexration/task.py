@@ -4,7 +4,6 @@ import os
 import subprocess
 import tempfile
 from intexration.tools import create_dir, cd
-from intexration import constants
 from intexration.build import Identifier, Build
 from intexration.document import Document
 
@@ -99,6 +98,7 @@ class CloneTask(Task):
         except RuntimeWarning as e:
             logging.warning(e)
 
+
 class CompileTask(Task):
 
     MAKEINDEX = 'makeindex'
@@ -112,7 +112,7 @@ class CompileTask(Task):
         self.document_directory = self._create_dir()
 
     def _create_dir(self):
-        return create_dir(os.path.join(constants.PATH_OUTPUT,
+        return create_dir(os.path.join(self.build_manager.output,
                                        self.identifier.owner,
                                        self.identifier.repository,
                                        self.identifier.name))

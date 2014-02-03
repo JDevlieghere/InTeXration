@@ -22,12 +22,8 @@ def main():
     api_parser.add_argument('--import', metavar='DIR', help='import API key file from given directory',
                             dest='api_import')
 
-    intexration = Intexration()
-
     arguments = parser.parse_args()
-    IntexrationParser(arguments, intexration.config).parse()
-
-    Intexration().run()
+    Intexration(arguments).run()
 
 if __name__ == '__main__':
     main()

@@ -5,16 +5,18 @@ import shutil
 import logging.config
 from intexration.server import Server, RequestHandler
 from intexration import constants
-from intexration.manager import ApiManager, DocumentManager
+from intexration.manager import ApiManager, DocumentManager, ConfigManager
 
 
 class Intexration:
 
-    def __init__(self):
-        self.config = IntexrationConfig()
+    def __init__(self, arguments):
+        self.config = ConfigManager()
+        self.parser = IntexrationParser(self.config, arguments)
         self.build_manager = DocumentManager(threaded=self.config.read_bool('COMPILATION', 'threaded'),
                                              lazy=self.config.read_bool('COMPILATION', 'lazy'),
-                                             explore=self.config.read_bool('COMPILATION', 'explore'))
+                                             explore=self.config.read_bool('INTEXRATION', 'explore'),
+                                             output=self.config.read('INTEXRATION', 'output'))
         self.api_manager = ApiManager()
         self.request_handler = RequestHandler(base_url=self.config.base_url(),
                                               branch=self.config.read('COMPILATION', 'branch'),
@@ -28,6 +30,7 @@ class Intexration:
         logging.config.fileConfig(os.path.join(constants.PATH_ROOT,
                                                constants.DIRECTORY_CONFIG,
                                                constants.FILE_LOGGER))
+        self.parser.parse()
         self.server.start()
 
 
@@ -73,60 +76,3 @@ class IntexrationParser:
             api_manager.export_file(self.get('api_export'))
         if self.is_set('api_import'):
             api_manager.import_file(self.get('api_import'))
-
-
-class IntexrationConfig:
-
-    def __init__(self):
-        self.parser = configparser.ConfigParser()
-        self.settings_file = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG)
-        self.logger_file = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_LOGGER)
-
-    def validate(self):
-        if not os.path.exists(self.settings_file):
-            raise RuntimeError("Settings file missing")
-        if not os.path.exists(self.logger_file):
-            raise RuntimeError("Logger config file missing")
-        try:
-            self.read('SERVER', 'host')
-            self.read('SERVER', 'port')
-            self.read('COMPILATION', 'branch')
-            self.read('COMPILATION', 'lazy')
-            self.read('COMPILATION', 'threaded')
-        except configparser.Error:
-            raise RuntimeError("Invalid config file")
-
-    def read(self, section, key):
-        self.parser.read(self.settings_file)
-        return self.parser[section][key]
-
-    def read_bool(self, section, key):
-        return self.str2bool(self.read(section, key))
-
-    def write(self, section, key, value):
-        self.parser.read(self.settings_file)
-        self.parser.set(section, key, value)
-        with open(self.settings_file, 'w+') as configfile:
-            self.parser.write(configfile)
-        logging.info("Updated config %s = %s", [key, value])
-
-    @staticmethod
-    def file_export(directory):
-        path = os.path.join(directory, constants.FILE_CONFIG)
-        shutil.copyfile(os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG), path)
-        logging.info("Configuration exported to %s", path)
-
-    def file_import(self, directory):
-        path = os.path.join(directory, constants.FILE_CONFIG)
-        if not os.path.exists(path):
-            raise RuntimeError("Importing configuration failed: not found in %s", path)
-        shutil.copyfile(path, os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG))
-        self.validate()
-        logging.info("Configuration imported from %s", path)
-
-    def base_url(self):
-        return 'http://'+self.read('SERVER', 'host')+':'+self.read('SERVER', 'port')+'/'
-
-    @staticmethod
-    def str2bool(v):
-        return v.lower() in ("yes", "true", "t", "1")
