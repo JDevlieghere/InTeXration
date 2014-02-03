@@ -82,17 +82,13 @@ class RequestHandler:
         try:
             identifier = Identifier(owner, repository, name)
             document = self.build_manager.get_document(identifier)
-            has_errors = len(document.errors()) > 0
-            has_warnings = len(document.warnings()) > 0
             return template(self.TEMPLATE_LOG,
                             base_url=self._base_url,
                             repo=repository,
                             name=name,
                             errors=document.errors(),
                             warnings=document.warnings(),
-                            all=document.logs(),
-                            has_errors=has_errors,
-                            has_warnings=has_warnings)
+                            all=document.logs())
         except (RuntimeError, RuntimeWarning):
             self.abort_request(404, "The requested document does not exist.")
 
