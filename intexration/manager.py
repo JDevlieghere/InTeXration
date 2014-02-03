@@ -198,3 +198,6 @@ class DocumentManager:
 
     def get_documents(self):
         return dict(self.documents)
+
+    def get_queue(self):
+        return dict(self.build_queue)

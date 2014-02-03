@@ -129,7 +129,7 @@
 					</tr>
 					<tr>
 						<th>Queued</th>
-						<td>{{nb_queued}}</td>
+						<td>{{len(queue)}}</td>
 					</tr>
 					</table>
 				</div>

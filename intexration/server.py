@@ -47,7 +47,11 @@ class RequestHandler:
     def index_request(self):
         return template(self.TEMPLATE_LIST,
                         base_url=self._base_url,
-                        documents=self.build_manager.get_documents())
+                        documents=self.build_manager.get_documents(),
+                        queue=self.build_manager.get_queue(),
+                        branch=self._branch,
+                        lazy=self.build_manager.lazy,
+                        threaded=self.build_manager.threaded)
 
     def hook_request(self, api_key):
         if not self.api_manager.is_valid(api_key):
