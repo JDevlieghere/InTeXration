@@ -1,7 +1,5 @@
 import logging
 import os
-import configparser
-import shutil
 import logging.config
 from intexration.server import Server, RequestHandler
 from intexration import constants

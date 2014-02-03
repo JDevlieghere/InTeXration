@@ -1,5 +1,5 @@
 import argparse
-from intexration.intexration import IntexrationParser, Intexration
+from intexration.intexration import Intexration
 
 
 def main():
