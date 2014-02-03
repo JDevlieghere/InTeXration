@@ -69,6 +69,7 @@ class DocumentManager:
         self.lazy = lazy
         self.build_queue = dict()
         self.documents = dict()
+        self.explore_documents()
 
     def explore_documents(self):
         root = constants.PATH_OUTPUT
@@ -81,8 +82,8 @@ class DocumentManager:
                     try:
                         document = Document(name, path)
                         self.submit_document(identifier, document)
-                    except RuntimeError as e:
-                        logging.debug(e)
+                    except RuntimeError:
+                        pass
 
     def submit_request(self, request):
         CloneTask(self, request).run()
