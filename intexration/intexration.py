@@ -5,14 +5,14 @@ import shutil
 import logging.config
 from intexration.server import Server, RequestHandler
 from intexration import constants
-from intexration.manager import ApiManager, BuildManager
+from intexration.manager import ApiManager, DocumentManager
 
 
 class Intexration:
 
     def __init__(self):
         self.config = IntexrationConfig()
-        self.build_manager = BuildManager(threaded=self.config.read_bool('COMPILATION', 'threaded'),
+        self.build_manager = DocumentManager(threaded=self.config.read_bool('COMPILATION', 'threaded'),
                                           lazy=self.config.read_bool('COMPILATION', 'lazy'))
         self.api_manager = ApiManager()
         self.request_handler = RequestHandler(base_url=self.config.base_url(),

@@ -3,7 +3,9 @@ import logging
 import os
 import shutil
 from threading import Thread
+from intexration.document import Document
 from intexration import constants
+from intexration.build import Identifier
 from intexration.task import CompileTask, CloneTask
 
 
@@ -60,13 +62,27 @@ class ApiManager:
         logging.info("API key file imported from %s", path)
 
 
-class BuildManager:
+class DocumentManager:
 
     def __init__(self, threaded, lazy):
         self.threaded = threaded
         self.lazy = lazy
         self.build_queue = dict()
         self.documents = dict()
+
+    def explore_documents(self):
+        root = constants.PATH_OUTPUT
+        for owner in os.listdir(root):
+            for repository in os.listdir(os.path.join(root, owner)):
+                for file in os.listdir(os.path.join(root, owner, repository)):
+                    path = os.path.join(root, owner, repository)
+                    name = os.path.splitext(file)[0]
+                    identifier = Identifier(owner, repository, name)
+                    try:
+                        document = Document(name, path)
+                        self.submit_document(identifier, document)
+                    except RuntimeError:
+                        pass
 
     def submit_request(self, request):
         CloneTask(self, request).run()
