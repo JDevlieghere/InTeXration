@@ -189,3 +189,6 @@ class DocumentManager:
             self._build_from_queue(identifier)
             return self.documents.get(identifier)
         raise RuntimeWarning("No document found for %s", identifier)
+
+    def get_documents(self):
+        return dict(self.documents)

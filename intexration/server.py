@@ -36,6 +36,7 @@ class RequestHandler:
 
     TEMPLATE_INDEX = 'index'
     TEMPLATE_LOG = 'log'
+    TEMPLATE_LIST = 'list'
 
     def __init__(self, base_url, branch, build_manager, api_manager):
         self._base_url = base_url
@@ -44,8 +45,9 @@ class RequestHandler:
         self.api_manager = api_manager
 
     def index_request(self):
-        return template(self.TEMPLATE_INDEX,
-                        base_url=self._base_url)
+        return template(self.TEMPLATE_LIST,
+                        base_url=self._base_url,
+                        documents=self.build_manager.get_documents())
 
     def hook_request(self, api_key):
         if not self.api_manager.is_valid(api_key):

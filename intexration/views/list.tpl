@@ -15,15 +15,11 @@
 
 <body>
 <div class="container">
-
-	% for document in documents:
-	<div class="document">
-		<h1>{{document.name}}</h1>
-	</div>
+	<ul>
+	% for identifier in documents:
+        <li><a href="{{root}}/pdf/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">{{identifier.name}}</a></li>
 	% end
-
-
+	</ul>
 </div>
-
 </body>
 </html>
