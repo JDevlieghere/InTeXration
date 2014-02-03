@@ -102,7 +102,7 @@
 						<th>Owner</th>
 						<td>{{identifier.owner}}</td>
 						<th>Errors</th>
-						<td>{{len(builds[identifier].errors())}}</td>
+						<td>{{len(documents[identifier].errors())}}</td>
 						<th>PDF</th>
 						<td><a href="{{base_url}}pdf/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">link</a></td>
 					</tr>
@@ -110,7 +110,7 @@
 						<th>Repository</th>
 						<td>{{SORTES-Main}}</td>
 						<th>Warnings</th>
-						<td>{{len(builds[identifier].warnings())}}</td>
+						<td>{{len(documents[identifier].warnings())}}</td>
 						<th>Log</th>
 						<td><a href="{{base_url}}log/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">link</a></td>
 					</tr>
@@ -125,7 +125,7 @@
 					<table class="table">
 					<tr>
 						<th>Documents</th>
-						<td>{{nb_documents}}</td>
+						<td>{{len(documents)}}</td>
 					</tr>
 					<tr>
 						<th>Queued</th>
