@@ -12,12 +12,11 @@ class Intexration:
 
     def __init__(self):
         self.config = IntexrationConfig()
-        self.build_manager = BuildManager()
+        self.build_manager = BuildManager(threaded=self.config.read_bool('COMPILATION', 'threaded'),
+                                          lazy=self.config.read_bool('COMPILATION', 'lazy'))
         self.api_manager = ApiManager()
         self.request_handler = RequestHandler(base_url=self.config.base_url(),
                                               branch=self.config.read('COMPILATION', 'branch'),
-                                              threaded=self.config.read_bool('COMPILATION', 'threaded'),
-                                              lazy=self.config.read_bool('COMPILATION', 'lazy'),
                                               build_manager=self.build_manager,
                                               api_manager=self.api_manager)
         self.server = Server(host=self.config.read('SERVER', 'host'),

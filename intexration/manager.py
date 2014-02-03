@@ -4,6 +4,7 @@ import os
 import shutil
 from threading import Thread
 from intexration import constants
+from intexration.task import CompileTask, CloneTask
 
 
 class ApiManager:
@@ -61,30 +62,53 @@ class ApiManager:
 
 class BuildManager:
 
-    SEPARATOR = '/'
+    def __init__(self, threaded, lazy):
+        self.threaded = threaded
+        self.lazy = lazy
+        self.build_queue = dict()
+        self.documents = dict()
 
-    def __init__(self):
-        self.queue = {}
+    def submit_request(self, request):
+        CloneTask(self, request).run()
 
-    @staticmethod
-    def run(task, blocking=False):
-        if not blocking:
-            thread = Thread(target=task.run)
-            thread.start()
+    def submit_builds(self, builds):
+        if not self.lazy:
+            self._build_all(builds)
         else:
-            task.run()
+            for identifier in builds:
+                self.build_queue[identifier] = builds[identifier]
+                logging.info("Build %s queued", identifier)
 
-    def enqueue(self, task):
-        key = task.owner+self.SEPARATOR+task.repository
-        self.queue[key] = task
+    def submit_document(self, identifier, document):
+        self.documents[identifier] = document
 
-    def dequeue(self, key):
-        build = self.queue[key]
-        del self.queue[key]
-        return build
+    def is_queued(self, identifier):
+        return identifier in self.build_queue
 
-    def run_lazy(self, owner, repository):
-        key = owner+self.SEPARATOR+repository
-        if key in self.queue:
-            task = self.dequeue(key)
-            self.run(task, blocking=True)
+    def is_ready(self, identifier):
+        return identifier not in self.build_queue and identifier in self.documents
+
+    def _build_from_queue(self, identifier):
+        build = self.build_queue[identifier]
+        task = CompileTask(self, identifier, build)
+        task.run()
+
+    def _build_all(self, builds):
+        threads = []
+        for identifier in builds:
+            build = builds[identifier]
+            task = CompileTask(self, identifier, build)
+            if self.threaded:
+                threads.append(Thread(target=task.run))
+            else:
+                task.run()
+        [t.start() for t in threads]
+        [t.join() for t in threads]
+
+    def get_document(self, identifier):
+        if self.is_ready(identifier):
+            return self.documents.get(identifier)
+        if self.is_queued(identifier):
+            self._build_from_queue(identifier)
+            return self.documents.get(identifier)
+        raise RuntimeWarning("No document found for %s", identifier)
