@@ -108,7 +108,7 @@
 					</tr>
 					<tr>
 						<th>Repository</th>
-						<td>{{SORTES-Main}}</td>
+						<td>{{identifier.repository}}</td>
 						<th>Warnings</th>
 						<td>{{len(documents[identifier].warnings())}}</td>
 						<th>Log</th>
