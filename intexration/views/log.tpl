@@ -17,6 +17,7 @@
     %include navigation base_url=base_url
 
     <div class="container">
+        % if len(errors) > 0
         <div class="callout callout-error">
             <h1>Errors</h1>
             <div class="log">
@@ -25,6 +26,8 @@
                 % end
             </div>
         </div>
+        % end
+        % if len(warnings) > 0
         <div class="callout callout-warning">
             <h1>Warnings</h1>
             <div class="log">
@@ -33,7 +36,7 @@
                 % end
             </div>
         </div>
-
+        % end
         <div id="all" class="callout callout-info">
             <h1>Log</h1>
             <div class="log">
