@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    % include('navigation.tpl', baseurl={{base_url}})
+    % include('navigation.tpl', base_url={{base_url}})
 
 	<div class="container">
 		<div class="row">
