@@ -81,7 +81,7 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Overview</a></li>
+					<li class="active"><a href="{{base_url}}">Overview</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="https://github.com/JDevlieghere/InTeXration" class="active">GitHub</a></li>
@@ -96,25 +96,27 @@
 			<div class="col-md-9">
 				% for identifier in documents:
 				<div class="document">
-					<h3>{{identifier.name}}</h3>
-					<table class="table">
-					<tr>
-						<th>Owner</th>
-						<td>{{identifier.owner}}</td>
-						<th>Errors</th>
-						<td>{{len(documents[identifier].errors())}}</td>
-						<th>PDF</th>
-						<td><a href="{{base_url}}pdf/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">link</a></td>
-					</tr>
-					<tr>
-						<th>Repository</th>
-						<td>{{identifier.repository}}</td>
-						<th>Warnings</th>
-						<td>{{len(documents[identifier].warnings())}}</td>
-						<th>Log</th>
-						<td><a href="{{base_url}}log/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">link</a></td>
-					</tr>
-					</table>
+					<div class="panel panel-default">
+						<div class="panel-heading">{{identifier.name}}</div>
+                        <table class="table">
+                        <tr>
+                            <th>Owner</th>
+                            <td>{{identifier.owner}}</td>
+                            <th>Errors</th>
+                            <td>{{len(documents[identifier].errors())}}</td>
+                            <th>PDF</th>
+                            <td><a href="{{base_url}}pdf/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">link</a></td>
+                        </tr>
+                        <tr>
+                            <th>Repository</th>
+                            <td>{{identifier.repository}}</td>
+                            <th>Warnings</th>
+                            <td>{{len(documents[identifier].warnings())}}</td>
+                            <th>Log</th>
+                            <td><a href="{{base_url}}log/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">link</a></td>
+                        </tr>
+                        </table>
+                     </div>
 				</div>
 				% end
 			</div>
