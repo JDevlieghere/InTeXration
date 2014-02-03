@@ -145,7 +145,7 @@ class CompileTask(Task):
         document = Document(self.identifier.name, self.build.path)
         document.move_to(self.document_directory)
         self.build_manager.submit_document(self.identifier, document)
-        self.build.finish()
+        #self.build.finish()
 
     def run(self):
         logging.info("Compiling %s", self.identifier)
