@@ -114,8 +114,7 @@ class CompileTask(Task):
     def _create_dir(self):
         return create_dir(os.path.join(self.build_manager.output,
                                        self.identifier.owner,
-                                       self.identifier.repository,
-                                       self.identifier.name))
+                                       self.identifier.repository))
 
     def _makeindex(self):
         """Make index."""
