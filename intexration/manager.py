@@ -153,11 +153,17 @@ class DocumentManager:
             self._build_all(builds)
         else:
             for identifier in builds:
-                self.build_queue[identifier] = builds[identifier]
-                logging.info("Build %s queued", identifier)
+                self.enqueue(identifier, builds[identifier])
 
     def submit_document(self, identifier, document):
         self.documents[identifier] = document
+
+    def enqueue(self, identifier, build):
+        if identifier in self.build_queue:
+            previous_build = self.build_queuep[identifier]
+            previous_build.finish()
+        self.build_queue[identifier] = build
+        logging.info("Queued %s", identifier)
 
     def is_queued(self, identifier):
         return identifier in self.build_queue
