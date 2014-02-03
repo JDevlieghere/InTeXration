@@ -69,7 +69,7 @@ class CloneTask(Task):
                                        self.build_request.commit))
 
     def _clone(self):
-        logging.info("Cloning from %s", self.build_request.url)
+        logging.info("Cloning to %s", self.build_directory)
         if subprocess.call(['git', 'clone',  self.build_request.url, self.build_directory],
                            stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) != 0:
