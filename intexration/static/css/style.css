@@ -47,3 +47,18 @@ body {
 .status {
     text-align: center;
 }
+
+/* Listing */
+.panel tr th {
+    width: 60%
+}
+
+#footer div {
+    margin-top: 50px;
+    font-size: 10pt;
+    text-align: center;
+}
+
+.document tr th, .document tr td {
+    width: 16%;
+}
