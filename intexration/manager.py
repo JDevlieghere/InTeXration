@@ -142,9 +142,9 @@ class DocumentManager:
                     try:
                         document = Document(name, path)
                         self.submit_document(identifier, document)
-                        logging.debug("Document explored for %s", identifier)
+                        logging.info("Document explored for %s", identifier)
                     except RuntimeError:
-                        logging.debug("Document discarded for %s", identifier)
+                        logging.info("Document discarded for %s", identifier)
 
     def submit_request(self, request):
         CloneTask(self, request).run()
