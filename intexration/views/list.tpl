@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    %include navigation base_url={base_url}
+    %include navigation base_url=base_url
 
 	<div class="container">
 		<div class="row">
