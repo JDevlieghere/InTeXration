@@ -83,7 +83,7 @@ class RequestHandler:
                             name=name,
                             errors=document.errors(),
                             warnings=document.warnings(),
-                            all=document.log())
+                            all=document.logs())
         except (RuntimeError, RuntimeWarning):
             self.abort_request(404, "The requested document does not exist.")
 

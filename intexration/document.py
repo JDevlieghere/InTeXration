@@ -77,5 +77,5 @@ class Document:
                 multi_line_error = True
         return errors
 
-    def log(self):
+    def logs(self):
         return self._lines
