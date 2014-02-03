@@ -9,6 +9,9 @@ from intexration.manager import ApiManager, DocumentManager, ConfigManager
 class Intexration:
 
     def __init__(self, arguments):
+        logging.config.fileConfig(os.path.join(constants.PATH_ROOT,
+                                               constants.DIRECTORY_CONFIG,
+                                               constants.FILE_LOGGER))
         self.config = ConfigManager()
         self.parser = IntexrationParser(self.config, arguments)
         self.build_manager = DocumentManager(threaded=self.config.read_bool('COMPILATION', 'threaded'),
@@ -25,9 +28,6 @@ class Intexration:
                              handler=self.request_handler)
 
     def run(self):
-        logging.config.fileConfig(os.path.join(constants.PATH_ROOT,
-                                               constants.DIRECTORY_CONFIG,
-                                               constants.FILE_LOGGER))
         self.parser.parse()
         self.server.start()
 
