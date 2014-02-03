@@ -14,7 +14,6 @@
 </head>
 
 <body>
-
     %include navigation base_url=base_url
 
     <div class="container">
@@ -45,5 +44,6 @@
         </div>
     </div>
 
+    %include footer
 </body>
 </html>
