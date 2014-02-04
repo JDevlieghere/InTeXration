@@ -7,7 +7,7 @@
             % for identifier in documents:
             <div class="document">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><span class="glyphicon glyphicon-file"></span> {{identifier.name}}</div>
+                    <div class="panel-heading"><span class="glyphicon glyphicon-file"></span> <b>{{identifier.name}}</b></div>
                     <table class="table">
                     <tr>
                         <th>Owner</th>
