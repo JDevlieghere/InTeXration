@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    %include navigation base_url=base_url
+    %include navigation base_url=base_url, doc_link=''
 
     <div class="container">
         % if len(errors) > 0:
