@@ -12,7 +12,7 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="{{base_url}}">All Documents</a></li>
+                <li class="{{doc_link or ''}}"><a href="{{base_url}}">All Documents</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="https://github.com/JDevlieghere/InTeXration" class="active">GitHub</a></li>
