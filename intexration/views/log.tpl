@@ -7,7 +7,7 @@
 	<meta name="description" content="InTeXration">
 	<meta name="author" content="InTeXration">
 
-	<title>{{repo}} - {{name}}</title>
+	<title>{{identifier}}</title>
 
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{base_url}}css/style.css">

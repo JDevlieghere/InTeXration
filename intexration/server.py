@@ -84,8 +84,7 @@ class RequestHandler:
             document = self.build_manager.get_document(identifier)
             return template(self.TEMPLATE_LOG,
                             base_url=self._base_url,
-                            repo=repository,
-                            name=name,
+                            identifier=identifier,
                             errors=document.errors(),
                             warnings=document.warnings(),
                             all=document.logs())
