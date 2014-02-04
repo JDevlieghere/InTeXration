@@ -45,6 +45,10 @@
                     <th>Warnings</th>
                     <td>{{len(warnings)}}</td>
                 </tr>
+                <tr>
+                    <th>PDF</th>
+                    <td>{{base_url}}pdf/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}</td>
+                </tr>
                 </table>
             </div>
         </div>
