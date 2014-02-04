@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    %include navigation base_url=base_url doc_link='active'
+    %include navigation base_url=base_url, doc_link='active'
 
 	<div class="container">
 		<div class="row">
