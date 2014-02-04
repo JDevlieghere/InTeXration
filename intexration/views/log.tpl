@@ -47,7 +47,7 @@
                 </tr>
                 <tr>
                     <th>PDF</th>
-                    <td>{{base_url}}pdf/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}</td>
+                    <td><a href="{{base_url}}pdf/{{identifier.owner}}/{{identifier.repository}}/{{identifier.name}}">link</a></td>
                 </tr>
                 </table>
             </div>
