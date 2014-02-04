@@ -12,9 +12,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{base_url}}css/style.css">
 	<style type="text/css">
-		body {
-			background-color: #f5f5f5;
-		}
+
 	</style>
 </head>
 
