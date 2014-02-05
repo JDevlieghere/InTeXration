@@ -17,12 +17,12 @@ The server is identified by a hostname and port. By default the hostname is `loc
 
 Setting the hostname to `localhost`:
 ```bash
-python -m intexration config --host localhost
+python3 -m intexration config --host localhost
 ```
 
 Setting the port to `8000`:
 ```bash
-python -m intexration config --host 8000
+python3 -m intexration config --host 8000
 ```
 
 ## Compilation
@@ -42,6 +42,10 @@ A default config file look like this:
 [SERVER]
 host=localhost
 port=8000
+
+[INTEXRATION]
+output=/home/intexration/out
+explore=yes
 
 [COMPILATION]
 branch=master

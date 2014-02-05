@@ -12,7 +12,8 @@ InTeXration requires:
 - pdflatex (part of TexX Live)
 - pip
 
-Use pip to install the required python packages:
+We're assuming `python3` refers to the right version. Make sure by running `python3 --version
+`. Use pip to install the required python packages:
 
 ```bash
 pip install -r requirements.txt
@@ -38,14 +39,14 @@ Configuration is done using command line arguments. The following options are av
 
 To set host to `localhost` and port to `8000` run
 ```bash
-python -m intexration -host localhost -port 8000
+python3 -m intexration -host localhost -port 8000
 ```
 
 
 ## Installing
 Run the `setup.py` file as illustrated below:
 ```bash
-python setup.py install
+python3 setup.py install
 ```
 
 ## Starting the Server
@@ -53,7 +54,7 @@ Starting the server is as easy as running the InTeXration module. However, if yo
 want to run InTeXration in the background, you can use the `nohup` command.
 
 ```bash
-nohup python -m intexration > /dev/null 2>&1 &
+nohup python3 -m intexration > /dev/null 2>&1 &
 ```
 You will be show the process id, which you will need in order to stop the
 server, if necessary.

@@ -25,14 +25,14 @@ Using GUID's as API keys is recommended. You can generate those
 
 Use the command line argument `-add` to authorize an API key:
 ```bash
-python -m intexration api -add 0F304A9A-997A-4207-A1BF-3C74A009F5A0
+python3 -m intexration api -add 0F304A9A-997A-4207-A1BF-3C74A009F5A0
 ```
 
 #### Listing
 
 To list all API keys currently registered, use the `-list` argument.
 ```bash
-python -m intexration api -list
+python3 -m intexration api -list
 ```
 A list of keys will be printed to the standard output stream.
 
@@ -40,7 +40,7 @@ A list of keys will be printed to the standard output stream.
 
 To remove an API key, simply use the `-remove` argument.
 ```bash
-python -m intexration api -remove 0F304A9A-997A-4207-A1BF-3C74A009F5A0
+python3 -m intexration api -remove 0F304A9A-997A-4207-A1BF-3C74A009F5A0
 ```
 
 
