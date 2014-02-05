@@ -5,6 +5,8 @@ Features
 
 InTeXration is a *continuous integration* tool for building *LaTeX* documents. It integrates with *GitHub* using a WebHook. On each commit the specified latex files are compiled to a PDF. Include the URL to this PDF and build log in the repository's README to offer interested parties a compiled version of the document(s) inside it.
 
+![InTeXration Screenshot](http://cdn.jonasdevlieghere.com/intexration_screenshot.png)
+
 Documentation
 -------------
 
