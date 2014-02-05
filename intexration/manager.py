@@ -132,7 +132,7 @@ class DocumentManager:
             self.explore_documents()
 
     def explore_documents(self):
-        root = constants.PATH_OUTPUT
+        root = self.output
         for owner in os.listdir(root):
             for repository in os.listdir(os.path.join(root, owner)):
                 for file in os.listdir(os.path.join(root, owner, repository)):

@@ -3,7 +3,6 @@ import os
 
 # Paths
 PATH_ROOT = os.path.abspath(os.path.dirname(__file__))
-PATH_OUTPUT = '/home/jonas/out'
 
 # Directory Names
 DIRECTORY_STATIC = 'static'
