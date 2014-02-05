@@ -92,10 +92,14 @@ class CloneTask(Task):
             builds[identifier] = build
         self.build_manager.submit_builds(builds)
 
+    def _clean(self):
+        shutil.rmtree(self.clone_directory)
+
     def run(self):
         try:
             self._clone()
             self._submit_builds()
+            self._clean()
         except RuntimeError as e:
             logging.error(e)
         except RuntimeWarning as e:
