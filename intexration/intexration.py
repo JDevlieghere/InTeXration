@@ -52,7 +52,7 @@ class IntexrationParser:
     def parse(self):
         self._parse_config()
         self._parse_api()
-        self._check_exit()
+        self._exit()
 
     def _parse_config(self):
         if self.is_set('config_host'):
