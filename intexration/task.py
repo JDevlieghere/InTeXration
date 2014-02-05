@@ -1,6 +1,7 @@
 import configparser
 import logging
 import os
+import shutil
 import subprocess
 import tempfile
 from intexration.tools import create_dir, cd
@@ -58,41 +59,47 @@ class CloneTask(Task):
     def __init__(self, manager, request):
         self.build_manager = manager
         self.build_request = request
-        self.build_directory = self._create_dir()
+        self.temp_directory = tempfile.mkdtemp()
+        self.clone_directory = self._create_dir()
 
     def _create_dir(self):
-        temp_directory = tempfile.mkdtemp()
-        return create_dir(os.path.join(temp_directory,
+        return create_dir(os.path.join(self.temp_directory,
                                        self.build_request.owner,
                                        self.build_request.repository,
                                        self.build_request.commit))
 
     def _clone(self):
-        logging.info("Cloning to %s", self.build_directory)
-        if subprocess.call(['git', 'clone',  self.build_request.url, self.build_directory],
+        logging.info("Cloning to %s", self.clone_directory)
+        if subprocess.call(['git', 'clone',  self.build_request.url, self.clone_directory],
                            stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) != 0:
             raise RuntimeError("Clone failed")
 
     def _submit_builds(self):
         builds = dict()
-        build_parser = BuildParser(self.build_directory)
+        build_parser = BuildParser(self.clone_directory)
         for name in build_parser.names():
             identifier = Identifier(self.build_request.owner,
                                     self.build_request.repository,
                                     name)
-            path = os.path.join(self.build_directory, build_parser.dir(name))
-            build = Build(path,
+            src_path = os.path.join(self.clone_directory, build_parser.dir(name))
+            dst_path = os.path.join(self.temp_directory, name)
+            shutil.copytree(src_path, dst_path)
+            build = Build(dst_path,
                           build_parser.tex(name),
                           build_parser.idx(name),
                           build_parser.bib(name))
             builds[identifier] = build
         self.build_manager.submit_builds(builds)
 
+    def _clean(self):
+        shutil.rmtree(self.clone_directory)
+
     def run(self):
         try:
             self._clone()
             self._submit_builds()
+            self._clean()
         except RuntimeError as e:
             logging.error(e)
         except RuntimeWarning as e:

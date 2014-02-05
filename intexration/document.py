@@ -17,7 +17,7 @@ class Document:
         self.pdf = name + self.PDF_EXTENSION
         self.log = name + self.LOG_EXTENSION
         if not self.exist():
-            raise RuntimeError("The document files do not exist")
+            raise RuntimeError("The document files at %s do not exist")
         self._lines = self._read_log()
 
     def __set__(self, instance, path):
