@@ -1,85 +1,81 @@
-import logging
 import os
-from intexration import config
+import shutil
 
 
 class Document:
-    def __init__(self, name, root):
-        self.name = name
-        self.root = root
+
+    PDF_EXTENSION = '.pdf'
+    LOG_EXTENSION = '.log'
+
+    SEPARATOR = '/'
+    NEWLINE = '\n'
+    ERROR = ' !'
+    WARMING = 'Warning'
+
+    def __init__(self, name, path):
+        self.path = path
+        self.pdf = name + self.PDF_EXTENSION
+        self.log = name + self.LOG_EXTENSION
+        if not self.exist():
+            raise RuntimeError("The document files do not exist")
         self._lines = self._read_log()
 
-    def log_name(self):
-        return self.name + '.log'
+    def __set__(self, instance, path):
+        if not os.path.exists(path):
+            raise RuntimeError('The document path does not exist')
+        else:
+            self.path = path
 
-    def log_path(self):
-        return os.path.join(self.root, self.log_name())
+    def path_pdf(self):
+        return os.path.join(self.path, self.pdf)
 
-    def pdf_name(self):
-        return self.name + '.pdf'
+    def path_log(self):
+        return os.path.join(self.path, self.log)
 
-    def pdf_path(self):
-        return os.path.join(self.root, self.pdf_name())
+    def exist(self):
+        return os.path.exists(self.path_pdf()) and os.path.exists(self.path_log())
+
+    def move_to(self, path):
+        # Current Paths
+        old_pdf = self.path_pdf()
+        old_log = self.path_log()
+        # New Paths
+        self.path = path
+        new_pdf = self.path_pdf()
+        new_log = self.path_log()
+        # Move All
+        shutil.move(old_pdf, new_pdf)
+        shutil.move(old_log, new_log)
 
     def _read_log(self):
         """Read all lines form log file"""
-        path = self.log_path()
-        if not os.path.exists(path):
-            logging.error("Log file not found at %s", path)
-            raise RuntimeWarning("Log file not found at %s", path)
+        path = self.path_log()
         log_file = open(path, "r", encoding='latin-1')
         return log_file.readlines()
 
-    def get_warnings(self):
+    def warnings(self):
         """Parse warnings from log file."""
         warnings = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == config.LOG_NEW_LINE_CHAR:
+            if multi_line_error and line == self.NEWLINE:
                 multi_line_error = False
-            if config.LOG_WARNING_STRING in line or multi_line_error:
+            if self.WARMING in line or multi_line_error:
                 warnings.append(line)
                 multi_line_error = True
         return warnings
 
-    def get_errors(self):
+    def errors(self):
         """Parse errors from logfile."""
         errors = []
         multi_line_error = False
         for line in self._lines:
-            if multi_line_error and line == config.LOG_NEW_LINE_CHAR:
+            if multi_line_error and line == self.NEWLINE:
                 multi_line_error = False
-            if line.startswith(config.LOG_ERROR_STRING) or multi_line_error:
-                errors.append(line.replace(config.LOG_ERROR_STRING, ""))
+            if line.startswith(self.ERROR) or multi_line_error:
+                errors.append(line.replace(self.ERROR, ""))
                 multi_line_error = True
         return errors
 
-    def get_log(self):
+    def logs(self):
         return self._lines
-
-
-class DocumentExplorer:
-    def __init__(self, root):
-        self.root = root
-
-    def all_owners(self):
-        return os.listdir(self.root)
-
-    def all_repos(self, owner):
-        return os.listdir(os.path.join(self.root, owner))
-
-    def all_names(self, owner, repo):
-        names = []
-        for file in os.listdir(os.path.join(self.root, owner, repo)):
-            if file.endswith('.log'):
-                names.append(file.replace('.log',''))
-        return names
-
-    def all_documents(self):
-        documents = []
-        for owner in self.all_owners():
-            for repo in self.all_repos(owner):
-                for name in self.all_names(owner, repo):
-                    path = os.path.join(self.root, owner, repo)
-                    documents.append(Document(name, path))
-        return documents

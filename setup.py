@@ -2,10 +2,10 @@ from distutils.core import setup
 
 setup(
     name='InTeXration',
-    version='1.1.0dev',
+    version='1.2.0dev',
     packages=['intexration'],
     package_dir={'config': 'intexration'},
-    package_data={'intexration': ['config/*.cfg', 'data/*.csv', 'logs/*.log', 'templates/*.tpl', 'static/*/*']},
+    package_data={'intexration': ['config/*.cfg', 'data/*.csv', 'logs/*.log', 'views/*.tpl', 'static/*/*']},
     url='https://github.com/JDevlieghere/InTeXration',
     license='Apache License, Version 2.0',
     author='Jonas Devlieghere',

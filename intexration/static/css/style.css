@@ -1,5 +1,8 @@
 body {
     font-family: sans-serif;
+    padding-top: 70px;
+    height: 100%;
+    background-color: #FFFFFF;
 }
 
 .log {
@@ -7,7 +10,7 @@ body {
 }
 
 .callout {
-  margin: 20px 0;
+  margin: 0 0 20px;
   padding: 20px;
   border-left: 3px solid #eee;
   overflow: auto;
@@ -46,4 +49,19 @@ body {
 
 .status {
     text-align: center;
+}
+
+/* Listing */
+.panel tr th {
+    width: 60%
+}
+
+#footer div {
+    margin-top: 50px;
+    font-size: 10pt;
+    text-align: center;
+}
+
+.document tr th, .document tr td {
+    width: 16%;
 }
