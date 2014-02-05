@@ -14,7 +14,7 @@ class Intexration:
                                                constants.DIRECTORY_CONFIG,
                                                constants.FILE_LOGGER))
         self.config = ConfigManager()
-        self.parser = IntexrationParser(self.config, arguments)
+        self.parser = IntexrationParser(arguments, self.config)
         self.build_manager = DocumentManager(threaded=self.config.read_bool('COMPILATION', 'threaded'),
                                              lazy=self.config.read_bool('COMPILATION', 'lazy'),
                                              explore=self.config.read_bool('INTEXRATION', 'explore'),
