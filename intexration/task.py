@@ -135,9 +135,7 @@ class CompileTask(Task):
     def _compile(self):
         """Compile with pdflatex."""
         with cd(self.build.path):
-            if subprocess.call([self.PDFLATEX, '-interaction=nonstopmode', self.build.tex],
-                               stdout=subprocess.DEVNULL,
-                               stderr=subprocess.DEVNULL) != 0:
+            if subprocess.call([self.PDFLATEX, '-interaction=nonstopmode', self.build.tex]) != 0:
                 logging.warning("Compilation finished with errors for %s", self.build.tex)
 
     def _submit_documents(self):
