@@ -1,6 +1,7 @@
 import logging
 import os
 import logging.config
+import sys
 from intexration.server import Server, RequestHandler
 from intexration import constants
 from intexration.manager import ApiManager, DocumentManager, ConfigManager
@@ -37,6 +38,7 @@ class IntexrationParser:
     def __init__(self, arguments, config):
         self.arguments = arguments
         self.config = config
+        self.exit = False
 
     def get(self, argument):
         return getattr(self.arguments, argument)
@@ -48,29 +50,45 @@ class IntexrationParser:
         return hasattr(self.arguments, argument) and hasattr(self.arguments, argument)
 
     def parse(self):
-        self.parse_config()
-        self.parse_api()
+        self._parse_config()
+        self._parse_api()
+        self._check_exit()
 
-    def parse_config(self):
+    def _parse_config(self):
         if self.is_set('config_host'):
             self.config.write('SERVER', 'host', self.get('config_host'))
+            self._exit_on_finish()
         if self.is_set('config_port'):
             self.config.write('SERVER', 'port', self.get('config_port'))
+            self._exit_on_finish()
         if self.is_set('config_export'):
             self.config.file_export(self.get('config_export'))
+            self._exit_on_finish()
         if self.is_set('config_import'):
             self.config.file_import(self.get('config_import'))
+            self._exit_on_finish()
 
-    def parse_api(self):
+    def _parse_api(self):
         api_manager = ApiManager()
         if self.is_set('api_add'):
             api_manager.add_key(self.get('api_add'))
+            self._exit_on_finish()
         if self.is_set('api_remove'):
             api_manager.remove_key(self.get('api_remove'))
+            self._exit_on_finish()
         if self.is_true('api_list'):
             for line in api_manager.all_keys():
                 print(line[0])
+            self._exit_on_finish()
         if self.is_set('api_export'):
             api_manager.export_file(self.get('api_export'))
+            self._exit_on_finish()
         if self.is_set('api_import'):
             api_manager.import_file(self.get('api_import'))
+            self._exit_on_finish()
+
+    def _exit_on_finish(self):
+        self.exit = True
+
+    def _exit(self):
+        sys.exit(0)
