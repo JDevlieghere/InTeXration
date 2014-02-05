@@ -91,4 +91,5 @@ class IntexrationParser:
         self.exit = True
 
     def _exit(self):
-        sys.exit(0)
+        if self.exit:
+            sys.exit(0)
