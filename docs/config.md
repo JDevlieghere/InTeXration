@@ -27,16 +27,30 @@ python3 -m intexration config --host 8000
 
 ## Compilation
 
-Currently, compilation settings are not configurable using command line arguments. Please refer to the next section for an example.
+Currently, compilation settings are not configurable using command line arguments. Please refer to the next section for an example on how to alter them using the export function.
+
+### Branch
 
 You can specify the branch that will trigger compilation (lazy or not). The default `branch` is set to the `master` branch.
 
+### Lazy Compilation
+
 InTeXration supports lazy compilation: this means that the document will only be compiled when necessary. The first view will experience a delay proportional to the compilation time. When lazy compilation is disabled, the document will be compiled as soon as the server receives the request. The advantage of using lazy compilation is reducing server load, especially when users are pushing frequently to the selected branch. The `lazy` option is disabled by default.
 
-When more than one file is provided for compilation InTeXration can run those in parallel. This means a significant performance increase. The `threaded` option is enabled by default.
+### Threading
+
+When more than one document is provided for compilation InTeXration can run the compilation process in parallel. This means a significant performance increase. The `threaded` option is enabled by default.
 
 ## Configuration File
-A default config file look like this:
+
+The current settings can be exported and imported using the following command:
+
+```bash
+python3 -m intexration config --export /path/to/dir
+python3 -m intexration config --import /path/to/dir
+```
+
+This allows you to configure all settings at once. An example configuration file is given below:
 
 ```ini
 [SERVER]

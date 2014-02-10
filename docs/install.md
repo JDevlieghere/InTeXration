@@ -23,15 +23,16 @@ Installing the full version of TeX Live is recommended. If you'll be running
 InTeXration on Ubuntu, [this repository](https://github.com/scottkosty/install-
 tl-ubuntu) might come in handy.
 
-## Configuring
-
-[This document](https://github.com/JDevlieghere/InTeXration/blob/master/docs/config.md) explains how to configure your InTeXration server.
 
 ## Installing
 Run the `setup.py` file as illustrated below:
 ```bash
 python3 setup.py install
 ```
+
+## Configuring
+
+[This document](https://github.com/JDevlieghere/InTeXration/blob/master/docs/config.md) explains how to configure your InTeXration server.
 
 ## Starting the Server
 Starting the server is as easy as running the InTeXration module. However, if you
