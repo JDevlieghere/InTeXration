@@ -12,8 +12,8 @@ InTeXration requires:
 - pdflatex (part of TexX Live)
 - pip
 
-We're assuming `python3` refers to the right version. Make sure by running `python3 --version
-`. Use pip to install the required python packages:
+We're assuming `python3` refers to the right version. You can check your python version using the `python3 --version
+` command. It should say something like `Python 3.x.x`. Use pip to install the required python packages:
 
 ```bash
 pip install -r requirements.txt
