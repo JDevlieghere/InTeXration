@@ -45,7 +45,7 @@ class ConfigManager:
         self.parser.set(section, key, value)
         with open(self.settings_file, 'w+') as configfile:
             self.parser.write(configfile)
-        logging.info("Updated config %s = %s", [key, value])
+        logging.info("Updated config value (%s)", value)
 
     @staticmethod
     def file_export(directory):
