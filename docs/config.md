@@ -27,7 +27,7 @@ python3 -m intexration config --host 8000
 
 ## Compilation
 
-Currently, compilation settings are not configurable using command line arguments. Please refer to the next section for an example on how to alter them using the export function.
+Currently, compilation settings are not configurable using command line arguments. Please refer to the last section for an example on how to alter them using the import/export function.
 
 ### Branch
 
@@ -40,6 +40,12 @@ InTeXration supports lazy compilation: this means that the document will only be
 ### Threading
 
 When more than one document is provided for compilation InTeXration can run the compilation process in parallel. This means a significant performance increase. The `threaded` option is enabled by default.
+
+## Files
+
+InTeXration stores the compiled documents in a folder on disk. This folder is specified in the configuration file. Refer to the last section for more information on how to alter this file. The default location is `/home/intexration/out`, or a folder called `out` in the intexration user's home directory. Make sure that whatever folder you select, it exists and is writable by the InTeXration server.
+
+The server keeps track of the files it has compiled since it started. Because this information is kept in memory, restarting the server causes it to forget about previously compiled documents. Use the `explore` option to enable the server to look on disk for existing compiled documents.
 
 ## Configuration File
 
