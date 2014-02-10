@@ -12,6 +12,8 @@ from intexration.task import CompileTask, CloneTask
 
 class ConfigManager:
 
+    DEFAULT_CONFIG = 'config.default.cfg'
+
     def __init__(self):
         self.parser = configparser.ConfigParser()
         self.settings_file = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG)
@@ -19,7 +21,7 @@ class ConfigManager:
 
     def validate(self):
         if not os.path.exists(self.settings_file):
-            raise RuntimeError("Settings file missing")
+            self.file_import(constants.DIRECTORY_CONFIG, self.DEFAULT_CONFIG)
         if not os.path.exists(self.logger_file):
             raise RuntimeError("Logger config file missing")
         try:
@@ -51,8 +53,8 @@ class ConfigManager:
         shutil.copyfile(os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG), path)
         logging.info("Configuration exported to %s", path)
 
-    def file_import(self, directory):
-        path = os.path.join(directory, constants.FILE_CONFIG)
+    def file_import(self, directory, name=constants.FILE_CONFIG):
+        path = os.path.join(directory, name)
         if not os.path.exists(path):
             raise RuntimeError("Importing configuration failed: not found in %s", path)
         shutil.copyfile(path, os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG))
@@ -76,6 +78,8 @@ class ApiManager:
         self._path = os.path.join(constants.PATH_ROOT,
                                   constants.DIRECTORY_DATA,
                                   constants.FILE_API)
+        if not os.path.exists(self._path):
+            self.create_empty_file()
 
     def is_valid(self, key_to_check):
         with open(self._path, newline=self.NEWLINE) as key_file:
@@ -118,6 +122,11 @@ class ApiManager:
             return
         shutil.copyfile(path, self._path)
         logging.info("API key file imported from %s", path)
+
+    def create_empty_file(self):
+        file = open(self._path, 'w+')
+        file.close()
+        logging.info("No api key file found, empty file created.")
 
 
 class DocumentManager:
