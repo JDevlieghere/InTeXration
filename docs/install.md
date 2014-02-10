@@ -25,23 +25,7 @@ tl-ubuntu) might come in handy.
 
 ## Configuring
 
-Configuration is done using command line arguments. The following options are available.
-
-
-```bash
-  -h, --help      show this help message and exit
-  -host HOST      Change the hostname
-  -port PORT      Change the port
-  -add ADD        Add API key
-  -remove REMOVE  Remove API key
-  -list           List API keys
-```
-
-To set host to `localhost` and port to `8000` run
-```bash
-python3 -m intexration -host localhost -port 8000
-```
-
+[This document](https://github.com/JDevlieghere/InTeXration/blob/master/docs/config.md) explains how to configure your InTeXration server.
 
 ## Installing
 Run the `setup.py` file as illustrated below:
