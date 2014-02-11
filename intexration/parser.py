@@ -1,39 +1,51 @@
-import logging
+import configparser
 import os
-import logging.config
 import sys
-from intexration.server import Server, RequestHandler
-from intexration import constants
-from intexration.manager import ApiManager, DocumentManager, ConfigManager
+from intexration.manager import ApiManager
+
+__author__ = 'Jonas'
 
 
-class Intexration:
+class BuildParser:
 
-    def __init__(self, arguments):
-        logging.config.fileConfig(os.path.join(constants.PATH_ROOT,
-                                               constants.DIRECTORY_CONFIG,
-                                               constants.FILE_LOGGER))
-        self.config = ConfigManager()
-        self.parser = IntexrationParser(arguments, self.config)
-        self.build_manager = DocumentManager(threaded=self.config.read_bool('COMPILATION', 'threaded'),
-                                             lazy=self.config.read_bool('COMPILATION', 'lazy'),
-                                             explore=self.config.read_bool('INTEXRATION', 'explore'),
-                                             output=self.config.read('INTEXRATION', 'output'))
-        self.api_manager = ApiManager()
-        self.request_handler = RequestHandler(base_url=self.config.base_url(),
-                                              branch=self.config.read('COMPILATION', 'branch'),
-                                              build_manager=self.build_manager,
-                                              api_manager=self.api_manager)
-        self.server = Server(host=self.config.read('SERVER', 'host'),
-                             port=self.config.read('SERVER', 'port'),
-                             handler=self.request_handler)
+    CONFIG_NAME = '.intexration'
 
-    def run(self):
-        self.parser.parse()
-        self.server.start()
+    DIR = 'dir'
+    IDX = 'idx'
+    BIB = 'bib'
+
+    def __init__(self, path):
+        self.path = os.path.join(path, self.CONFIG_NAME)
+        if not os.path.exists(path):
+            raise RuntimeError("InTeXration config file not found")
+        self.parser = configparser.ConfigParser()
+        self.parser.read(self.path)
+
+    def names(self):
+        return self.parser.sections()
+
+    def tex(self, name):
+        if name not in self.names():
+            raise RuntimeError("The request tex file does not exist")
+        return name + '.tex'
+
+    def dir(self, name):
+        if self.parser.has_option(name, self.DIR):
+            return self.parser[name][self.DIR]
+        return ''
+
+    def idx(self, name):
+        if self.parser.has_option(name, self.IDX):
+            return self.parser[name][self.IDX]
+        return name + '.idx'
+
+    def bib(self, name):
+        if self.parser.has_option(name, self.BIB):
+            return self.parser[name][self.BIB]
+        return name
 
 
-class IntexrationParser:
+class RunArgumentParser:
 
     def __init__(self, arguments, config):
         self.arguments = arguments

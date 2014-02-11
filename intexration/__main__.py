@@ -1,5 +1,5 @@
 import argparse
-from intexration.intexration import Intexration
+from intexration.application import IntexrationApplication
 
 
 def main():
@@ -23,7 +23,7 @@ def main():
                             dest='api_import')
 
     arguments = parser.parse_args()
-    Intexration(arguments).run()
+    IntexrationApplication(arguments).run()
 
 if __name__ == '__main__':
     main()
