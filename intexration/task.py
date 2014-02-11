@@ -3,7 +3,6 @@ import os
 import shutil
 import subprocess
 import tempfile
-
 from intexration.parser import BuildParser
 from intexration.tools import create_dir, cd
 from intexration.build import Identifier, Build
