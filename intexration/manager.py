@@ -13,7 +13,7 @@ from intexration.task import CompileTask, CloneTask
 
 class LoggingManager:
 
-    DEFAULT_LOGGER = 'logger.default.cfg'
+    DEFAULT_LOGGER = 'logging.default.cfg'
 
     def __init__(self):
         self._root = os.path.join(constants.PATH_USER,

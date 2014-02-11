@@ -17,4 +17,4 @@ DIRECTORY_OUTPUT = 'output'
 # File Names
 FILE_API = 'api_keys.csv'
 FILE_CONFIG = 'config.cfg'
-FILE_LOGGER = 'logger.cfg'
+FILE_LOGGER = 'logging.cfg'
