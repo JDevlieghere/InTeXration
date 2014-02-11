@@ -18,6 +18,7 @@ class ConfigManager:
         self.parser = configparser.ConfigParser()
         self.settings_file = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG)
         self.logger_file = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_LOGGER)
+        self.validate()
 
     def validate(self):
         if not os.path.exists(self.settings_file):
