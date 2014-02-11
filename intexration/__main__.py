@@ -1,10 +1,11 @@
 from intexration.server import Server, RequestHandler
-from intexration.manager import ApiManager, DocumentManager, ConfigManager
+from intexration.manager import ApiManager, DocumentManager, ConfigManager, LoggingManager
 
 
 class InTeXration:
 
     def __init__(self):
+        self.logging_manager = LoggingManager()
         self.config_manager = ConfigManager()
         self.api_manager = ApiManager()
         self.build_manager = DocumentManager(threaded=self.config_manager.read_bool('COMPILATION', 'threaded'),

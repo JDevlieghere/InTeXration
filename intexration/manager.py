@@ -22,8 +22,6 @@ class LoggingManager:
                                  constants.FILE_LOGGER)
         if not os.path.exists(self.path):
             self._copy_default()
-        else:
-            print("logger file found?")
         logging.config.fileConfig(self.path)
 
     def _copy_default(self):
