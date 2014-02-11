@@ -22,7 +22,7 @@ class ConfigManager:
 
     def validate(self):
         if not os.path.exists(self.settings_file):
-            self.file_import(constants.DIRECTORY_CONFIG, self.DEFAULT_CONFIG)
+            self.file_import(os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG), self.DEFAULT_CONFIG)
         if not os.path.exists(self.logger_file):
             raise RuntimeError("Logger config file missing")
         try:
