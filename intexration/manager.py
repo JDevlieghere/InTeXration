@@ -91,7 +91,7 @@ class ConfigManager:
 
     def _copy_default(self):
         source_path = os.path.join(constants.PATH_MODULE, constants.DIRECTORY_CONFIG, self.DEFAULT_CONFIG)
-        self.file_import(source_path, self.path)
+        shutil.copyfile(source_path, self.path)
 
 
 class ApiManager:
