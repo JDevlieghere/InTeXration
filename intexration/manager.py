@@ -4,6 +4,7 @@ import logging
 import os
 import shutil
 from threading import Thread
+from intexration.tools import create_dir
 from intexration.document import Document
 from intexration import constants
 from intexration.build import Identifier
@@ -15,14 +16,16 @@ class LoggingManager:
     DEFAULT_LOGGER = 'logger.default.cfg'
 
     def __init__(self):
-        self.path = os.path.join(constants.PATH_USER,
-                                 constants.DIRECTORY_CONFIG,
+        self._root = os.path.join(constants.PATH_USER,
+                                  constants.DIRECTORY_CONFIG)
+        self.path = os.path.join(self._root,
                                  constants.FILE_LOGGER)
         if not os.path.exists(self.path):
             self._copy_default()
         logging.config.fileConfig(self.path)
 
     def _copy_default(self):
+        create_dir(self._root)
         source_path = os.path.join(constants.PATH_ROOT,
                                    constants.DIRECTORY_CONFIG,
                                    self.DEFAULT_LOGGER)
@@ -35,8 +38,9 @@ class ConfigManager:
 
     def __init__(self):
         self.parser = configparser.ConfigParser()
-        self.path = os.path.join(constants.PATH_USER,
-                                 constants.DIRECTORY_CONFIG,
+        self._root = os.path.join(constants.PATH_USER,
+                                  constants.DIRECTORY_CONFIG)
+        self.path = os.path.join(self._root,
                                  constants.FILE_CONFIG)
         self.validate()
 
@@ -90,6 +94,7 @@ class ConfigManager:
         return v.lower() in ("yes", "true", "t", "1")
 
     def _copy_default(self):
+        create_dir(self._root)
         source_path = os.path.join(constants.PATH_MODULE, constants.DIRECTORY_CONFIG, self.DEFAULT_CONFIG)
         shutil.copyfile(source_path, self.path)
 
@@ -100,8 +105,9 @@ class ApiManager:
     DELIMITER = ','
 
     def __init__(self):
-        self._path = os.path.join(constants.PATH_USER,
-                                  constants.DIRECTORY_DATA,
+        self._root = os.path.join(constants.PATH_USER,
+                                  constants.DIRECTORY_DATA)
+        self._path = os.path.join(self._root,
                                   constants.FILE_API)
         if not os.path.exists(self._path):
             self.create_default_file()
@@ -149,6 +155,7 @@ class ApiManager:
         logging.info("API key file imported from %s", path)
 
     def create_default_file(self):
+        create_dir(self._root)
         file = open(self._path, 'w+')
         file.close()
         logging.info("No api key file found, empty file created.")
@@ -163,6 +170,7 @@ class DocumentManager:
         self.documents = dict()
         self.output = os.path.join(constants.PATH_USER,
                                    constants.DIRECTORY_OUTPUT)
+        create_dir(self.output)
         if explore:
             self.explore_documents()
 
