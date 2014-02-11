@@ -1,6 +1,6 @@
 import configparser
 import csv
-import logging
+import logging.config
 import os
 import shutil
 from threading import Thread
@@ -26,7 +26,7 @@ class LoggingManager:
 
     def _copy_default(self):
         create_dir(self._root)
-        source_path = os.path.join(constants.PATH_ROOT,
+        source_path = os.path.join(constants.PATH_MODULE,
                                    constants.DIRECTORY_CONFIG,
                                    self.DEFAULT_LOGGER)
         shutil.copyfile(source_path, self.path)
@@ -69,20 +69,6 @@ class ConfigManager:
         with open(self.path, 'w+') as configfile:
             self.parser.write(configfile)
         logging.info("Updated config value (%s)", value)
-
-    @staticmethod
-    def file_export(directory):
-        path = os.path.join(directory, constants.FILE_CONFIG)
-        shutil.copyfile(os.path.join(constants.PATH_MODULE, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG), path)
-        logging.info("Configuration exported to %s", path)
-
-    def file_import(self, directory, name=constants.FILE_CONFIG):
-        path = os.path.join(directory, name)
-        if not os.path.exists(path):
-            raise RuntimeError("Importing configuration failed: not found in %s".format(path))
-        shutil.copyfile(path, os.path.join(constants.PATH_MODULE, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG))
-        self.validate()
-        logging.info("Configuration imported from %s", path)
 
     def base_url(self):
         return 'http://'+self.read('SERVER', 'host')+':'+self.read('SERVER', 'port')+'/'
@@ -138,19 +124,6 @@ class ApiManager:
             key_writer = csv.writer(key_file, delimiter=self.DELIMITER)
             for row in rows:
                 key_writer.writerow(row)
-
-    def export_file(self, directory):
-        path = os.path.join(directory, os.path.basename(self._path))
-        shutil.copyfile(self._path, path)
-        logging.info("API key file exported to %s", path)
-
-    def import_file(self, directory):
-        path = os.path.join(directory, os.path.basename(self._path))
-        if not os.path.exists(path):
-            logging.error("Importing API key file failed: file not found.")
-            return
-        shutil.copyfile(path, self._path)
-        logging.info("API key file imported from %s", path)
 
     def create_default_file(self):
         create_dir(self._root)
