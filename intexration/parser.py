@@ -1,7 +1,6 @@
 import configparser
 import os
 import sys
-from intexration.manager import ApiManager
 
 __author__ = 'Jonas'
 
@@ -47,9 +46,10 @@ class BuildParser:
 
 class RunArgumentParser:
 
-    def __init__(self, arguments, config):
+    def __init__(self, arguments, config, api_manager):
         self.arguments = arguments
         self.config = config
+        self.api_manager = api_manager
         self.exit = False
 
     def get(self, argument):
@@ -81,22 +81,21 @@ class RunArgumentParser:
             self._exit_on_finish()
 
     def _parse_api(self):
-        api_manager = ApiManager()
         if self.is_set('api_add'):
-            api_manager.add_key(self.get('api_add'))
+            self.api_manager.add_key(self.get('api_add'))
             self._exit_on_finish()
         if self.is_set('api_remove'):
-            api_manager.remove_key(self.get('api_remove'))
+            self.api_manager.remove_key(self.get('api_remove'))
             self._exit_on_finish()
         if self.is_true('api_list'):
-            for line in api_manager.all_keys():
+            for line in self.api_manager.all_keys():
                 print(line[0])
             self._exit_on_finish()
         if self.is_set('api_export'):
-            api_manager.export_file(self.get('api_export'))
+            self.api_manager.export_file(self.get('api_export'))
             self._exit_on_finish()
         if self.is_set('api_import'):
-            api_manager.import_file(self.get('api_import'))
+            self.api_manager.import_file(self.get('api_import'))
             self._exit_on_finish()
 
     def _exit_on_finish(self):

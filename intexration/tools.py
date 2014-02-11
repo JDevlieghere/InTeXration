@@ -3,6 +3,7 @@ import logging
 import os
 import errno
 
+
 @contextlib.contextmanager
 def cd(directory):
     cur_dir = os.getcwd()

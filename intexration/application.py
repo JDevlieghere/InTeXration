@@ -15,12 +15,12 @@ class IntexrationApplication:
                                                constants.DIRECTORY_CONFIG,
                                                constants.FILE_LOGGER))
         self.config = ConfigManager()
-        self.parser = RunArgumentParser(arguments, self.config)
+        self.api_manager = ApiManager()
+        self.parser = RunArgumentParser(arguments, self.config, self.api_manager)
         self.build_manager = DocumentManager(threaded=self.config.read_bool('COMPILATION', 'threaded'),
                                              lazy=self.config.read_bool('COMPILATION', 'lazy'),
                                              explore=self.config.read_bool('INTEXRATION', 'explore'),
                                              output=self.config.read('INTEXRATION', 'output'))
-        self.api_manager = ApiManager()
         self.request_handler = RequestHandler(base_url=self.config.base_url(),
                                               branch=self.config.read('COMPILATION', 'branch'),
                                               build_manager=self.build_manager,

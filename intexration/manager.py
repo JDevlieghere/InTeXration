@@ -170,7 +170,7 @@ class DocumentManager:
 
     def enqueue(self, identifier, build):
         if identifier in self.build_queue:
-            previous_build = self.build_queuep[identifier]
+            previous_build = self.build_queue[identifier]
             previous_build.finish()
         self.build_queue[identifier] = build
         logging.info("Queued %s", identifier)
