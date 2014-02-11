@@ -2,13 +2,6 @@ from intexration.server import Server, RequestHandler
 from intexration.manager import ApiManager, DocumentManager, ConfigManager
 
 
-def main():
-    InTeXration().run()
-
-if __name__ == '__main__':
-    main()
-
-
 class InTeXration:
 
     def __init__(self):
@@ -27,3 +20,10 @@ class InTeXration:
 
     def run(self):
         self.server.start()
+
+
+def main():
+    InTeXration().run()
+
+if __name__ == '__main__':
+    main()
