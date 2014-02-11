@@ -10,19 +10,39 @@ from intexration.build import Identifier
 from intexration.task import CompileTask, CloneTask
 
 
+class LoggingManager:
+
+    DEFAULT_LOGGER = 'logger.default.cfg'
+
+    def __init__(self):
+        self.path = os.path.join(constants.PATH_USER,
+                                 constants.DIRECTORY_CONFIG,
+                                 constants.FILE_LOGGER)
+        if not os.path.exists(self.path):
+            self._copy_default()
+        logging.config.fileConfig(self.path)
+
+    def _copy_default(self):
+        source_path = os.path.join(constants.PATH_ROOT,
+                                   constants.DIRECTORY_CONFIG,
+                                   self.DEFAULT_LOGGER)
+        shutil.copyfile(source_path, self.path)
+
+
 class ConfigManager:
 
     DEFAULT_CONFIG = 'config.default.cfg'
 
     def __init__(self):
         self.parser = configparser.ConfigParser()
-        self.settings_file = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG)
-        self.logger_file = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_LOGGER)
+        self.path = os.path.join(constants.PATH_USER,
+                                 constants.DIRECTORY_CONFIG,
+                                 constants.FILE_CONFIG)
         self.validate()
 
     def validate(self):
-        if not os.path.exists(self.settings_file):
-            self.file_import(os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG), self.DEFAULT_CONFIG)
+        if not os.path.exists(self.path):
+            self._copy_default()
         if not os.path.exists(self.logger_file):
             raise RuntimeError("Logger config file missing")
         try:
@@ -35,30 +55,30 @@ class ConfigManager:
             raise RuntimeError("Invalid config file")
 
     def read(self, section, key):
-        self.parser.read(self.settings_file)
+        self.parser.read(self.path)
         return self.parser[section][key]
 
     def read_bool(self, section, key):
         return self.str2bool(self.read(section, key))
 
     def write(self, section, key, value):
-        self.parser.read(self.settings_file)
+        self.parser.read(self.path)
         self.parser.set(section, key, value)
-        with open(self.settings_file, 'w+') as configfile:
+        with open(self.path, 'w+') as configfile:
             self.parser.write(configfile)
         logging.info("Updated config value (%s)", value)
 
     @staticmethod
     def file_export(directory):
         path = os.path.join(directory, constants.FILE_CONFIG)
-        shutil.copyfile(os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG), path)
+        shutil.copyfile(os.path.join(constants.PATH_MODULE, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG), path)
         logging.info("Configuration exported to %s", path)
 
     def file_import(self, directory, name=constants.FILE_CONFIG):
         path = os.path.join(directory, name)
         if not os.path.exists(path):
             raise RuntimeError("Importing configuration failed: not found in %s", path)
-        shutil.copyfile(path, os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG))
+        shutil.copyfile(path, os.path.join(constants.PATH_MODULE, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG))
         self.validate()
         logging.info("Configuration imported from %s", path)
 
@@ -69,6 +89,10 @@ class ConfigManager:
     def str2bool(v):
         return v.lower() in ("yes", "true", "t", "1")
 
+    def _copy_default(self):
+        source_path = os.path.join(constants.PATH_MODULE, constants.DIRECTORY_CONFIG, self.DEFAULT_CONFIG)
+        self.file_import(source_path, self.path)
+
 
 class ApiManager:
 
@@ -76,11 +100,11 @@ class ApiManager:
     DELIMITER = ','
 
     def __init__(self):
-        self._path = os.path.join(constants.PATH_ROOT,
+        self._path = os.path.join(constants.PATH_USER,
                                   constants.DIRECTORY_DATA,
                                   constants.FILE_API)
         if not os.path.exists(self._path):
-            self.create_empty_file()
+            self.create_default_file()
 
     def is_valid(self, key_to_check):
         with open(self._path, newline=self.NEWLINE) as key_file:
@@ -124,7 +148,7 @@ class ApiManager:
         shutil.copyfile(path, self._path)
         logging.info("API key file imported from %s", path)
 
-    def create_empty_file(self):
+    def create_default_file(self):
         file = open(self._path, 'w+')
         file.close()
         logging.info("No api key file found, empty file created.")
@@ -132,12 +156,13 @@ class ApiManager:
 
 class DocumentManager:
 
-    def __init__(self, threaded, lazy, explore, output):
+    def __init__(self, threaded, lazy, explore):
         self.threaded = threaded
         self.lazy = lazy
-        self.output = output
         self.build_queue = dict()
         self.documents = dict()
+        self.output = os.path.join(constants.PATH_USER,
+                                   constants.DIRECTORY_OUTPUT)
         if explore:
             self.explore_documents()
 

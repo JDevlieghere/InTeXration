@@ -2,13 +2,17 @@ import os
 
 
 # Paths
-PATH_ROOT = os.path.abspath(os.path.dirname(__file__))
+PATH_MODULE = os.path.abspath(os.path.dirname(__file__))
+PATH_USER = '/home/intexration/'
 
-# Directory Names
+# Module Directory Names (located in module root)
 DIRECTORY_STATIC = 'static'
+DIRECTORY_TEMPLATES = 'views'
+
+# User Directory Names (located in /home/intexration)
 DIRECTORY_DATA = 'data'
 DIRECTORY_CONFIG = 'config'
-DIRECTORY_TEMPLATES = 'views'
+DIRECTORY_OUTPUT = 'output'
 
 # File Names
 FILE_API = 'api_keys.csv'
