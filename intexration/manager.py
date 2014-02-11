@@ -47,8 +47,6 @@ class ConfigManager:
     def validate(self):
         if not os.path.exists(self.path):
             self._copy_default()
-        if not os.path.exists(self.logger_file):
-            raise RuntimeError("Logger config file missing")
         try:
             self.read('SERVER', 'host')
             self.read('SERVER', 'port')
