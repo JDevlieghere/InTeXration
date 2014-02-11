@@ -77,7 +77,7 @@ class ConfigManager:
     def file_import(self, directory, name=constants.FILE_CONFIG):
         path = os.path.join(directory, name)
         if not os.path.exists(path):
-            raise RuntimeError("Importing configuration failed: not found in %s", path)
+            raise RuntimeError("Importing configuration failed: not found in %s".format(path))
         shutil.copyfile(path, os.path.join(constants.PATH_MODULE, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG))
         self.validate()
         logging.info("Configuration imported from %s", path)
@@ -230,7 +230,7 @@ class DocumentManager:
         if self.is_queued(identifier):
             self._build_from_queue(identifier)
             return self.documents.get(identifier)
-        raise RuntimeWarning("No document found for %s", identifier)
+        raise RuntimeWarning("No document found for %s".format(identifier))
 
     def get_documents(self):
         return dict(self.documents)
