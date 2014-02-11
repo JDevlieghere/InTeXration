@@ -71,7 +71,7 @@ If you don't notice any I/O-related issues, the installation in now complete.
 
 ## Starting the Server
 
-Starting the server is as easy as running the InTeXration module.
+Starting the server is as easy as running the InTeXration module. Please do so outside of the root of the repository. Otherwise Python might choose to run the copy located there rather than the one installed as a module.
 
 ```bash
 $ python3 -m intexration
