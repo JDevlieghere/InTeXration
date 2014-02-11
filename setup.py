@@ -8,7 +8,6 @@ setup(
     name='InTeXration',
     version='1.2.1dev',
     packages=['intexration'],
-    package_dir={'': 'intexration'},
     package_data={'': ['config/*.cfg', 'data/*.csv', 'logs/*.log', 'views/*.tpl', 'static/*/*']},
     include_package_data=True,
     url='https://github.com/JDevlieghere/InTeXration',
