@@ -58,6 +58,13 @@ handlers=stream, file
 
 Both are basically ini-files. If either of them does not exist, InTeXration will try to create a default one for you. This might fail due to a lack of permissions. Either create the files and folders yourself, or run InTeXration for the first time with root permissions.
 
+Make sure that InTeXration can write to the following folders:
+```
+/home/intexration/config
+/home/intexration/data
+/home/intexration/output
+```
+
 ## Global
 
 ### Server
