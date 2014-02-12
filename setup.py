@@ -6,7 +6,7 @@ requirements = [str(ir.req) for ir in install_requirements]
 
 setup(
     name='InTeXration',
-    version='1.2.1dev',
+    version='1.3.0dev',
     packages=['intexration'],
     package_data={'': ['config/*.cfg', 'data/*.csv', 'logs/*.log', 'views/*.tpl', 'static/*/*']},
     include_package_data=True,
