@@ -56,7 +56,9 @@ class RequestHandler:
         if not self.api_manager.is_valid(api_key):
             self.abort_request(401, 'Unauthorized: API key invalid.')
         try:
-            data = json.loads(request.forms.get('payload'))
+            payload = request.forms.get('payload')
+            print(payload)
+            data = json.loads(payload)
             refs = data['ref']
             url = data['repository']['url']
             owner = data['repository']['owner']['name']
