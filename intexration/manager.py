@@ -21,20 +21,23 @@ class LoggingManager:
                                   constants.DIRECTORY_CONFIG)
         self.path = os.path.join(self._root,
                                  constants.FILE_LOGGER)
-        self.output_path = os.path.join(constants.PATH_USER,
-                                        self.LOG_DIR)
-        if not os.path.exists(self.output_path):
-            create_dir(self.output_path)
-        if not os.path.exists(self.path):
-            self._copy_default()
+        self._create_output_if_missing()
+        self._copy_missing_default()
         logging.config.fileConfig(self.path)
 
-    def _copy_default(self):
-        create_dir(self._root)
-        source_path = os.path.join(constants.PATH_MODULE,
-                                   constants.DIRECTORY_CONFIG,
-                                   self.DEFAULT_LOGGER)
-        shutil.copyfile(source_path, self.path)
+    def _copy_missing_default(self):
+        if not os.path.exists(self.path):
+            create_dir(self._root)
+            source_path = os.path.join(constants.PATH_MODULE,
+                                       constants.DIRECTORY_CONFIG,
+                                       self.DEFAULT_LOGGER)
+            shutil.copyfile(source_path, self.path)
+
+    def _create_missing_output(self):
+        output_path = os.path.join(constants.PATH_USER,
+                                   self.LOG_DIR)
+        if not os.path.exists(output_path):
+            create_dir(output_path)
 
 
 class ConfigManager:
@@ -50,8 +53,7 @@ class ConfigManager:
         self.validate()
 
     def validate(self):
-        if not os.path.exists(self.path):
-            self._copy_default()
+        self._copy_missing_default()
         try:
             self.read('SERVER', 'host')
             self.read('SERVER', 'port')
@@ -82,10 +84,11 @@ class ConfigManager:
     def str2bool(v):
         return v.lower() in ("yes", "true", "t", "1")
 
-    def _copy_default(self):
-        create_dir(self._root)
-        source_path = os.path.join(constants.PATH_MODULE, constants.DIRECTORY_CONFIG, self.DEFAULT_CONFIG)
-        shutil.copyfile(source_path, self.path)
+    def _copy_missing_default(self):
+        if not os.path.exists(self.path):
+            create_dir(self._root)
+            source_path = os.path.join(constants.PATH_MODULE, constants.DIRECTORY_CONFIG, self.DEFAULT_CONFIG)
+            shutil.copyfile(source_path, self.path)
 
 
 class ApiManager:
@@ -98,8 +101,7 @@ class ApiManager:
                                   constants.DIRECTORY_DATA)
         self._path = os.path.join(self._root,
                                   constants.FILE_API)
-        if not os.path.exists(self._path):
-            self.create_default_file()
+        self._create_missing_default()
 
     def is_valid(self, key_to_check):
         with open(self._path, newline=self.NEWLINE) as key_file:
@@ -130,11 +132,12 @@ class ApiManager:
             for row in rows:
                 key_writer.writerow(row)
 
-    def create_default_file(self):
-        create_dir(self._root)
-        file = open(self._path, 'w+')
-        file.close()
-        logging.info("No api key file found, empty file created.")
+    def _create_missing_default(self):
+        if not os.path.exists(self._path):
+            create_dir(self._root)
+            file = open(self._path, 'w+')
+            file.close()
+            logging.info("No api key file found, empty file created.")
 
 
 class DocumentManager:
