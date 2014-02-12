@@ -14,6 +14,7 @@ from intexration.task import CompileTask, CloneTask
 class LoggingManager:
 
     DEFAULT_LOGGER = 'logging.default.cfg'
+    LOG_DIR = 'log'
 
     def __init__(self):
         self._root = os.path.join(constants.PATH_USER,
@@ -26,6 +27,7 @@ class LoggingManager:
 
     def _copy_default(self):
         create_dir(self._root)
+        create_dir(os.path.join(constants.PATH_USER, self.LOG_DIR))
         source_path = os.path.join(constants.PATH_MODULE,
                                    constants.DIRECTORY_CONFIG,
                                    self.DEFAULT_LOGGER)
