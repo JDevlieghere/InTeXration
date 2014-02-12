@@ -59,7 +59,6 @@ class RequestHandler:
             data = json.loads(request.forms.get('payload'))
             refs = data['ref']
             url = data['repository']['url']
-            ssh = data['repository']['ssh_url']
             owner = data['repository']['owner']['name']
             repository = data['repository']['name']
             commit = data['after']

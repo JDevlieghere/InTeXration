@@ -31,7 +31,7 @@ class CloneTask(Task):
 
     def _clone(self):
         logging.info("Cloning to %s", self.clone_directory)
-        if subprocess.call(['git', 'clone',  self.build_request.ssh_url, self.clone_directory],
+        if subprocess.call(['git', 'clone',  self.build_request.url, self.clone_directory],
                            stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) != 0:
             raise RuntimeError("Clone failed")

@@ -24,11 +24,11 @@ class Identifier:
 
 class BuildRequest:
 
-    def __init__(self, owner, repository, commit, ssh_url):
+    def __init__(self, owner, repository, commit, url):
         self.owner = owner
         self.repository = repository
         self.commit = commit
-        self.ssh_url = ssh_url
+        self.url = url
         self._temp = tempfile.mkdtemp()
 
 
