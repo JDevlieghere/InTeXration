@@ -21,13 +21,16 @@ class LoggingManager:
                                   constants.DIRECTORY_CONFIG)
         self.path = os.path.join(self._root,
                                  constants.FILE_LOGGER)
+        self.output_path = os.path.join(constants.PATH_USER,
+                                        self.LOG_DIR)
+        if not os.path.exists(self.output_path):
+            create_dir(self.output_path)
         if not os.path.exists(self.path):
             self._copy_default()
         logging.config.fileConfig(self.path)
 
     def _copy_default(self):
         create_dir(self._root)
-        create_dir(os.path.join(constants.PATH_USER, self.LOG_DIR))
         source_path = os.path.join(constants.PATH_MODULE,
                                    constants.DIRECTORY_CONFIG,
                                    self.DEFAULT_LOGGER)
