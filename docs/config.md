@@ -48,7 +48,7 @@ args=(sys.stdout,)
 class=logging.FileHandler
 level=WARNING
 formatter=default
-args=(os.path.expanduser("~") + '/intexration.log', 'a')
+args=('home/intexration/log/intexration.log', 'a')
 
 [logger_root]
 level=DEBUG
@@ -63,6 +63,7 @@ Make sure that InTeXration can write to the following folders:
 /home/intexration/config
 /home/intexration/data
 /home/intexration/output
+/home/intexration/log
 ```
 
 ## Global
