@@ -4,5 +4,8 @@
 git fetch --all
 git checkout master
 
+# Install new requirements
+sudo pip3 install -r requirements.txt
+
 # Install using setup.py
-python3 setup.py install
+sudo python3 setup.py install

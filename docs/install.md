@@ -9,7 +9,8 @@
 
 This guide is written as generally as possible to cover multiple GNU/Linux distributions. However, it has currently only been tested with the following versions:
 
- - Ubuntu 13.10 (Saucy Salamander)
+ - Ubuntu 12.04 LTS
+ - Ubuntu 13.10
 
 ## Prerequisites
 
@@ -34,9 +35,14 @@ tl-ubuntu) might come in handy.
 
 Pip is a package management system for managing and installing packages in Python. Please note that is supports both versions on Python. Since this project is using Python 3 make sure you have the right version or configuration. If you're using InTeXration on Ubuntu, the easiest way is to install `python3-pip`. We'll assume that `pip` for Python 3 is called `pip3` from now on.
 
-Installing `python3-pip` on Ubuntu:
+Installing `python3-pip` on Ubuntu 12.10 or later:
 ```bash
 $ sudo apt-get install python3-pip
+```
+If you're on an earlier version of Ubuntu (12.04 LTS for example) you can make use of the `python3-setuptools` package:
+```bash
+$ sudo aptitude install python3-setuptools
+$ sudo easy_install3 pip
 ```
 
 Installing the requirements from the text file:
@@ -55,13 +61,14 @@ $ cd /home/intexration
 ```
 
 No return to the root of the repository to start the installation process. Installing the application itself is pretty easy. Just run the `setup.py` file as illustrated below:
+
 ```bash
 $ sudo python3 setup.py install
 ```
 
 ## Configuring
 
-As explained in [this document](https://github.com/JDevlieghere/InTeXration/blob/master/docs/config.md) some files are necessary for InTeXration to run properly. Summarized: InTeXration can create these automatically for you if it has the right privileges. Therefore you might want to **run it as root for the first run**.
+As explained in [this document](https://github.com/JDevlieghere/InTeXration/blob/master/docs/config.md) some files are necessary for InTeXration to run properly. Summarized: InTeXration can create these automatically for you if it has the right privileges. Make sure InTeXration can create directories and files in the folder `/home/intexration`. A possible way to do so is starting it as the root user.
 
 ```bash
 $ sudo python3 -m intexration
