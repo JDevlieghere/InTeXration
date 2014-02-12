@@ -21,7 +21,7 @@ class LoggingManager:
                                   constants.DIRECTORY_CONFIG)
         self.path = os.path.join(self._root,
                                  constants.FILE_LOGGER)
-        self._create_output_if_missing()
+        self._create_missing_output()
         self._copy_missing_default()
         logging.config.fileConfig(self.path)
 
