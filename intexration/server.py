@@ -57,7 +57,6 @@ class RequestHandler:
             self.abort_request(401, 'Unauthorized: API key invalid.')
         try:
             payload = request.forms.get('payload')
-            print(payload)
             data = json.loads(payload)
             refs = data['ref']
             url = data['repository']['url']
