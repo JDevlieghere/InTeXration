@@ -1,29 +1,30 @@
-import argparse
-from intexration.intexration import Intexration
+from intexration.server import Server, RequestHandler
+from intexration.manager import ApiManager, DocumentManager, ConfigManager, LoggingManager
+
+
+class InTeXration:
+
+    def __init__(self):
+        self.logging_manager = LoggingManager()
+        self.config_manager = ConfigManager()
+        self.api_manager = ApiManager()
+        self.build_manager = DocumentManager(threaded=self.config_manager.read_bool('COMPILATION', 'threaded'),
+                                             lazy=self.config_manager.read_bool('COMPILATION', 'lazy'),
+                                             explore=self.config_manager.read_bool('DOCUMENTS', 'explore'))
+        self.request_handler = RequestHandler(base_url=self.config_manager.base_url(),
+                                              branch=self.config_manager.read('COMPILATION', 'branch'),
+                                              build_manager=self.build_manager,
+                                              api_manager=self.api_manager)
+        self.server = Server(host=self.config_manager.read('SERVER', 'host'),
+                             port=self.config_manager.read('SERVER', 'port'),
+                             handler=self.request_handler)
+
+    def run(self):
+        self.server.start()
 
 
 def main():
-    parser = argparse.ArgumentParser(prog='intexration')
-    subparsers = parser.add_subparsers(help='subparser')
-
-    config_parser = subparsers.add_parser('config', help='configuration')
-    config_parser.add_argument('--host', help='change the hostname', dest='config_host')
-    config_parser.add_argument('--port', help='change the port', dest='config_port')
-    config_parser.add_argument('--export', metavar='DIR', help='export configuration file to given directory',
-                               dest='config_export')
-    config_parser.add_argument('--import', metavar='DIR', help='import configuration file from given directory',
-                               dest='config_import')
-
-    api_parser = subparsers.add_parser('api', help='API management')
-    api_parser.add_argument('--add', metavar='KEY', help='add API key', dest='api_add')
-    api_parser.add_argument('--remove', metavar='KEY', help='remove API key', dest='api_remove')
-    api_parser.add_argument('--list', help='list API keys', action='store_true', dest='api_list')
-    api_parser.add_argument('--export', metavar='DIR', help='export API key file to given directory', dest='api_export')
-    api_parser.add_argument('--import', metavar='DIR', help='import API key file from given directory',
-                            dest='api_import')
-
-    arguments = parser.parse_args()
-    Intexration(arguments).run()
+    InTeXration().run()
 
 if __name__ == '__main__':
     main()

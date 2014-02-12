@@ -1,7 +1,7 @@
 import contextlib
-import logging
 import os
 import errno
+
 
 @contextlib.contextmanager
 def cd(directory):
@@ -20,5 +20,5 @@ def create_dir(path):
         if exc.errno == errno.EEXIST and os.path.isdir(path):
             pass
         else:
-            logging.error(exc)
+            raise
     return path

@@ -65,3 +65,12 @@ body {
 .document tr th, .document tr td {
     width: 16%;
 }
+
+.navbar-brand{
+    display: block;
+    background-image: url('../img/logo.png');
+    background-repeat: no-repeat;
+    background-position: left center ;
+    padding-left: 45px;
+    height: 50px;
+}

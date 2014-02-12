@@ -1,27 +1,59 @@
 import configparser
 import csv
-import logging
+import logging.config
 import os
 import shutil
 from threading import Thread
+from intexration.tools import create_dir
 from intexration.document import Document
 from intexration import constants
 from intexration.build import Identifier
 from intexration.task import CompileTask, CloneTask
 
 
+class LoggingManager:
+
+    DEFAULT_LOGGER = 'logging.default.cfg'
+    LOG_DIR = 'log'
+
+    def __init__(self):
+        self._root = os.path.join(constants.PATH_USER,
+                                  constants.DIRECTORY_CONFIG)
+        self.path = os.path.join(self._root,
+                                 constants.FILE_LOGGER)
+        self._create_missing_output()
+        self._copy_missing_default()
+        logging.config.fileConfig(self.path)
+
+    def _copy_missing_default(self):
+        if not os.path.exists(self.path):
+            create_dir(self._root)
+            source_path = os.path.join(constants.PATH_MODULE,
+                                       constants.DIRECTORY_CONFIG,
+                                       self.DEFAULT_LOGGER)
+            shutil.copyfile(source_path, self.path)
+
+    def _create_missing_output(self):
+        output_path = os.path.join(constants.PATH_USER,
+                                   self.LOG_DIR)
+        if not os.path.exists(output_path):
+            create_dir(output_path)
+
+
 class ConfigManager:
+
+    DEFAULT_CONFIG = 'config.default.cfg'
 
     def __init__(self):
         self.parser = configparser.ConfigParser()
-        self.settings_file = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG)
-        self.logger_file = os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_LOGGER)
+        self._root = os.path.join(constants.PATH_USER,
+                                  constants.DIRECTORY_CONFIG)
+        self.path = os.path.join(self._root,
+                                 constants.FILE_CONFIG)
+        self.validate()
 
     def validate(self):
-        if not os.path.exists(self.settings_file):
-            raise RuntimeError("Settings file missing")
-        if not os.path.exists(self.logger_file):
-            raise RuntimeError("Logger config file missing")
+        self._copy_missing_default()
         try:
             self.read('SERVER', 'host')
             self.read('SERVER', 'port')
@@ -32,32 +64,18 @@ class ConfigManager:
             raise RuntimeError("Invalid config file")
 
     def read(self, section, key):
-        self.parser.read(self.settings_file)
+        self.parser.read(self.path)
         return self.parser[section][key]
 
     def read_bool(self, section, key):
         return self.str2bool(self.read(section, key))
 
     def write(self, section, key, value):
-        self.parser.read(self.settings_file)
+        self.parser.read(self.path)
         self.parser.set(section, key, value)
-        with open(self.settings_file, 'w+') as configfile:
+        with open(self.path, 'w+') as configfile:
             self.parser.write(configfile)
-        logging.info("Updated config %s = %s", [key, value])
-
-    @staticmethod
-    def file_export(directory):
-        path = os.path.join(directory, constants.FILE_CONFIG)
-        shutil.copyfile(os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG), path)
-        logging.info("Configuration exported to %s", path)
-
-    def file_import(self, directory):
-        path = os.path.join(directory, constants.FILE_CONFIG)
-        if not os.path.exists(path):
-            raise RuntimeError("Importing configuration failed: not found in %s", path)
-        shutil.copyfile(path, os.path.join(constants.PATH_ROOT, constants.DIRECTORY_CONFIG, constants.FILE_CONFIG))
-        self.validate()
-        logging.info("Configuration imported from %s", path)
+        logging.info("Updated config value (%s)", value)
 
     def base_url(self):
         return 'http://'+self.read('SERVER', 'host')+':'+self.read('SERVER', 'port')+'/'
@@ -66,6 +84,12 @@ class ConfigManager:
     def str2bool(v):
         return v.lower() in ("yes", "true", "t", "1")
 
+    def _copy_missing_default(self):
+        if not os.path.exists(self.path):
+            create_dir(self._root)
+            source_path = os.path.join(constants.PATH_MODULE, constants.DIRECTORY_CONFIG, self.DEFAULT_CONFIG)
+            shutil.copyfile(source_path, self.path)
+
 
 class ApiManager:
 
@@ -73,9 +97,11 @@ class ApiManager:
     DELIMITER = ','
 
     def __init__(self):
-        self._path = os.path.join(constants.PATH_ROOT,
-                                  constants.DIRECTORY_DATA,
+        self._root = os.path.join(constants.PATH_USER,
+                                  constants.DIRECTORY_DATA)
+        self._path = os.path.join(self._root,
                                   constants.FILE_API)
+        self._create_missing_default()
 
     def is_valid(self, key_to_check):
         with open(self._path, newline=self.NEWLINE) as key_file:
@@ -106,28 +132,24 @@ class ApiManager:
             for row in rows:
                 key_writer.writerow(row)
 
-    def export_file(self, directory):
-        path = os.path.join(directory, os.path.basename(self._path))
-        shutil.copyfile(self._path, path)
-        logging.info("API key file exported to %s", path)
-
-    def import_file(self, directory):
-        path = os.path.join(directory, os.path.basename(self._path))
-        if not os.path.exists(path):
-            logging.error("Importing API key file failed: file not found.")
-            return
-        shutil.copyfile(path, self._path)
-        logging.info("API key file imported from %s", path)
+    def _create_missing_default(self):
+        if not os.path.exists(self._path):
+            create_dir(self._root)
+            file = open(self._path, 'w+')
+            file.close()
+            logging.info("No api key file found, empty file created.")
 
 
 class DocumentManager:
 
-    def __init__(self, threaded, lazy, explore, output):
+    def __init__(self, threaded, lazy, explore):
         self.threaded = threaded
         self.lazy = lazy
-        self.output = output
         self.build_queue = dict()
         self.documents = dict()
+        self.output = os.path.join(constants.PATH_USER,
+                                   constants.DIRECTORY_OUTPUT)
+        create_dir(self.output)
         if explore:
             self.explore_documents()
 
@@ -161,7 +183,7 @@ class DocumentManager:
 
     def enqueue(self, identifier, build):
         if identifier in self.build_queue:
-            previous_build = self.build_queuep[identifier]
+            previous_build = self.build_queue[identifier]
             previous_build.finish()
         self.build_queue[identifier] = build
         logging.info("Queued %s", identifier)
@@ -195,7 +217,7 @@ class DocumentManager:
         if self.is_queued(identifier):
             self._build_from_queue(identifier)
             return self.documents.get(identifier)
-        raise RuntimeWarning("No document found for %s", identifier)
+        raise RuntimeWarning("No document found for %s".format(identifier))
 
     def get_documents(self):
         return dict(self.documents)
