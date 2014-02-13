@@ -59,12 +59,11 @@ class RequestHandler:
             payload = request.forms.get('payload')
             data = json.loads(payload)
             refs = data['ref']
-            url = data['repository']['url']
             owner = data['repository']['owner']['name']
             repository = data['repository']['name']
             commit = data['after']
             if self._branch in refs:
-                build_request = BuildRequest(owner, repository, commit, url)
+                build_request = BuildRequest(owner, repository, commit)
                 self.build_manager.submit_request(build_request)
             else:
                 self.abort_request(406, "Wrong branch")

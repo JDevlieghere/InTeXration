@@ -28,8 +28,10 @@ class BuildRequest:
         self.owner = owner
         self.repository = repository
         self.commit = commit
-        self.url = url
         self._temp = tempfile.mkdtemp()
+
+    def url(self):
+        return 'git@github.com:'+self.owner+'/'+self.repository+'.git'
 
 
 class Build:
