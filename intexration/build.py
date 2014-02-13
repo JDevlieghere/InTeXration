@@ -30,9 +30,11 @@ class BuildRequest:
         self.commit = commit
         self._temp = tempfile.mkdtemp()
 
-    def url(self):
+    def ssh_url(self):
         return 'git@github.com:'+self.owner+'/'+self.repository+'.git'
 
+    def https_url(self):
+        return 'https://github.com/'+self.owner+'/'+self.repository+'.git'
 
 class Build:
 
