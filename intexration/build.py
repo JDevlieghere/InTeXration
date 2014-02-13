@@ -24,7 +24,7 @@ class Identifier:
 
 class BuildRequest:
 
-    def __init__(self, owner, repository, commit, url):
+    def __init__(self, owner, repository, commit):
         self.owner = owner
         self.repository = repository
         self.commit = commit
