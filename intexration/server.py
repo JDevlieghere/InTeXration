@@ -59,7 +59,7 @@ class RequestHandler:
             payload = request.forms.get('payload')
             data = json.loads(payload)
             if data['zen']:
-                return
+                return 'Ping received'
             refs = data['ref']
             owner = data['repository']['owner']['name']
             repository = data['repository']['name']
@@ -67,7 +67,7 @@ class RequestHandler:
             if self._branch in refs:
                 build_request = BuildRequest(owner, repository, commit)
                 self.build_manager.submit_request(build_request)
-                return
+                return 'Build request received'
             else:
                 self.abort_request(406, "Wrong branch")
         except (RuntimeError, RuntimeWarning) as e:
