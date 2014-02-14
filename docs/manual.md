@@ -18,32 +18,6 @@ Please consult the [configuration
 guide](https://github.com/JDevlieghere/InTeXration/blob/master/docs/config.md)
 for information on how to configure InTeXration.
 
-## Adding an API key
-
-Using GUID's as API keys is recommended. You can generate those
-[here](http://www.guidgenerator.com/).
-
-Use the command line argument `-add` to authorize an API key:
-```bash
-python3 -m intexration api -add 0F304A9A-997A-4207-A1BF-3C74A009F5A0
-```
-
-#### Listing
-
-To list all API keys currently registered, use the `-list` argument.
-```bash
-python3 -m intexration api -list
-```
-A list of keys will be printed to the standard output stream.
-
-#### Removing
-
-To remove an API key, simply use the `-remove` argument.
-```bash
-python3 -m intexration api -remove 0F304A9A-997A-4207-A1BF-3C74A009F5A0
-```
-
-
 ## Setting Up WebHook
 
 Once you have created an API key for your repository, you can create a WebHook

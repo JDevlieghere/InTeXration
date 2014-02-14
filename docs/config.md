@@ -3,6 +3,7 @@
 - [Overview](#overview)
 - [Global](#global)
 - [Logging](#logging)
+- [API Keys](#api-keys)
 
 ## Overview
 
@@ -89,3 +90,8 @@ When more than one document is provided for compilation InTeXration can run the 
 ## Logging
 
 The logging configuration file follows the specifications as described by the logging library that is part of the Python distribution. Please refer to its documentation for more info on how to configure your logging.
+
+# API Keys
+
+Using GUID's as API keys is recommended. You can generate those
+[here](http://www.guidgenerator.com/). API Keys are stored in `/home/intexration/data/api_keys.cvs`. One API key per line. The InTeXration server does not need to restart after adding or removing a key.
