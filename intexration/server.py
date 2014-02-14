@@ -58,7 +58,7 @@ class RequestHandler:
         try:
             payload = request.forms.get('payload')
             data = json.loads(payload)
-            if data['zen']:
+            if 'zen' in data:
                 return 'Ping received'
             refs = data['ref']
             owner = data['repository']['owner']['name']
