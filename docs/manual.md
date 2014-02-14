@@ -36,7 +36,7 @@ http://server.com:8000/hook/0F304A9A-997A-4207-A1BF-3C74A009F5A0
 
 Once your WebHook URL is created, add it to your repository. Navigate to the
 settings page of your repository, find the *Service Hooks* page and add the URL
-as a *WebHook URL*.
+as a *WebHook URL*. Use the default payload version. (`application/vnd.github.v3+form`)
 
 ## .intexration
 InTeXration uses the `.intexration` file from the root of your repository to
