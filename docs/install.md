@@ -91,27 +91,16 @@ If you don't notice any I/O-related issues, the installation in now complete.
 
 ## Starting the Server
 
-Starting the server is as easy as running the InTeXration module. Please do so outside of the root of the repository. Otherwise Python might choose to run the copy located there rather than the one installed as a module.
-
-```bash
-$ python3 -m intexration
-```
-
-However, if you want to run InTeXration in the background, you can do so using the `nohup` command.
-
-```bash
-$ nohup python3 -m intexration > /dev/null 2>&1 &
-```
-
-You will be show the process id, which you will need in order to stop the
-server, if necessary.
-
-### Run on Boot
-
 InTeXration comes with a startup script called `intexration_start.sh` in the `sripts` folder. Make a symbolic link and tell the server to start InTeXration when it starts.
 
 ```bash
 $ sudo ln -s /home/intexration/InTeXration/scripts/intexration_start.sh /etc/init.d/intexration
 $ sudo update-rc.d intexration defaults
+```
+
+Start the InTeXration service
+
+```bash
+$ sudo service intexration start
 ```
 
