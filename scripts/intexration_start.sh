@@ -9,7 +9,7 @@ start() {
 
 stop() {
 	pkill -9 -f 'python3.*intexration'
-	echo "InTeXration stopped$."
+	echo "InTeXration stopped."
 }
 
 status() {
