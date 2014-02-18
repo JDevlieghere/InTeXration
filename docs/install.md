@@ -12,6 +12,19 @@ This guide is written as generally as possible to cover multiple GNU/Linux distr
  - Ubuntu 12.04 LTS
  - Ubuntu 13.10
 
+ Before installing the application you will have to create a user named `intexration`.
+
+```bash
+$ sudo adduser --disabled-login --gecos 'InTeXration' intexration
+```
+
+Now clone the InTeXration project.
+```
+```bash
+$ cd /home/intexration
+$ git clone https://github.com/JDevlieghere/InTeXration.git
+```
+
 ## Prerequisites
 
 InTeXration requires:
@@ -54,14 +67,13 @@ Once all prerequisites are installed, you're ready to install InTeXration itself
 
 ## Installing
 
-Before installing the application you will have to create a user named `intexration`. Make sure it receives a directory called `intexration` in the `/home` folder.
+Return to the root of the repository to start the installation process.
 
 ```bash
-$ sudo adduser --disabled-login --gecos 'InTeXration' intexration
-$ cd /home/intexration
+$ cd /home/intexration/InTeXration
 ```
 
-No return to the root of the repository to start the installation process. Installing the application itself is pretty easy. Just run the `setup.py` file as illustrated below:
+Installing the application itself is pretty easy. Just run the `setup.py` file as illustrated below:
 
 ```bash
 $ sudo python3 setup.py install
@@ -99,7 +111,7 @@ server, if necessary.
 InTeXration comes with a startup script called `intexration_start.sh` in the `sripts` folder. Make a symbolic link and tell the server to start InTeXration when it starts.
 
 ```bash
-$ sudo ln -s ./scripts/intexration_start.sh /etc/init.d/intexration
+$ sudo ln -s /home/intexration/InTeXration/scripts/intexration_start.sh /etc/init.d/intexration
 $ sudo update-rc.d intexration defaults
 ```
 
