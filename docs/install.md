@@ -54,9 +54,10 @@ Once all prerequisites are installed, you're ready to install InTeXration itself
 
 ## Installing
 
-Before installing the application you will have to create a user named `intexration`. Make sure it receives a directory called `intexration` in the `/home` folder by changing directory to it:
+Before installing the application you will have to create a user named `intexration`. Make sure it receives a directory called `intexration` in the `/home` folder.
 
 ```bash
+$ sudo adduser --disabled-login --gecos 'InTeXration' intexration
 $ cd /home/intexration
 ```
 
