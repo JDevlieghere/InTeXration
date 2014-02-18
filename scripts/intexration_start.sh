@@ -1,0 +1,1 @@
+nohup python3 -m intexration > /dev/null 2>&1 &

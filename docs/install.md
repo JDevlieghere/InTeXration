@@ -93,3 +93,13 @@ $ nohup python3 -m intexration > /dev/null 2>&1 &
 
 You will be show the process id, which you will need in order to stop the
 server, if necessary.
+
+### Run on Boot
+
+InTeXration comes with a startup script called `intexration_start.sh` in the `sripts` folder. Make a symbolic link and tell the server to start InTeXration when it starts.
+
+```bash
+$ sudo ln -s ./scripts/intexration_start.sh /etc/init.d/intexration
+$ sudo update-rc.d intexration defaults
+```
+
