@@ -8,12 +8,12 @@ start() {
 }
 
 stop() {
-	pkill -9 -f 'python3|intexration'
+	pkill -9 -f 'python3.*intexration'
 	echo "InTeXration stopped$."
 }
 
 status() {
-	pids=$(pgrep -f 'python3|intexration')
+	pids=$(pgrep -f 'python3.*intexration')
 	if [ "${pids}" ]; then
 		echo "InTeXration is running."
 	else
