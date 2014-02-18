@@ -14,8 +14,7 @@ stop() {
 
 status() {
 	pids=$(pgrep -f 'python3|intexration')
-	if [ -z "${pids}" ]
-	then
+	if [ "${pids}" ]; then
 		echo "InTeXration is running."
 	else
 		echo "InTeXration is not running."
