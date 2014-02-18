@@ -2,27 +2,23 @@
 # InTeXration startup script
 # =============================================================== #
 
-BRed='\e[1;31m'         # Red
-BGreen='\e[1;32m'       # Green
-NC="\e[m"               # Color Reset
-
 start() {
 	nohup python3 -m intexration > /dev/null 2>&1 &
-	echo -e "InTeXration ${BGreen}started${NC}."
+	echo -e "InTeXration started."
 }
 
 stop() {
 	pkill -9 -f intexration
-	echo -e "InTeXration ${BRed}stopped${NC}."
+	echo -e "InTeXration stopped$."
 }
 
 status() {
 	pids=$(pgrep -f intexration)
 	if [ $? -eq 1 ]
 	then
-		echo -e "InTeXration is ${BRed}not running${NC}."
+		echo "InTeXration is not running."
 	else
-		echo -e "InTeXration is ${BGreen}running${NC}."
+		echo "InTeXration is running."
 	fi
 }
 
