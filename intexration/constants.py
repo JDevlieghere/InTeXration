@@ -3,7 +3,7 @@ import os
 
 # Paths
 PATH_MODULE = os.path.abspath(os.path.dirname(__file__))
-PATH_USER = '/home/intexration_beta/'
+PATH_USER = '/home/intexration/'
 
 # Module Directory Names (located in module root)
 DIRECTORY_STATIC = 'static'
