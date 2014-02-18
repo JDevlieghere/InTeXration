@@ -4,21 +4,21 @@
 
 start() {
 	nohup python3 -m intexration > /dev/null 2>&1 &
-	echo -e "InTeXration started."
+	echo "InTeXration started."
 }
 
 stop() {
 	pkill -9 -f intexration
-	echo -e "InTeXration stopped$."
+	echo "InTeXration stopped$."
 }
 
 status() {
 	pids=$(pgrep -f intexration)
-	if [ $? -eq 1 ]
+	if [ -z "${pids}" ]
 	then
-		echo "InTeXration is not running."
-	else
 		echo "InTeXration is running."
+	else
+		echo "InTeXration is not running."
 	fi
 }
 
