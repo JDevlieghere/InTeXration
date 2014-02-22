@@ -31,15 +31,15 @@ class CloneTask(Task):
 
     def _clone(self):
         logging.info("Cloning to %s", self.clone_directory)
-        if subprocess.call(['git', 'clone',  self.build_request.https_url(), self.clone_directory],
-                           stdout=subprocess.DEVNULL,
-                           stderr=subprocess.DEVNULL) == 0:
-            return
         if subprocess.call(['git', 'clone',  self.build_request.ssh_url(), self.clone_directory],
                            stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL) == 0:
             return
-        raise RuntimeError("Clone failed: both https and ssh cloning failed.")
+        if subprocess.call(['git', 'clone',  self.build_request.https_url(), self.clone_directory],
+                           stdout=subprocess.DEVNULL,
+                           stderr=subprocess.DEVNULL) == 0:
+            return
+        raise RuntimeError("Clone failed.")
 
     def _submit_builds(self):
         builds = dict()
