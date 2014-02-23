@@ -24,6 +24,8 @@ class Identifier:
 
 class BuildRequest:
 
+    SEPARATOR = '/'
+
     def __init__(self, owner, repository, commit):
         self.owner = owner
         self.repository = repository
@@ -35,6 +37,9 @@ class BuildRequest:
 
     def https_url(self):
         return 'https://github.com/'+self.owner+'/'+self.repository+'.git'
+
+    def __str__(self):
+        return self.owner + self.SEPARATOR + self.repository
 
 class Build:
 
