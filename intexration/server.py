@@ -67,9 +67,9 @@ class RequestHandler:
             build_request = BuildRequest(owner, repository, commit)
             if self._branch in refs:
                 self.build_manager.submit_request(build_request)
-                return 'Build request received for %s'.format(build_request)
+                return 'Build request received for {0}'.format(build_request)
             else:
-                self.abort_request(406, "Wrong branch for %s".format(build_request))
+                self.abort_request(406, "Wrong branch for {0}".format(build_request))
         except (RuntimeError, RuntimeWarning) as e:
             self.abort_request(500, e)
 
@@ -79,7 +79,7 @@ class RequestHandler:
             document = self.build_manager.get_document(identifier)
             return static_file(document.pdf, document.path)
         except (RuntimeError, RuntimeWarning):
-            self.abort_request(404, "The requested document does not exist: %s".format(identifier))
+            self.abort_request(404, "The requested document does not exist: {0}".format(identifier))
 
     def log_request(self, owner, repository, name):
         identifier = Identifier(owner, repository, name)
@@ -92,7 +92,7 @@ class RequestHandler:
                             warnings=document.warnings(),
                             all=document.logs())
         except (RuntimeError, RuntimeWarning):
-            self.abort_request(404, "The requested document does not exist: %s".format(identifier))
+            self.abort_request(404, "The requested document does not exist: {0}".format(identifier))
 
     @staticmethod
     def file_request(name):
