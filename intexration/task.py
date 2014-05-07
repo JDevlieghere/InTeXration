@@ -125,6 +125,7 @@ class CompileTask(Task):
             self._makeindex()
             self._bibtex()
             self._compile()
+            self._compile()
             self._submit_documents()
         except RuntimeError as e:
             logging.error(e)
