@@ -217,7 +217,7 @@ class DocumentManager:
         if self.is_queued(identifier):
             self._build_from_queue(identifier)
             return self.documents.get(identifier)
-        raise RuntimeWarning("No document found for %s".format(identifier))
+        raise RuntimeWarning("No document found for {0}".format(identifier))
 
     def get_documents(self):
         return dict(self.documents)

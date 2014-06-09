@@ -24,13 +24,22 @@ class Identifier:
 
 class BuildRequest:
 
-    def __init__(self, owner, repository, commit, url):
+    SEPARATOR = '/'
+
+    def __init__(self, owner, repository, commit):
         self.owner = owner
         self.repository = repository
         self.commit = commit
-        self.url = url
         self._temp = tempfile.mkdtemp()
 
+    def ssh_url(self):
+        return 'git@github.com:'+self.owner+'/'+self.repository+'.git'
+
+    def https_url(self):
+        return 'https://github.com/'+self.owner+'/'+self.repository+'.git'
+
+    def __str__(self):
+        return self.owner + self.SEPARATOR + self.repository
 
 class Build:
 
