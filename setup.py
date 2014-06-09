@@ -6,9 +6,9 @@ requirements = [str(ir.req) for ir in install_requirements]
 
 setup(
     name='InTeXration',
-    version='1.3.0dev',
+    version='1.4.0dev',
     packages=['intexration'],
-    package_data={'': ['config/*.cfg', 'data/*.csv', 'logs/*.log', 'views/*.tpl', 'static/*/*']},
+    package_data={'': ['config/*.cfg', 'views/*.tpl', 'static/*/*']},
     include_package_data=True,
     url='https://github.com/JDevlieghere/InTeXration',
     license='Apache License, Version 2.0',
