@@ -23,8 +23,13 @@ class InTeXration:
         self.server.start()
 
 
+def version():
+    return '1.3.0 dev'
+
+
 def main():
     InTeXration().run()
+
 
 if __name__ == '__main__':
     main()
