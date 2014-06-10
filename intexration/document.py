@@ -10,7 +10,7 @@ class Document:
     SEPARATOR = '/'
     NEWLINE = '\n'
     ERROR = ' !'
-    WARMING = 'Warning'
+    WARNING = 'Warning'
 
     def __init__(self, name, path):
         self.path = path
@@ -60,7 +60,7 @@ class Document:
         for line in self._lines:
             if multi_line_error and line == self.NEWLINE:
                 multi_line_error = False
-            if self.WARMING in line or multi_line_error:
+            if self.WARNING in line or multi_line_error:
                 warnings.append(line)
                 multi_line_error = True
         return warnings
