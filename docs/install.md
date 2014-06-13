@@ -41,8 +41,7 @@ We're assuming that `python3` refers to the right version. You can check your py
 ### Pdflatex
 
 Installing the full version of TeX Live is recommended. If you'll be running
-InTeXration on Ubuntu, [this repository](https://github.com/scottkosty/install-
-tl-ubuntu) might come in handy.
+InTeXration on Ubuntu, [this repository](https://github.com/scottkosty/install-tl-ubuntu) might come in handy.
 
 ### Pip and Packages
 
