@@ -21,7 +21,7 @@ class Server:
 
     def _route(self):
         self._app.route('/', method="GET", callback=self._handler.index_request)
-        self._app.route('/hook/<api_key>', method=["GET","POST"], callback=self._handler.hook_request)
+        self._app.route('/hook/<api_key>', method=["GET", "POST"], callback=self._handler.hook_request)
         self._app.route('/pdf/<owner>/<repository>/<name>', method=["GET", "GET"], callback=self._handler.pdf_request)
         self._app.route('/log/<owner>/<repository>/<name>', method=["GET", "GET"], callback=self._handler.log_request)
         self._app.route('/<name:path>', method="GET", callback=self._handler.file)
@@ -77,7 +77,7 @@ class RequestHandler:
         identifier = Identifier(owner, repository, name)
         try:
             document = self.build_manager.get_document(identifier)
-            return self.file(document.pdf, document.path)
+            return self.static_file(document.pdf, document.path)
         except (RuntimeError, RuntimeWarning):
             return self.failure(404, "PDF Request", "The requested document does not exist: {0}".format(identifier))
 
@@ -89,7 +89,6 @@ class RequestHandler:
                             base_url=self._base_url,
                             identifier=identifier,
                             errors=document.errors(),
-                            warnings=document.warnings(),
                             warnings=document.warnings(),
                             all=document.logs())
         except (RuntimeError, RuntimeWarning):
