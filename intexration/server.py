@@ -54,12 +54,12 @@ class RequestHandler:
 
     def hook_request(self, api_key):
         if not self.api_manager.is_valid(api_key):
-            return self.failure(401, 'Unauthorized: API key invalid.')
+            return self.failure(401, "Hook Request", "Unauthorized: API key invalid.")
         try:
             payload = request.forms.get('payload')
             data = json.loads(payload)
             if 'zen' in data:
-                return self.success('Ping received')
+                return self.success('Ping Request')
             refs = data['ref']
             owner = data['repository']['owner']['name']
             repository = data['repository']['name']
@@ -67,11 +67,11 @@ class RequestHandler:
             build_request = BuildRequest(owner, repository, commit)
             if self._branch in refs:
                 self.build_manager.submit_request(build_request)
-                return self.success('Build request received for {0}'.format(build_request))
+                return self.success("Build Request")
             else:
-                return self.failure(406, "Wrong branch for {0}".format(build_request))
+                return self.failure(406, "Build Request", "Wrong branch for {0}".format(build_request))
         except (RuntimeError, RuntimeWarning) as e:
-            return self.failure(500, e)
+            return self.failure(500, "Build Request", e)
 
     def pdf_request(self, owner, repository, name):
         identifier = Identifier(owner, repository, name)
@@ -79,7 +79,7 @@ class RequestHandler:
             document = self.build_manager.get_document(identifier)
             return self.file(document.pdf, document.path)
         except (RuntimeError, RuntimeWarning):
-            return self.abort_request(404, "The requested document does not exist: {0}".format(identifier))
+            return self.failure(404, "PDF Request", "The requested document does not exist: {0}".format(identifier))
 
     def log_request(self, owner, repository, name):
         identifier = Identifier(owner, repository, name)
@@ -90,9 +90,10 @@ class RequestHandler:
                             identifier=identifier,
                             errors=document.errors(),
                             warnings=document.warnings(),
+                            warnings=document.warnings(),
                             all=document.logs())
         except (RuntimeError, RuntimeWarning):
-            return self.failure(404, "The requested document does not exist: {0}".format(identifier))
+            return self.failure(404, "Log Request", "The requested document does not exist: {0}".format(identifier))
 
     @staticmethod
     def file(name):
@@ -100,15 +101,10 @@ class RequestHandler:
         return static_file(name, static_dir)
 
     @staticmethod
-    def success(text):
-        return bottle.HTTPResponse(body=json.dumps({"code": 200, "type": text}))
+    def success(action):
+        return bottle.HTTPResponse(body=json.dumps({"code": 200, "action": action}))
 
     @staticmethod
-    def failure(code, text):
-        return bottle.HTTPResponse(body=json.dumps({"code": code, "type": text}), status=401)
-
-    @staticmethod
-    def abort_request(code, text):
-        logging.warning(text)
-        abort(code, text)
+    def failure(code, action, error_text):
+        return bottle.HTTPResponse(body=json.dumps({"code": code, "action": action, "error": error_text}), status=401)
 
