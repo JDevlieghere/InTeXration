@@ -21,10 +21,10 @@ class Server:
 
     def _route(self):
         self._app.route('/', method="GET", callback=self._handler.index_request)
-        self._app.route('/hook/<api_key>', method="POST", callback=self._handler.hook_request)
+        self._app.route('/hook/<api_key>', method=["GET","POST"], callback=self._handler.hook_request)
         self._app.route('/pdf/<owner>/<repository>/<name>', method=["GET", "GET"], callback=self._handler.pdf_request)
         self._app.route('/log/<owner>/<repository>/<name>', method=["GET", "GET"], callback=self._handler.log_request)
-        self._app.route('/<name:path>', method="GET", callback=self._handler.file_request)
+        self._app.route('/<name:path>', method="GET", callback=self._handler.file)
 
     def start(self):
         self._app.run(host=self._host,
@@ -54,12 +54,12 @@ class RequestHandler:
 
     def hook_request(self, api_key):
         if not self.api_manager.is_valid(api_key):
-            self.abort_request(401, 'Unauthorized: API key invalid.')
+            return self.abort_request(401, 'Unauthorized: API key invalid.')
         try:
             payload = request.forms.get('payload')
             data = json.loads(payload)
             if 'zen' in data:
-                return 'Ping received'
+                return self.success('Ping received')
             refs = data['ref']
             owner = data['repository']['owner']['name']
             repository = data['repository']['name']
@@ -67,19 +67,19 @@ class RequestHandler:
             build_request = BuildRequest(owner, repository, commit)
             if self._branch in refs:
                 self.build_manager.submit_request(build_request)
-                return 'Build request received for {0}'.format(build_request)
+                return self.success('Build request received for {0}'.format(build_request))
             else:
-                self.abort_request(406, "Wrong branch for {0}".format(build_request))
+                return self.abort_request(406, "Wrong branch for {0}".format(build_request))
         except (RuntimeError, RuntimeWarning) as e:
-            self.abort_request(500, e)
+            return self.abort_request(500, e)
 
     def pdf_request(self, owner, repository, name):
         identifier = Identifier(owner, repository, name)
         try:
             document = self.build_manager.get_document(identifier)
-            return static_file(document.pdf, document.path)
+            return self.file(document.pdf, document.path)
         except (RuntimeError, RuntimeWarning):
-            self.abort_request(404, "The requested document does not exist: {0}".format(identifier))
+            return self.abort_request(404, "The requested document does not exist: {0}".format(identifier))
 
     def log_request(self, owner, repository, name):
         identifier = Identifier(owner, repository, name)
@@ -92,14 +92,23 @@ class RequestHandler:
                             warnings=document.warnings(),
                             all=document.logs())
         except (RuntimeError, RuntimeWarning):
-            self.abort_request(404, "The requested document does not exist: {0}".format(identifier))
+            return self.abort_request(404, "The requested document does not exist: {0}".format(identifier))
 
     @staticmethod
-    def file_request(name):
+    def file(name):
         static_dir = os.path.join(constants.PATH_MODULE, constants.DIRECTORY_STATIC)
         return static_file(name, static_dir)
+
+    @staticmethod
+    def success(text):
+        return bottle.Response(body=json.dumps({"code": 200, "type": text}))
+
+    @staticmethod
+    def failure(code, text):
+        return bottle.Response(body=json.dumps({"code": code, "type": text}))
 
     @staticmethod
     def abort_request(code, text):
         logging.warning(text)
         abort(code, text)
+
