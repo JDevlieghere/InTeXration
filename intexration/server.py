@@ -54,7 +54,7 @@ class RequestHandler:
 
     def hook_request(self, api_key):
         if not self.api_manager.is_valid(api_key):
-            return self.abort_request(401, 'Unauthorized: API key invalid.')
+            return self.failure(401, 'Unauthorized: API key invalid.')
         try:
             payload = request.forms.get('payload')
             data = json.loads(payload)
@@ -69,9 +69,9 @@ class RequestHandler:
                 self.build_manager.submit_request(build_request)
                 return self.success('Build request received for {0}'.format(build_request))
             else:
-                return self.abort_request(406, "Wrong branch for {0}".format(build_request))
+                return self.failure(406, "Wrong branch for {0}".format(build_request))
         except (RuntimeError, RuntimeWarning) as e:
-            return self.abort_request(500, e)
+            return self.failure(500, e)
 
     def pdf_request(self, owner, repository, name):
         identifier = Identifier(owner, repository, name)
@@ -92,7 +92,7 @@ class RequestHandler:
                             warnings=document.warnings(),
                             all=document.logs())
         except (RuntimeError, RuntimeWarning):
-            return self.abort_request(404, "The requested document does not exist: {0}".format(identifier))
+            return self.failure(404, "The requested document does not exist: {0}".format(identifier))
 
     @staticmethod
     def file(name):
@@ -105,7 +105,7 @@ class RequestHandler:
 
     @staticmethod
     def failure(code, text):
-        return bottle.Response(body=json.dumps({"code": code, "type": text}))
+        return bottle.Response(body=json.dumps({"code": code, "type": text}), status=code)
 
     @staticmethod
     def abort_request(code, text):
