@@ -101,11 +101,11 @@ class RequestHandler:
 
     @staticmethod
     def success(text):
-        return bottle.Response(body=json.dumps({"code": 200, "type": text}))
+        return bottle.BaseResponse(body=json.dumps({"code": 200, "type": text}))
 
     @staticmethod
     def failure(code, text):
-        return bottle.Response(body=json.dumps({"code": code, "type": text}), status=code)
+        return bottle.BaseResponse(body=json.dumps({"code": code, "type": text}), status=code)
 
     @staticmethod
     def abort_request(code, text):
