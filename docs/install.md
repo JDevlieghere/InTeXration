@@ -93,7 +93,7 @@ If you don't notice any I/O-related issues, the installation in now complete.
 InTeXration comes with a startup script called `intexration_start.sh` in the `sripts` folder. Make a symbolic link and tell the server to start InTeXration when it starts.
 
 ```bash
-$ sudo ln -s /home/intexration/InTeXration/scripts/intexration_start.sh /etc/init.d/intexration
+$ sudo ln -s /home/intexration/InTeXration/scripts/intexration.sh /etc/init.d/intexration
 $ sudo update-rc.d intexration defaults
 ```
 
