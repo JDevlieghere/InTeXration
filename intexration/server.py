@@ -77,7 +77,7 @@ class RequestHandler:
         identifier = Identifier(owner, repository, name)
         try:
             document = self.build_manager.get_document(identifier)
-            return self.static_file(document.pdf, document.path)
+            return static_file(document.pdf, document.path)
         except (RuntimeError, RuntimeWarning):
             return self.failure(404, "PDF Request", "The requested document does not exist: {0}".format(identifier))
 
